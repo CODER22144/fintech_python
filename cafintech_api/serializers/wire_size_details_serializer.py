@@ -1,0 +1,20 @@
+from rest_framework import serializers
+
+class WireSizeDetailSerializer(serializers.Serializer):
+    wireNo = serializers.CharField(max_length=15)
+    matno = serializers.CharField(max_length=15)
+    partNo = serializers.CharField(max_length=15)
+    colNo = serializers.CharField(max_length=15)
+    wlength = serializers.IntegerField()
+    leftSL = serializers.DecimalField(max_digits=12, decimal_places=3, allow_null=True, required=False)
+    leftPL = serializers.DecimalField(max_digits=12, decimal_places=3, allow_null=True, required=False)
+    rightSL = serializers.DecimalField(max_digits=12, decimal_places=3, allow_null=True, required=False)
+    rightPL = serializers.DecimalField(max_digits=12, decimal_places=3, allow_null=True, required=False)
+    leftTL = serializers.CharField(max_length=15, allow_null=True, required=False)
+    rightTL = serializers.CharField(max_length=15, allow_null=True, required=False)
+    leftCap = serializers.CharField(max_length=15, allow_null=True, required=False)
+    rightCap = serializers.CharField(max_length=15, allow_null=True, required=False)
+    leftSleeve = serializers.CharField(max_length=15, allow_null=True, required=False)
+    rightSleeve = serializers.CharField(max_length=15, allow_null=True, required=False)
+    jWireNo = serializers.CharField(max_length=15, allow_null=True, required=False)
+    jTL = serializers.CharField(max_length=15, allow_null=True, required=False)

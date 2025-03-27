@@ -1,0 +1,21 @@
+from rest_framework import serializers
+
+class PurchaseOrderSerializer(serializers.Serializer):
+  poId = serializers.IntegerField(allow_null=True, required=False)
+  poDate = serializers.CharField(max_length=12)
+  bpCode = serializers.CharField(max_length=10)
+  mof = serializers.CharField(max_length=1)
+  freightAmount = serializers.DecimalField(max_digits=12, decimal_places=2)
+  insurance = serializers.CharField(max_length=1)
+  insuranceAmount = serializers.DecimalField(max_digits=12, decimal_places=2)
+  otherCharges = serializers.CharField(max_length=100, allow_null=True, required=False)
+  ocAmount = serializers.DecimalField(max_digits=12, decimal_places=2)
+  validFrom = serializers.CharField(max_length=12)
+  validTo = serializers.CharField(max_length=12)
+  whCode = serializers.CharField(max_length=5)
+  carrierName = serializers.CharField(max_length=50)
+  transmode = serializers.CharField(max_length=1)
+  paymentTerm = serializers.CharField(max_length=100)
+  pdi = serializers.BooleanField()
+  mtc = serializers.BooleanField()
+  packingList = serializers.BooleanField()

@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+{% block content %}
+
+    <div class="container col-8 mt-5 mb-5">
+        <h1 class="text-danger">Delete User</h1>
+        <table class="table mt-4">
+            <thead>
+              <tr>
+                <th scope="col">First Name</th>
+                <th scope="col">Last Name</th>
+                <th scope="col">Email</th>
+                <th scope="col" colspan="2">Role</th>
+              </tr>
+            </thead>
+            <tbody>
+                {% for usr in usr %}
+                    <tr>
+                        <td>{{usr.first_name}}</td>
+                        <td>{{usr.last_name}}</td>
+                        <td>{{usr.email}}</td>
+                        <td>{{usr.roles}}</td>
+                        <td> <button onclick="DelUser('{{usr.id}}')" class='btn btn-outline-danger'><i class="fas fa-trash"></i></button> </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+{% endblock %}

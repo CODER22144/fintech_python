@@ -1,0 +1,100 @@
+﻿    html
+    {
+        background-color:white;
+        font:14px Arial,Sans-Serif;
+    }
+    .staticMenuItem
+    {
+        font-family:Verdana;
+        font-size:12px;
+        color:BLACK;
+        border:solid 1px black;
+        padding:2px 4px;
+    }            
+    .menuHover
+    {
+        color:white;
+        background-color:blue;
+    }
+    .menuHover1
+    {
+        color:#ff0000;
+        background-color:#cccccc;
+    }
+    .dynamicMenuItem
+    {
+        font-family:Verdana Arial;
+        font-size:12px;
+        color:Black;
+        padding:2px 4px;       
+    }
+    .dynamicMenu
+    {
+        font-family:Verdana;
+        font-size:10px;
+        border:Solid 1px black;        
+    }        
+    .content
+    {
+        margin:auto;
+        width:780px;                
+        background-color:white;
+        border:Solid 1px black;       
+     }
+     .leftColumn
+     {
+        float: left;
+        padding:5px;
+        width:200px;        
+        border-right:Solid 1px black;
+        height:700px;        
+      }
+      .leftColumn1
+     {
+        float: left;
+        padding:5px;
+        width:150px;
+        background-color:#ce9b62;
+        border-right:Solid 1px black;
+        height:700px;        
+      }
+      .middleColumn
+      {
+        float: left;
+        padding:5px;
+        height:989px;        
+      }
+      .middleColumn1
+      {
+        float: left;
+        padding:5px;
+        height:700px;        
+      }            
+      .rightColumn
+      {
+        float:right;
+        width:175px;
+        height:300px;
+        border-left:solid 1px black;
+        border-bottom:solid 1px black;
+        background-color:#eeeeee;
+        text-align:center;
+       }
+       .tabstrip
+       {
+        padding:0px;
+        border-top:solid 1px black;        
+       }
+       .ad
+       {
+        margin-top:20px;
+       }
+       .clear
+       {
+        clear:both;
+       }
+       .headerleft
+       {
+        text-align:left;
+       }    
+       

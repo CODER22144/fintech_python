@@ -1,0 +1,204 @@
+<html>
+  <head id="Head1" runat="server">
+  <title>JOB WORKOUT</title>
+  <style>
+	.RepHead
+	{
+		height:50px;
+		font-family:Verdana; 
+		font-size:12pt; 
+		font-weight:bold;
+		background-color:#ffffff;
+		padding-left: 2px;
+	}
+	.RepHeadGEN
+	{
+		font-family:Verdana; 
+		font-size:9pt; 
+		font-weight:bold;
+		background-color:#c5c385;
+		padding-left: 2px;
+	}
+	.RepBody
+	{
+		font-family:Verdana; 
+		font-size:10pt; 
+		font-weight:Normal;
+		background-color:#ffffff;
+	}
+	
+	.Verdana10
+	{
+		font-family:Verdana; 
+		font-size:10pt; 
+		font-weight:Normal;
+		background-color:#ffffff;
+	}
+	.Arial10
+	{
+		font-family:Arial; 
+		font-size:10pt; 
+		font-weight:Normal;
+		background-color:#ffffff;
+	}
+	.Arial10Bold
+	{
+		font-family:Arial; 
+		font-size:10pt; 
+		font-weight:bold;
+		background-color:#ffffff;
+	}
+	.Arial12
+	{
+		font-family:Arial; 
+		font-size:12pt; 
+		font-weight:Normal;
+		background-color:#ffffff;
+	}
+	.Arial12Bold
+	{
+		font-family:Arial; 
+		font-size:12pt; 
+		font-weight:bold;
+		background-color:#ffffff;
+	}
+	.RepHeadThin
+	{
+		height:50px;
+		font-family:Verdana; 
+		font-size:7pt; 
+		font-weight:bold;
+		background-color:#c5c385;
+		padding-left: 2px;
+	}
+	.Arial7
+	{
+		font-family:Arial; 
+		font-size:7pt; 
+		font-weight:normal;
+		background-color:#ffffff;
+	}
+	.Arial8
+	{
+		font-family:Arial; 
+		font-size:8pt; 
+		font-weight:normal;
+		background-color:#ffffff;
+	}
+  </style>
+  </head>
+<body style="background-color:White;">
+<table cellpadding="0" cellspacing="1" border="0" width="780px" style="border:solid 1px black;">
+    <tr><td align="right" style="font-size: 10pt; font-weight: bold;">Original for Receipient</td></tr>
+    <tr>
+        <td class="RepHead" align="center">DELIVERY CHALLAN<br/><span style="font-size: 9pt;">(Under Section 141(1) Rule 55 of GST Act 2017)</span></td></tr>
+    {% if order.compLogo %}
+	<tr><td><img src="http://mapp.rcinz.com{{order.compLogo}}" alt="image"></td></tr>
+	{% endif %}
+    <tr>
+        <td style="border-top:solid 1px black;">
+            <table cellspacing="0" cellpadding="0" border="0" width="100%">
+                <tr>
+	                <td valign="top" style="width:50%;padding-left:2px;">
+		            <table class="Arial10" cellspacing="0" cellpadding="0" border="0" width="100%">		            	
+                        <tr><td colspan="2" class="Arial10Bold">Consignee Details</td></tr>
+                        <tr><td colspan="2" class="Arial10Bold">{{order.bpName}}</td></tr>
+		                <tr><td colspan="2">{{order.bpAdd}} {% if order.bpAdd1 %}<br />{{order.bpAdd1}}{% endif %}<br />{{order.bpCity}},&nbsp;{{order.stateName}} &emsp;&emsp;&emsp;PIN : {{order.bpZipCode}}</td></tr>
+   		                <tr><td colspan="2">PO. No. : {{order.poNo}}&nbsp;&nbsp;Date : {{order.poDate}}</td></tr>		                        
+		                <tr><td colspan="2" class="Arial10Bold">Place of Supply : {{order.placeOfSupply}}</td></tr> 		            
+		                <tr><td class="Arial10Bold">GSTIN No. : {% if order.bpAdd1 %} {{order.bpGSTIN}} {% endif %}</td></tr>                    
+		            </table>
+	                </td>
+	                <td style="width:50%; border-left:solid 1px black;padding-left:2px;" valign="top">
+	                	<table class="Arial10" cellspacing="0" cellpadding="0" border="0" width="100%">
+                        	<tr><td colspan="2" class="Arial10Bold">CHALLAN NO : {{order.docno}}</td></tr>
+                        	<tr><td class="Arial10">DATE OF ISSUE : {{order.dtDate}}</td></tr>
+                        	<tr><td>NATURE OF WORK :{{order.jpDescription}}</td></tr>   
+                        	<tr><td class="Arial10Bold">Please return the following Goods :-</td></tr>   
+                        	<tr><td class="Arial10Bold">{{order.matnoReturn}} = {{order.matReturnQty|floatformat:2}}</td></tr>   
+                        	<tr><td>RETURN OF GOODS IN : 360 DAYS</td></tr>   
+		                </table>
+		            </td>
+		        </tr>
+            </table>    
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <table class="Arial10" cellspacing="0" cellpadding="0" width="100%">
+                <tr class="Arial10Bold" style = "text-align:center;">
+	                <td valign="top" rowspan="2" style="border-bottom:solid 1px black;border-top:solid 1px black; width:30px;">S.NO.</td>
+	                <td valign="top" rowspan="2" style="border-bottom:solid 1px black;border-top:solid 1px black; border-left:solid 1px black; width:70px;">ITEM CODE</td>
+                    <td valign="top" rowspan="2" style="border-bottom:solid 1px black;border-top:solid 1px black; border-left:solid 1px black; width:60px;">HSN CODE</td>
+	                <td valign="top" rowspan="2" style="border-bottom:solid 1px black;border-top:solid 1px black; border-left:solid 1px black; width:360px;">DESCRIPTION</td>        	    
+                    <td valign="top" rowspan="2" style="border-bottom:solid 1px black;border-top:solid 1px black; border-left:solid 1px black; width:50px;">QTY</td>
+                    <td valign="top" rowspan="2" style="border-bottom:solid 1px black;border-top:solid 1px black; border-left:solid 1px black; width:50px;">RATE</td>
+                    <td valign="top" rowspan="2" style="border-bottom:solid 1px black;border-top:solid 1px black; border-left:solid 1px black; width:40px;">UNIT</td>	    
+	                <td valign="top" style="border-top:solid 1px black; border-left:solid 1px black; width:70px;">TAX</td>
+                    <td valign="top" style="border-top:solid 1px black; border-left:solid 1px black; width:90px;">TAXABLE</td>	                  
+                </tr>
+                <tr class="Arial10Bold" style = "text-align:center;">
+	                <td valign="top" style="border-bottom:solid 1px black;border-left:solid 1px black; width:40px;">RATE</td>
+                    <td valign="top" style="border-bottom:solid 1px black;border-left:solid 1px black; width:70px;">VALUE</td>	        
+                </tr>
+                <tr class="Arial10">
+                	<td valign="top" style="width:30px; text-align:center;"></td>
+	            	<td valign="top" style="border-left:solid 1px black; padding-left:2px; width:70px;"></td>	            
+	            	<td valign="top" style="border-left:solid 1px black; padding-left:2px; width:60px;"></td>
+                	<td valign="top" style="border-left:solid 1px black; padding-left:2px; font-size:7pt; width:360px;"></td>                	            
+	            	<td valign="top" style="border-left:solid 1px black; padding-right:2px; text-align:right; width:50px;"></td>
+                    <td valign="top" style="border-left:solid 1px black; padding-right:2px; text-align:right; width:50px;"></td>	
+                    <td valign="top" style="border-left:solid 1px black; padding-left:2px; width:40px;"></td>
+                    <td valign="top" style="border-left:solid 1px black; padding-right:2px; text-align:right; width:70px; "></td>
+                    
+                </tr>
+				<!-- ******************************* -->
+				{% for od in order.jwd %}
+				<tr class="Arial10">
+	                <td valign="top" style="width:30px; text-align:center;">{% if od.matno %} {{forloop.counter}} {% endif %}</td>
+	                <td valign="top" style="border-left:solid 1px black; width:70px;">{{od.matno}}</td>
+                    <td valign="top" style="border-left:solid 1px black; width:100px;">{{od.hsnCode}}</td>
+	                <td valign="top" class="Arial8" style="border-left:solid 1px black; width:320px; text-align:left;">{{od.matDescription}}</td>        	    
+                    <td valign="top" style="border-left:solid 1px black; width:50px; text-align:right;">{{od.qty|floatformat:2}}</td>
+                    <td valign="top" style="border-left:solid 1px black; width:50px; text-align:right;">{{od.rate|floatformat:2}}</td>   
+                    <td valign="top" style="border-left:solid 1px black; width:40px; text-align:center;">{{od.puUnit}}</td>	    
+	                <td valign="top" style="border-left:solid 1px black; width:70px; text-align:right;">{{od.gstTaxRate|floatformat:2}}&nbsp;</td>
+                    <td valign="top" style="border-left:solid 1px black; width:90px; text-align:right;">{{od.amount|floatformat:2}}</td>	                 
+                </tr>
+                <tr class="Arial9" style = "text-align:center;">
+	                <td valign="top" style="width:40px;"></td>
+                    <td valign="top" style="width:70px;"></td>	    
+                </tr>
+                
+				{% endfor %}
+				<!-- ******************************* -->
+                <tr class="Arial10bold">                
+			        <td valign="top" colspan="8" style="border-top:solid 1px black; padding-right:2px; text-align:left;">TOTAL ASSESSABLE VALUE </td>                    
+                    <td valign="top" style="border-top:solid 1px black; padding-right:2px; text-align:right;">{{order.sumAmount|floatformat:2}}</td>
+	            </tr>      
+                <tr class="Arial10bold">                                 
+			        <td valign="top" colspan="8" style="border-top:solid 1px black; padding-right:2px; text-align:left;">TOTAL GST AMOUNT</td>                    
+                    <td valign="top" style="border-top:solid 1px black; padding-right:2px; text-align:right;">{{order.sumGstAmount|floatformat:2}}</td>
+	            </tr>     
+                <tr class="Arial10bold">                                 
+			        <td valign="top" colspan="8" style="border-top:solid 1px black; border-bottom:solid 1px black; padding-right:2px; text-align:left;">Rs. {{order.num2wordAmount}}</td>                    
+                    <td valign="top" style="border-top:solid 1px black; border-bottom:solid 1px black; padding-right:2px; text-align:right;">{{order.sumTamount|floatformat:2}}</td>
+	            </tr> 
+            </table>
+        </td>
+    </tr>         
+    <tr>
+        <td>
+	        <table class="Arial10" cellspacing="0" cellpadding="0" border="0" width="100%">
+	            <tr>
+	        	    <td style="width:60%;" valign="bottom" class="Arial7">Note :- Inputs.Partially processed goods, Semi Finished goods movement for job work from the factory of supplier in the factory of job Worker and subsequent return to the parent Factory/Consignee.<br/><br/><br/></td>
+		            <td colspan="2" style="text-align:right; font-weight: bold;" valign="bottom">FOR {{order.legalName}} <br /><br /><br />AUTHORISED SIGNATORY</td>	    
+	            </tr>  
+	        </table>
+        </td>
+    </tr> 
+</table> 
+
+
+</body> 
+</html>

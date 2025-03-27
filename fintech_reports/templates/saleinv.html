@@ -1,0 +1,204 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head id="Head1" runat="server">
+  <title>TAX INVOICE</title>
+  <link href="http://mapp.rcinz.com/static/css/main.css" type="text/css" rel="STYLESHEET" />
+  <link href="http://mapp.rcinz.com/static/css/tab.css" type="text/css" rel="STYLESHEET" />  
+  </head>
+<body style="background-color:White;">
+    <input type='text' id='txt' style="display:none;" value="" />
+    <table cellpadding="0" cellspacing="1" border="0" width="780px" style="border:solid 1px black; margin:0px;">
+        <tr><td class="RepHead" align="center">TAX INVOICE<br /><span style="font-size:8pt;font-weight:bold;color:#000000;">(u/s.31 read with rule 7)</span> </td></tr>
+        <tr><td>{% if sale.compLogo %}<img src="http://mapp.rcinz.com{{sale.compLogo}}" width="780" height="70" alt ="" /> {% endif %}</td></tr>
+        <tr>
+        <td style="border-top:solid 1px black;">
+        <table cellspacing="0" cellpadding="0" border="0" width="100%">
+            <tr>
+	            <td valign="top" style="width:70%;padding-left:2px;">
+		        <table class="Arial10" cellspacing="0" cellpadding="0" border="0" width="100%">                    
+                    <tr><td class="Arial10Bold">INV. No. : {{sale.invNo}}&nbsp;& Date : {{sale.dtDate}}</td><td style="text-align:right;"></td></tr>
+                    <tr><td class="Arial10Bold">Category : B2B</td><td class="Arial10Bold">Eway No : {{sale.ewbno}}</td></tr>
+                    <tr><td colspan="2" class="Arial10Bold" style="border-top:solid 1px black;">IRN : {{sale.irn}}</td></tr>
+                    <tr><td class="Arial10Bold">ACK No. : {{sale.ackno}}</td><td class="Arial10Bold">ACK Date : {{sale.ackdate}}</td></tr>
+                    <tr><td colspan="2" class="Arial10Bold" style="border-top:solid 1px black;">Billed To : {{sale.custName}}</td></tr>
+                    <tr><td colspan="2" class="Arial10Bold">GSTIN : {{sale.custGSTIN}}</td></tr>		            
+		            <tr><td colspan="2">{{sale.custAdd}}<br />{{sale.custAdd1}}<br />{{sale.custCity}}, {{sale.custStateName}} - {{sale.custZipCode}}</td></tr>
+   		            <tr><td colspan="2">PO. No. & Date : {{sale.poNo}}&nbsp;{{sale.poDate}}</td></tr>		                        
+		            <tr><td colspan="2" class="Arial10Bold">Place of Supply : {{sale.placeSupply}}</td></tr>		                                                    
+                    {% if not sale.shipName %}
+                    <tr><td colspan="2" class="Arial10Bold" style="border-top:solid 1px black;">Shipped to : {{sale.custName}}</td></tr>
+		            <tr><td colspan="2">{{sale.custAdd}}&nbsp;&nbsp;{{sale.custAdd1}}</td></tr>		                       
+		            <tr><td colspan="2">{{sale.custCity}},&nbsp;&nbsp;{{sale.custStateName}} - {{sale.custZipCode}}</td></tr>
+		            <tr><td colspan="2">GSTIN: {{sale.custGSTIN}}</td></tr>
+                    {% else %}
+                    <tr><td colspan="2" class="Arial10Bold" style="border-top:solid 1px black;">Shipped to : {{sale.shipName}}</td></tr>
+		            <tr><td colspan="2">{{sale.shipAdd}}&nbsp;&nbsp;{{sale.shipAdd1}}</td></tr>		                       
+		            <tr><td>{{sale.shipCity}},&nbsp;&nbsp;{{sale.shipStateName}} - {{sale.shipZipCode}}</td><td style="text-align:right;"></td></tr>
+		            <tr><td colspan="2">GSTIN: {{sale.shipGSTIN}}</td></tr>
+                    {% endif %}      
+		        </table>
+	            </td>
+	            <td style="width:30%;border-left:solid 1px black;padding-left:2px;" valign="top">
+	            <table class="Arial10" cellspacing="0" cellpadding="0" border="0" width="100%">                    
+                    {% if sale.sqrcode %}                   
+                    <!-- <tr><td colspan="2"><asp:PlaceHolder ID="plBarCode" runat="server" /></td></tr> -->
+                    <tr>
+                    <td>
+                        <img src="http://mapp.rcinz.com/get-qr/?data={{sale.sqrcode}}" width="250" height="250" />
+		                
+                    </td>
+                    </tr>
+                    {% endif %}
+		        </table>
+		        </td>
+	        </tr>
+        </table>    
+        </td>
+        </tr>
+        <tr>
+        <td>
+            <table class="Arial10" cellspacing="0" cellpadding="0" width="100%">
+            <tr class="Arial10Bold" style = "text-align:center;">
+	            <td valign="top" rowspan="2" style="border-bottom:solid 1px black;border-top:solid 1px black; width:30px;">S.NO.</td>
+	            <td valign="top" rowspan="2" style="border-bottom:solid 1px black;border-top:solid 1px black; border-left:solid 1px black; width:70px;">ITEM CODE</td>
+                <td valign="top" rowspan="2" style="border-bottom:solid 1px black;border-top:solid 1px black; border-left:solid 1px black; width:60px;">HSN CODE</td>
+	            <td valign="top" rowspan="2" style="border-bottom:solid 1px black;border-top:solid 1px black; border-left:solid 1px black; width:360px;">DESCRIPTION</td>        	    
+	            <td valign="top" rowspan="2" style="border-bottom:solid 1px black;border-top:solid 1px black; border-left:solid 1px black; width:50px;">MRP</td>
+                <td valign="top" rowspan="2" style="border-bottom:solid 1px black;border-top:solid 1px black; border-left:solid 1px black; width:50px;">RATE</td>
+                <td valign="top" rowspan="2" style="border-bottom:solid 1px black;border-top:solid 1px black; border-left:solid 1px black; width:50px;">QTY</td>
+                <td valign="top" rowspan="2" style="border-bottom:solid 1px black;border-top:solid 1px black; border-left:solid 1px black; width:40px;">UNIT</td>	    
+	            <td valign="top" style="border-bottom:solid 1px black;border-top:solid 1px black; border-left:solid 1px black; width:90px;">TAX</td>
+                <td valign="top" style="border-bottom:solid 1px black;border-top:solid 1px black; border-left:solid 1px black; width:70px;">TAXABLE</td>	    
+            </tr>
+            <tr class="Arial10Bold" style = "text-align:center;">
+	            <td valign="top" style="border-bottom:solid 1px black;border-left:solid 1px black; width:40px;">RATE</td>
+                <td valign="top" style="border-bottom:solid 1px black;border-left:solid 1px black; width:70px;">VALUE</td>	    
+            </tr>
+            
+            {% for items in sale.itemList %}      
+            <tr class="Arial10">
+                <td valign="top" style="width:30px; text-align:center;">{% if items.icode %} {{forloop.counter}} {% else %} &nbsp; {% endif %}</td>
+	            <td valign="top" style="border-left:solid 1px black; padding-left:2px; width:70px;">{{items.icode}}</td>	            
+	            <td valign="top" style="border-left:solid 1px black; padding-left:2px; width:60px;">{{items.hsnCode}}</td>
+                <td valign="top" style="border-left:solid 1px black; padding-left:2px; font-size:7pt; width:360px;">{{items.saleDescription}}</td>
+                <td valign="top" style="border-left:solid 1px black; padding-right:2px; text-align:right; width:50px;">{{items.listPrice|floatformat:2}}</td>
+                <td valign="top" style="border-left:solid 1px black; padding-right:2px; text-align:right; width:50px;">{{items.rate|floatformat:2}}</td>	            
+	            <td valign="top" style="border-left:solid 1px black; padding-right:2px; text-align:right; width:50px;">{{items.qty|floatformat:2}}</td>
+                <td valign="top" style="border-left:solid 1px black; padding-left:2px; width:40px;">{{items.unit}}</td>	            	            
+                <td valign="top" style="border-left:solid 1px black; padding-right:2px; text-align:right; width:40px;">{{items.gstTaxRate|floatformat:2}}</td>
+                <td valign="top" style="border-left:solid 1px black; padding-right:2px; text-align:right; width:70px; ">{{items.amount|floatformat:2}}</td>	            
+	        </tr>			
+            {% endfor %}
+           <tr class="Arial10bold">                
+	            <td valign="top" colspan="6" style="border-top:solid 1px black; border-bottom:solid 1px black; padding-right:2px; text-align:left;">TOTAL </td>
+                <td valign="top" style="border-top:solid 1px black; border-bottom:solid 1px black; padding-right:2px; text-align:right;">{{sale.sumqty|floatformat:2}}</td>
+                <td valign="top" style="border-top:solid 1px black; border-bottom:solid 1px black; padding-right:2px; text-align:right;">&nbsp;</td>
+                <td valign="top" style="border-top:solid 1px black; border-bottom:solid 1px black; padding-right:2px; text-align:right;">&nbsp;</td>
+	            <td valign="top" style="border-top:solid 1px black; border-bottom:solid 1px black; padding-right:2px; text-align:right;">{{sale.sumamount|floatformat:2}}</td>                
+	        </tr>          
+            </table>
+        </td>
+        </tr>         
+        <tr>
+        <td>
+	        <table class="Arial10" cellspacing="0" cellpadding="0" border="0" width="100%">
+	        <tr class="Arial10Bold">
+                <!-- Freight : <%=rstParent.Fields("FREIGHT").Value%> &nbsp;Insurance : <%=rstParent.Fields("INSURANCE").Value%> &nbsp;Packing & Forwarding : <%=rstParent.Fields("PNF").Value%> -->
+	            <td colspan="3" style="text-align:right;">Total GST : {{sale.sumgstAmount}}</td>
+	        </tr>
+            <tr class="Arial10Bold">
+                <!-- Amount subject to Reverse Charge :	<%=FormatNumber(FREIGHT + INSURANCE + PNF, 2)%> -->
+	        <!-- <td style="width:60%;">&nbsp;</td> -->
+	        <!-- {% if sale.sumtcsITaxAmount > 0 %}
+                <td style="width:25%;">TCS {{sale.sumtcsITaxAmount}}</td>
+                <td style="width:15%; text-align:right;"><%=FormatNumber(TTCSAMOUNT, 2)%></td>
+            {% endif %} -->
+	        <!-- <%If TCSITAX = "Y" Then%>
+                <td style="width:25%;">TCS @0.1%</td>
+                <td style="width:15%; text-align:right;"><%=FormatNumber(TCSITAXAMOUNT, 3)%></td>
+            <%End If%> -->
+            {% if sale.sumtcsITaxAmount > 0 %}
+                <td style="width:25%;">TCS @0.1%</td>
+                <td style="width:15%; text-align:right;">{{sale.sumtcsITaxAmount|floatformat:2}}</td>
+            {% endif %}
+	        </tr>
+            <tr class="Arial10Bold">
+	            <td colspan="3">Amount subject to Reverse Charge : 0.00</td>
+	        </tr>
+	        <tr class="Arial10Bold">
+	            <td>{{sale.num2words}}</td>
+	            <td colspan="2" style="text-align:right;">Total Sale Price : {{sale.sumtamount|floatformat:2}}</td>
+	            
+	        </tr>
+	        <tr>
+                <td colspan="3">
+                <table class="Arial10" cellspacing="0" cellpadding="0" border="0" width="100%">
+                <tr class="Arial10Bold">
+                    <td style="border-top:1px solid black; border-right:1px solid black;" colspan="3">HSN CODE & GST SUMMARY</td>
+                    <td style="border-top:1px solid black; border-right:1px solid black;" align="center" colspan="2">IGST</td>
+                    <td style="border-top:1px solid black; border-right:1px solid black;" align="center" colspan="2">CGST</td>
+                    <td style="border-top:1px solid black;" align="center" colspan="2">SGST</td>
+                </tr>
+                <tr class="Arial10Bold">
+                    <td style="border-top:1px solid black; border-right:1px solid black;">HSN CODE</td>
+                    <td style="border-top:1px solid black; border-right:1px solid black;" align="right">QTY</td>
+                    <td style="border-top:1px solid black; border-right:1px solid black;" align="right">TAXABLE VALUE</td>
+                    <td style="border-top:1px solid black; border-right:1px solid black;" align="right">RATE</td>
+                    <td style="border-top:1px solid black; border-right:1px solid black;" align="right">AMOUNT</td>
+                    <td style="border-top:1px solid black; border-right:1px solid black;" align="right">RATE</td>
+                    <td style="border-top:1px solid black; border-right:1px solid black;" align="right">AMOUNT</td>
+                    <td style="border-top:1px solid black; border-right:1px solid black;" align="right">RATE</td>
+                    <td style="border-top:1px solid black;" align="right">AMOUNT</td>
+                </tr>
+
+                {% for hsnGrp in hsnList %}    
+                    {% for hsnData in hsnGrp.hsn %}
+                <tr>
+                    <td style="border-top:1px solid black; border-right:1px solid black;">{{hsnData.hsnCode}}</td>
+                    <td style="border-top:1px solid black; border-right:1px solid black;" align="right">{{hsnData.sumQty|floatformat:2}}</td>
+                    <td style="border-top:1px solid black; border-right:1px solid black;" align="right">{{hsnData.sumTaxableAmount|floatformat:2}}</td>
+                    <td style="border-top:1px solid black; border-right:1px solid black;" align="right">{{hsnData.igstRate|floatformat:2}}</td>
+                    <td style="border-top:1px solid black; border-right:1px solid black;" align="right">{{hsnData.sumigstAmount|floatformat:2}}</td>
+                    <td style="border-top:1px solid black; border-right:1px solid black;" align="right">{{hsnData.cgstRate|floatformat:2}}</td>
+                    <td style="border-top:1px solid black; border-right:1px solid black;" align="right">{{hsnData.sumCgstAmount|floatformat:2}}</td>
+                    <td style="border-top:1px solid black; border-right:1px solid black;" align="right">{{hsnData.sgstRate|floatformat:2}}</td>
+                    <td style="border-top:1px solid black;" align="right">{{hsnData.sumSgstAmount|floatformat:2}}</td>
+                </tr>
+                    {% endfor %}
+                    <tr class="Arial10Bold">
+                        <td style="border-top:1px solid black; border-right:1px solid black;">TOTAL</td>
+                        <td style="border-top:1px solid black; border-right:1px solid black;" align="right">{{hsnGrp.totalQty|floatformat:2}}</td>
+                        <td style="border-top:1px solid black; border-right:1px solid black;" align="right">{{hsnGrp.totalTaxableAmount|floatformat:2}}</td>
+                        <td style="border-top:1px solid black; border-right:1px solid black;" align="right">&nbsp;</td>
+                        <td style="border-top:1px solid black; border-right:1px solid black;" align="right">{{hsnGrp.totaligstAmount|floatformat:2}}</td>
+                        <td style="border-top:1px solid black; border-right:1px solid black;" align="right">&nbsp;</td>
+                        <td style="border-top:1px solid black; border-right:1px solid black;" align="right">{{hsnGrp.totalCgstAmount|floatformat:2}}</td>
+                        <td style="border-top:1px solid black; border-right:1px solid black;" align="right">&nbsp;</td>
+                        <td style="border-top:1px solid black;" align="right">{{hsnGrp.totalSgstAmount|floatformat:2}}</td>
+                    </tr>
+                <tr>
+                    <td style="border-top:1px solid black;">&nbsp;</td>
+                    <td style="border-top:1px solid black;" align="right">&nbsp;</td>
+                    <td style="border-top:1px solid black;" align="right">&nbsp;</td>
+                    <td style="border-top:1px solid black;" align="right">&nbsp;</td>
+                    <td style="border-top:1px solid black;" align="right">&nbsp;</td>
+                    <td style="border-top:1px solid black;" align="right">&nbsp;</td>
+                    <td style="border-top:1px solid black;" align="right">&nbsp;</td>
+                    <td style="border-top:1px solid black;" align="right">&nbsp;</td>
+                    <td style="border-top:1px solid black;" align="right">&nbsp;</td>
+                </tr>    
+                <tr>
+                    <td colspan="4" style="border-top:1px solid black;">
+                        E. & O. E.<br />- All disputes subject to Delhi Courts Jurisdiction.<br />- No Complaint shall be entertained after seven days of receipt of goods.<br />- If Payment is not received within 7 days, interest will be charged @24% p.a.<br />- The liability of pay GST on such Interest charge on delayed payment will arise at the time of receipt of such charges.<br/><span style="font-weight:bold;">- Payments to be made through RTGS/NEFT/Cheque/DD Only.</span><br /><span style="font-weight:bold;">- Bank Details : {{sale.bankName}} Account No. : {{sale.accountNo}} IFSC Code : {{sale.ifscCode}}</span>
+                    </td>
+                    <td colspan="5" style="border-top:1px solid black; text-align:right; font-weight: bold;">FOR {{sale.legalName}}<br /><br /><br /><br />AUTHORISED SIGNATORY</td>
+                </tr> 
+                {% endfor %}    
+                </table>
+        </td>
+        </tr>
+	    </table>
+        </td>
+        </tr>
+</table> 
+</body> 
+</html>

@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  </head>
+  <body>
+    <table cellpadding="0" cellspacing="0" border="1" style="border: 1px solid black;">
+        <tbody>
+          <tr>
+            <td colspan="12" style="text-align: right;">DOC No.: ST/00/2/00</td>            
+          </tr>
+          <tr>
+            <td colspan="12" style="text-align: center; font-size: 16pt; font-weight:bold;">STORE RECEIPT VOUCHER</td>            
+          </tr>
+          <tr>
+            <td colspan="6">SRV NO. : {{gr.grno}}</td>
+            <td colspan="6">SRV DATE &amp; TIME : {{gr.dDate}}</td>
+          </tr>
+          <tr>
+            <td colspan="6">{{gr.bpName}}</td>
+            <td colspan="6">P.CH.DATE. : {{gr.dDate}}</td>
+          </tr>
+          <tr>
+            <td colspan="6">{{gr.bpAdd}}</td>
+            <td colspan="6">TYPE : {{gr.itDescription}}</td>
+          </tr>
+          <tr>
+            <td colspan="6">{% if gr.bpAdd1 %} {{gr.bpAdd1}} {% endif %}</td>
+            <td colspan="6">&nbsp;</td>
+          </tr>
+          <tr>
+            <td colspan="6">{{gr.bpCity}}</td>
+            <td colspan="6">&nbsp;</td>
+          </tr>
+          <tr>
+            <td colspan="6">{{gr.stateName}}</td>
+            <td colspan="6">&nbsp;</td>
+          </tr>
+          <tr>
+            <td style="padding: 3px;">S.NO.</td>
+            <td style="padding: 3px;">ITEM CODE</td>
+            <td style="padding: 3px;">DESCRIPTION</td>
+            <td style="padding: 3px;">HSN CODE</td>
+            <td style="padding: 3px;">QTY</td>
+            <td style="padding: 3px;">UNIT</td>
+            <td style="padding: 3px;">PO RATE</td>
+            <td style="padding: 3px;">GR RATE</td>
+            <td style="padding: 3px;">AMOUNT</td>
+            <td style="padding: 3px;">GST TAX RATE</td>
+            <td style="padding: 3px;">GST AMOUNT</td>
+            <td style="padding: 3px;">TOTAL AMOUNT</td>
+          </tr>
+          {% for items in gr.grd %}    
+	  <tr>
+            <td>{% if items.matno %} {{forloop.counter}}. {% else %} &nbsp; {% endif %}</td>
+            <td>{{items.matno}}</td>
+            <td>{{items.matDescription}}</td>
+            <td>{{items.hsnCode}}</td>
+            <td style="text-align: right;">{{items.grQty}}</td>
+            <td>{{items.puUnit}}</td>
+            <td style="text-align: right;">{{items.poRate}}</td>
+            <td style="text-align: right;">{{items.grRate}}</td>
+            <td style="text-align: right;">{{items.grAmount}}</td>
+            <td style="text-align: right;">{{items.gstTaxRate}}</td>
+            <td style="text-align: right;">{{items.gstAmount}}</td>
+            <td style="text-align: right;">{{items.tAmount}}</td>
+          </tr>
+          {% endfor %}      
+          <tr class="row29">
+            <td class="column0 style1 s" style="padding: 3px 3px 0px 3px;">TOTAL</td>
+            <td class="column1 style1 null"></td>
+            <td class="column2 style1 null"></td>
+            <td class="column3 style1 null"></td>
+            <td class="column4 style1 f"  style="text-align: right;">{{gr.sumgrQty}}</td>
+            <td class="column5">&nbsp;</td>
+            <td class="column6">&nbsp;</td>
+            <td class="column7">&nbsp;</td>
+            <td class="column8 style1 f"  style="text-align: right;">{{gr.sumgrAmount}}</td>
+            <td class="column9 style1 null"></td>
+            <td class="column10 style1 f"  style="text-align: right;">{{gr.sumgstAmount}}</td>
+            <td class="column11 style1 f"  style="text-align: right;">{{gr.sumtAmount}}</td>
+          </tr>
+        </tbody>
+    </table>
+  </body>
+</html>

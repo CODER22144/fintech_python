@@ -1,0 +1,139 @@
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head id="Head1" runat="server">
+  <title>Purchase Order</title>
+  <link href="http://mapp.rcinz.com/static/css/main.css" type="text/css" rel="STYLESHEET" />
+  <link href="http://mapp.rcinz.com/static/css/tab.css" type="text/css" rel="STYLESHEET" />  
+  </head>
+  <body style="background-color:White;">    
+<table cellpadding="0" cellspacing="0" border="0" width="780px">
+    <tr >
+    <td align="right"></td> 
+    <td class="prmRepMainHeadTD" align="right">PUR/004/00</td>
+    </tr>
+</table>       
+<table cellpadding="0" cellspacing="1" border="0" width="780px">
+<tr>
+<!-- <td style="width:320; padding-bottom: 10px;"><span class="Arial12Bold">{{data.bpName}}</span><br /><span class="Arial10">{{data.bpAdd}}<br />{{data.bpAdd1}}</span><br /></td> -->
+<td style="width:320; font-family: Arial; font-size:14pt; font-weight:bold;text-align:center;" valign="middle">Purchase Order</td>
+<td style="width:200;" valign="top">&nbsp;</td>
+</tr>  
+</table> 
+<table cellpadding="0" cellspacing="1" border="0" width="780px">
+    <tr>
+    <td style="width:55%;">
+	    <table cellspacing="0" cellpadding="0" border="0" width="100%">
+            <tr>
+		        <td class="Arial10Bold">{{data.bpName}}</td>
+            </tr>
+            <tr>
+                <td class="Arial10">{{data.bpAdd}}</td>
+            </tr>
+            <tr>
+		        <td class="Arial10">{{data.bpAdd1}}</td>
+            </tr>
+            <tr>
+                <td class="Arial10">{{data.bpCity}}</td>
+            </tr>
+            <tr>
+                <td class="Arial10">{{data.stateName}}</td>
+            </tr>
+            <tr>
+                <td class="Arial10">GSTIN : {{data.bpGSTIN}}</td>
+            </tr>
+            <!-- <tr>
+                <td class="Arial10"><%=rstParent.Fields("EMAILID").Value%></td>
+            </tr> -->
+        </table>
+    </td>		    
+    <td style="width:45%;">
+	    <table cellspacing="0" cellpadding="0" border="0" width="100%">
+            <tr>
+                <td class="Arial10Bold">P. O. NO. AND DATE: {{data.poId}} &nbsp;: {{data.dpoDate}} <br /><span class="Arial10">PERIOD FROM :{{data.validFrom}} TO {{data.validTo}}<br />GST No. : {{data.compGstin}}<br />PAN : {{data.compPAN}} </span></td>
+            </tr>
+        </table>
+    </td>		    
+
+	</tr>
+    <tr><td><p class="Arial10">Dear Sir,<br /><br />We are pleased to place purchase order for the following items.</p></td></tr>
+    <tr>
+    <td colspan="2">
+    <table class="Arial10" cellspacing="0" cellpadding="1" border="0" width="100%" style="border:1px solid black;">
+        <tr class="Arial10Bold">
+	    <td valign="top" style="border-bottom:solid 1px black; width:40;">S.No.</td>
+	    <td valign="top" style="border-bottom:solid 1px black; border-left:solid 1px black; width:80;">ITEM CODE</td>
+	    <td valign="top" style="border-bottom:solid 1px black; border-left:solid 1px black; width:80;">HSN CODE</td>
+	    <td valign="top" style="border-bottom:solid 1px black; border-left:solid 1px black; width:350;">DESCRIPTION</td>	    
+	    <td valign="top" style="border-bottom:solid 1px black; border-left:solid 1px black; width:70; text-align:right;">QTY</td>
+	    <td valign="top" style="border-bottom:solid 1px black; border-left:solid 1px black; width:70; text-align:right;">RATE</td>
+	    <td valign="top" style="border-bottom:solid 1px black; border-left:solid 1px black; width:40; text-align:center;">UNIT</td>	    	    
+	    <td valign="top" style="border-bottom:solid 1px black; border-left:solid 1px black; width:100;">AMOUNT</td>
+        </tr>
+        {% for items in data.pod %}     
+            <tr>
+	            <td valign="top" style="width:40;">{{forloop.counter}}.</td>
+	            <td valign="top" style="border-left:solid 1px black; width:80;">{{items.matno}}</td>
+		    <td valign="top" style="border-left:solid 1px black; width:80;">{{items.hsnCode}}</td>
+                    <td valign="top" style="border-left:solid 1px black; width:350;">{{items.matDescription}}</td>	            
+                    <td valign="top" style="border-left:solid 1px black; width:70; text-align:right;">{{items.poQty}}</td>
+	            <td valign="top" style="border-left:solid 1px black; width:70; text-align:right;">{{items.poRate}}</td>
+	            <td valign="top" style="border-left:solid 1px black; width:40; text-align:center;">{{items.puUnit}}</td>	            
+	            <td valign="top" style="border-left:solid 1px black; width:100; text-align:right;">&nbsp;{{items.poAmount}}</td>
+	        </tr>			
+        {% endfor %}
+        <!-- <%  If SNO <= 30 Then
+                For SNO = SNO To 30
+         %>            
+            <tr>
+	            <td valign="top" style="width:40;">&nbsp;</td>
+	            <td valign="top" style="width:80;border-left:solid 1px black; ">&nbsp;</td>
+		    <td valign="top" style="width:80;border-left:solid 1px black; ">&nbsp;</td>
+	            <td valign="top" style="border-left:solid 1px black; width:350;">&nbsp;</td>
+	            <td valign="top" style="border-left:solid 1px black; width:70; text-align:right;">&nbsp;</td>
+	            <td valign="top" style="border-left:solid 1px black; width:70; text-align:right;">&nbsp;</td>
+	            <td valign="top" style="border-left:solid 1px black; width:40; text-align:center;">&nbsp;</td>	            
+	            <td valign="top" style="border-left:solid 1px black; width:100;">&nbsp;</td>
+	        </tr>
+      <%  Next
+      End If%> -->
+    </table>
+    </td> 
+    </tr>
+    <tr>
+    <td>
+	    <table class="Arial10" cellspacing="0" cellpadding="0" border="0" width="100%">
+	    <tr>
+	        <!-- <td style="font-size:12pt; font-weight:bold;">Note : <%If rstParent.Fields("CPENDING").Value = "Y" Then Response.Write("Please find pending order statement attached") Else Response.Write("This Purchase Order Supercedes all our previous orders")%></td> -->
+	    </tr>
+	    <tr>
+	     <td valign="top" style="padding-top:10px;">
+	        <b >TERMS & CONDITIONS </b><br />
+		    <ul>
+		    <li>Delivery of material should be strictly as per period given above.</li>
+		    <li>No material will be received without inspection report.</li>
+		    <li><span style="font-weight:bold; text-decoration:underline;">Purchase Order No.</span> must be mentioned in the invoice.</li>		    
+            <li>Please send your order acceptance/confirmation.</li>
+		    <li>Please inform immediately of inability/delay expected in servicing the supply as per schedule.</li>
+   		    <li>Prices are at our works.</li>            
+		    <li>GST as applicable</li>
+            <!-- <li>Payment will be made after <% = rstParent.Fields("CRDAYS").Value%> days from the date of material receipt.</li>  -->
+            <li><span style="font-weight:bold;">For any change in specifications of the item(s) please do obtain our prior written approval or revised approved drawing </span></li>
+		    </ul>
+	    </td>
+	    </tr>
+	    <tr>
+	    <td class="Arial10Bold" style="width:780px; height:100;" valign="middle">For {{data.legalName}}</td>
+	    </tr>
+	    <tr>
+	    <td style="width:780px;" valign="bottom">Authorised Signatory</td>
+	    </tr>
+	    <tr>
+	    <td style="width:780px;" valign="bottom" align="center">This is computer generated p.o. and does not require signature</td>
+	    </tr>        
+	    </table>
+    </td>
+    </tr>     
+</table>
+
+</body> 
+</html>

@@ -1,2 +1,2 @@
-# fintech_python
-Python Backend
+# CaFinTech
+a fintech project

@@ -1,0 +1,20 @@
+from rest_framework import serializers
+
+class ResourceSerializer(serializers.Serializer):
+    resId = serializers.IntegerField()
+    resName = serializers.CharField(max_length=100)
+    resLoginUserId = serializers.CharField(max_length=500)
+    resDesignation = serializers.CharField(max_length=50)
+    resAddress = serializers.CharField(max_length=100, allow_null=True, required=False)
+    resAddress1 = serializers.CharField(max_length=100, allow_null=True, required=False)
+    resSId = serializers.IntegerField()
+    resCountryCode = serializers.CharField(max_length=2)
+    resPinCode = serializers.CharField(max_length=6, allow_null=True, required=False)
+    resContactNo = serializers.CharField(max_length=10)
+    resAltContactNo = serializers.CharField(max_length=10, allow_null=True, required=False)
+    resEmail = serializers.CharField(max_length=100)
+    resAltEmail = serializers.CharField(max_length=100, allow_null=True, required=False)
+    isLeader = serializers.CharField(max_length=1)
+    leaderId = serializers.IntegerField(allow_null=True, required=False)
+    resPhotoUrl = serializers.CharField(max_length=200,allow_null=True, required=False)
+    resStatus = serializers.CharField(max_length=1)

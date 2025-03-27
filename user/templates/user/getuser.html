@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+{% block content %}
+{% include 'message.html' %}
+    <div class="container mt-5 mb-5 col-5">
+        <h1 class="text-danger">Reset Password</h1>
+        <form action="/user-action/" method="POST" class="mt-4" name="new-password" onsubmit="return editpassword()">
+            {% csrf_token %}
+            <div class="mb-2 row">
+                <label class="col-sm-3 col-form-label">Email</label>
+                <div class="col-sm-9">
+                    <input type="email" name="mail" class="form-control" required>
+                </div>
+            </div>
+
+            <div class="mb-2 row">
+                <label class="col-sm-3 col-form-label">New Password</label>
+                <div class="col-sm-9">
+                    <input type="password" name="password" class="form-control" required>
+                </div>
+            </div>
+
+            <div class="mb-2 row">
+                <label class="col-sm-3 col-form-label">Re Password</label>
+                <div class="col-sm-9">
+                    <input type="password" name="re-password" class="form-control" required>
+                </div>
+            </div>
+
+            <div class="mb-2 row">
+                <label class="col-sm-3 col-form-label"></label>
+                <div class="col-sm-9">
+                    <button type="submit" class="btn btn-outline-success">Submit</button>
+                </div>
+            </div>
+        </form>
+    </div>
+{% endblock %}
