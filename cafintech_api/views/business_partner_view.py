@@ -52,7 +52,7 @@ def getCompanyType(request):
 def getAllStates(request):
     try:
         cursor = connections[request.user.cid.cid].cursor()
-        cursor.execute(f"select * from [mastcode].[States]")
+        cursor.execute(f"EXEC [mastcode].[uspGetStates]")
         json_data = ConvertToJson(cursor)
         return JsonResponse(json_data, safe=False)
     except Exception as e:

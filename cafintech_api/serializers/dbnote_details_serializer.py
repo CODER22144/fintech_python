@@ -17,3 +17,4 @@ class DbNoteDetailSerializer(serializers.Serializer):
     rgst = serializers.DecimalField(max_digits=12, decimal_places=3, default=0)
     gstAmount = serializers.DecimalField(max_digits=12, decimal_places=3, default=0)
     roff = serializers.DecimalField(max_digits=12, decimal_places=3, default=0)
+    unit = serializers.CharField(max_length=10, allow_null=True, required=False)

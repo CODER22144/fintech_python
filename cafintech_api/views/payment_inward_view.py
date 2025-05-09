@@ -58,3 +58,25 @@ def getPaymentPendingByTransIdVtype(request):
         return JsonResponse(json_data, safe=False)
     except Exception as e:
         return Response(data=generate_error_message(e), status=500, exception=e)
+    
+@api_view(["POST"])
+@permission_classes([IsAuthenticated])
+def postPaymentInward(request):
+    try:
+        cursor = connections[request.user.cid.cid].cursor()
+        cursor.execute(f"exec [fiac].[PaymentInwardPost] %s", (json.dumps({"fromDate" : request.data['fromDate']}), ))
+        return Response(data={"status" : "ok"}, status=200)
+    except Exception as e:
+        return Response(data=generate_error_message(e), status=500, exception=e)
+
+@api_view(["POST"])
+@permission_classes([IsAuthenticated])
+def getBankStatementByTransDate(request):
+    try:
+        cursor = connections[request.user.cid.cid].cursor()
+        cursor.execute(f"exec [fiac].[uspGetBankStatementByTranDate] %s", (json.dumps({"fromDate" : request.data['fromDate']}), ))
+        json_data = ConvertToJson(cursor)
+        return JsonResponse(json_data, safe=False)
+    except Exception as e:
+        return Response(data=generate_error_message(e), status=500, exception=e)
+    

@@ -101,3 +101,14 @@ def addCrNote(request):
         return Response(UNSUCCESSFUL_REQUEST, status=400)
     except Exception as e:
         return Response(data=generate_error_message(e), status=500, exception=e)
+    
+@api_view(["POST"])
+@permission_classes([IsAuthenticated])
+def getCrNoteMaterialDetails(request):
+    try:
+        cursor = connections[request.user.cid.cid].cursor()
+        cursor.execute(f"exec [fiac].[uspGetCrNoteMaterialDetails] %s,%s",(request.data['bpCode'], request.data['matno']))
+        json_data = ConvertToJson(cursor)
+        return JsonResponse(json_data, safe=False)
+    except Exception as e:
+        return Response(data=generate_error_message(e), status=500, exception=e)

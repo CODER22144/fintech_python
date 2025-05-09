@@ -1,0 +1,200 @@
+﻿<html xmlns="http://www.w3.org/1999/xhtml">
+  <head id="Head1" runat="server">
+  <title>CREDIT NOTE</title>
+  <link href="http://mapp.rcinz.com/static/css/main.css" type="text/css" rel="STYLESHEET" />
+  <link href="http://mapp.rcinz.com/static/css/tab.css" type="text/css" rel="STYLESHEET" /> 
+  </head>
+<body style="background-color:White;">
+<table cellpadding="0" cellspacing="0" border="0" width="780px">
+<!-- <tr>
+<td class="Arial8" style="font-weight:bold; text-align:right;"><%=Heading%></td>
+</tr> -->
+<tr>
+<td style="text-align:center; font-family:Verdana; font-size:14pt; font-weight:bold;">CREDIT NOTE</td>
+</tr>
+<tr>
+    {% if crnote.compLogo %}
+    <td><img src="http://mapp.rcinz.com{{crnote.compLogo}}" width="100%" height="70" alt="" /></td>
+    {% endif %}
+</tr>
+
+<tr>
+<td>
+
+<table cellpadding="0" cellspacing="1" border="0" width="100%" style="border:solid 1px black;">
+    <tr>
+        <td>
+            <table cellspacing="0" cellpadding="0" border="0" width="100%">
+                <tr>
+	                <td valign="top" style="width:70%;">
+		            <table class="Arial10" cellspacing="0" cellpadding="0" border="0" width="100%">		                
+                        <tr><td class="Arial10Bold">CREDIT NOTE NO. : {{crnote.docno}}<div style="float:right;width:50%;">DATE OF ISSUE : {{crnote.ddocDate}}</div></td></tr>                        
+                        <tr><td class="Arial10Bold" style="border-top:solid 1px black;">Billed To</td></tr>		            
+		                <tr><td class="Arial10Bold">{{crnote.bpName}}</td></tr>
+		                <tr><td class="Arial10">{{crnote.bpAdd}}</td></tr>
+		                <tr><td class="Arial10">{% if crnote.bpAdd1 %} {{crnote.bpAdd1}} {% endif %}</td></tr>
+		                <tr><td class="Arial10">{{crnote.bpCity}}</td></tr>
+                        <tr><td class="Arial10">{{crnote.StateName}}&nbsp;&nbsp;&nbsp;PIN : {{crnote.bpZipCode}}</td></tr>
+                        <tr><td class="Arial10Bold">Place of Supply : {{crnote.placeSupply}}</td></tr>		                                        
+                        <tr><td class="Arial10Bold">GSTN No. : {% if crnote.bpGSTIN %} {{crnote.bpGSTIN}} {% endif %}</td></tr>
+                        <tr><td class="Arial10Bold" style="border-top:solid 1px black;">ACK No. : {% if crnote.ackno %} {{crnote.ackno}} {% endif %}<div style="float:right;width:50%;">ACK Date : {% if crnote.ackdate %} {{crnote.ackdate}} {% endif %}</div></td></tr>
+                        <tr><td class="Arial10Bold">IRN : {% if crnote.irn %} {{crnote.irn}} {% endif %}</td></tr>
+                        <tr><td class="Arial10Bold" style="border-top:solid 1px black;">REASON : {{crnote.drDescription}} &emsp; CR. AGAINST : {{crnote.daDescription}}</td></tr>
+		                <tr><td class="Arial10">AGAINST INVOICE NO. : <div style="float:right;width:50%;">INVOICE DATE : </div></td></tr>
+		            </table>
+	                </td>
+	                <td style="width:30%;border-left:solid 1px black;" valign="top">
+	                <table class="Arial10" cellspacing="0" cellpadding="0" border="0" width="100%">
+                    <tr>
+                    <td>
+                        {% if crnote.sqrcode %} 
+                        <img src="http://mapp.rcinz.com/get-qr/?data={{crnote.sqrcode}}" width="250" height="250" />                  
+                        {% endif %}
+                    </td>
+                    </tr>
+		            </table>
+		            </td>
+	            </tr>
+	         </table> 	    
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <table class="Arial10" cellspacing="0" cellpadding="0" width="100%">
+                <tr style="font-family:Arial; font-size: 8pt; font-weight:bold;">
+                    <td valign="top" style="border-bottom:solid 1px black;border-top:solid 1px black;">S.NO.</td>
+                    <td valign="top" style="border-bottom:solid 1px black;border-top:solid 1px black; border-left:solid 1px black;">ITEM CODE</td>
+                    <td valign="top" style="border-bottom:solid 1px black;border-top:solid 1px black; border-left:solid 1px black;">HSN CODE</td>
+                    <td valign="top" style="border-bottom:solid 1px black;border-top:solid 1px black; border-left:solid 1px black;">DESCRIPTION</td>
+                    <td valign="top" style="border-bottom:solid 1px black;border-top:solid 1px black; border-left:solid 1px black; text-align:center;">QTY</td>
+                    <td valign="top" style="border-bottom:solid 1px black;border-top:solid 1px black; border-left:solid 1px black; text-align:center;">UNIT</td>	            
+                    <td valign="top" style="border-bottom:solid 1px black;border-top:solid 1px black; border-left:solid 1px black; text-align:center;">RATE</td>	            
+                    <td valign="top" style="border-bottom:solid 1px black;border-top:solid 1px black; border-left:solid 1px black; text-align:center;">TAXABLE<br />VALUE</td>
+                    <td valign="top" style="border-bottom:solid 1px black;border-top:solid 1px black; border-left:solid 1px black; text-align:center;">GST<br />RATE</td>            
+                    <td valign="top" style="border-bottom:solid 1px black;border-top:solid 1px black; border-left:solid 1px black; text-align:center;">GST<br />VALUE</td>
+                </tr>
+                {% for items in crnote.itemList %}
+                <tr>
+                    <td style="width:30px;">&nbsp;{% if items.matno %} {{forloop.counter}} {% else %} &nbsp; {% endif %}</td>
+                    <td style="border-left:solid 1px black;">{{items.matno}}</td>
+                    <td style="border-left:solid 1px black;">{{items.hsnCode}}</td>
+                    <td class="Arial8" style="border-left:solid 1px black;">{{items.naration}}</td> 
+                    <td style="border-left:solid 1px black;" align="right">{{items.qty|floatformat:2}}</td>
+                    <td style="border-left:solid 1px black;" align="center">{{items.unit}}</td>                
+                    <td style="border-left:solid 1px black;" align="right">{{items.rate|floatformat:2}}</td>
+                    <td style="border-left:solid 1px black;" align="right">{{items.amount|floatformat:2}}</td>
+                    <td style="border-left:solid 1px black;" align="right">{{items.rgst|floatformat:2}}</td>
+                    <td style="border-left:solid 1px black;" align="right">{{items.gstAmount|floatformat:2}}</td>                
+                </tr> 
+                {% endfor %}
+                <!-- <tr>
+                    <td style="width:30px;">&nbsp;</td>
+                    <td style="border-left:solid 1px black;">&nbsp;</td>
+                    <td style="border-left:solid 1px black;">&nbsp;</td>
+                    <td style="border-left:solid 1px black;">&nbsp;</td> 
+                    <td style="border-left:solid 1px black;">&nbsp;</td>
+                    <td style="border-left:solid 1px black;">&nbsp;</td>                                
+                    <td style="border-left:solid 1px black;" align="right">&nbsp;</td>
+                    <td style="border-left:solid 1px black;" align="right">&nbsp;</td>
+                    <td style="border-left:solid 1px black;" align="right">&nbsp;</td>
+                    <td style="border-left:solid 1px black;" align="right">&nbsp;</td>                
+                </tr>  -->
+                <tr class="Arial10Bold">
+                    <td valign="top" colspan="4" style="border-bottom:solid 1px black;border-top:solid 1px black;">TOTAL ASSESSABLE VALUE</td>
+                    <td valign="top" align="right" style="border-bottom:solid 1px black;border-top:solid 1px black; border-left:solid 1px black;">{{crnote.sumqty|floatformat:2}}</td>
+                    <td valign="top" colspan="2" align="right" style="border-bottom:solid 1px black;border-top:solid 1px black; border-left:solid 1px black;">&nbsp;</td>
+                    <td valign="top" align="right" style="border-bottom:solid 1px black;border-top:solid 1px black; border-left:solid 1px black;">{{crnote.sumamount|floatformat:2}}</td>
+                    <td valign="top" align="right" style="border-bottom:solid 1px black;border-top:solid 1px black; border-left:solid 1px black;">&nbsp;</td>
+                    <td valign="top" align="right" style="border-bottom:solid 1px black;border-top:solid 1px black; border-left:solid 1px black;">{{crnote.sumgstAmount|floatformat:2}}</td>
+                </tr>
+                <!-- <tr class="Arial10Bold">
+                    <td valign="top" colspan="6" style="border-bottom:solid 1px black;">&nbsp;</td>
+                    <td valign="top" colspan="3" style="border-bottom:solid 1px black;">TOTAL GST AMOUNT </td>
+                    <td valign="top" align="right" style="border-bottom:solid 1px black; border-left:solid 1px black;">&nbsp;</td>
+                </tr> -->
+                <tr class="Arial10Bold">
+                    <td valign="top" colspan="6">{{crnote.num2words}} Only.</td>
+                    <td valign="top" colspan="3">TOTAL VALUE</td>
+                    <td valign="top" align="right" style="border-left:solid 1px black;">{{crnote.sumtamount|floatformat:2}}</td>
+                </tr>
+            </table> 
+            </td> 
+        </tr>
+        <tr>
+        <td>
+            <table class="Arial10" cellspacing="0" cellpadding="0" border="0" width="100%">
+            <tr class="Arial10Bold">
+                <td style="border-top:1px solid black; border-right:1px solid black;" colspan="3">HSN CODE & GST SUMMARY</td>
+                <td style="border-top:1px solid black; border-right:1px solid black;" align="center" colspan="2">IGST</td>
+                <td style="border-top:1px solid black; border-right:1px solid black;" align="center" colspan="2">CGST</td>
+                <td style="border-top:1px solid black;" align="center" colspan="2">SGST</td>
+            </tr>
+            <tr class="Arial10Bold">
+                <td style="border-top:1px solid black; border-right:1px solid black;">HSN CODE</td>
+                <td style="border-top:1px solid black; border-right:1px solid black;" align="right">QTY</td>
+                <td style="border-top:1px solid black; border-right:1px solid black;" align="right">TAXABLE VALUE</td>
+                <td style="border-top:1px solid black; border-right:1px solid black;" align="right">RATE</td>
+                <td style="border-top:1px solid black; border-right:1px solid black;" align="right">AMOUNT</td>
+                <td style="border-top:1px solid black; border-right:1px solid black;" align="right">RATE</td>
+                <td style="border-top:1px solid black; border-right:1px solid black;" align="right">AMOUNT</td>
+                <td style="border-top:1px solid black; border-right:1px solid black;" align="right">RATE</td>
+                <td style="border-top:1px solid black;" align="right">AMOUNT</td>
+            </tr>
+    
+                {% for hsn in crnote.hsnList %}      
+                <tr>
+                    <td style="border-top:1px solid black; border-right:1px solid black;">{{hsn.hsnCode}}</td>
+                    <td style="border-top:1px solid black; border-right:1px solid black;" align="right">{{hsn.sumQty|floatformat:2}}</td>
+                    <td style="border-top:1px solid black; border-right:1px solid black;" align="right">{{hsn.sumTaxableAmount|floatformat:2}}</td>
+                    <td style="border-top:1px solid black; border-right:1px solid black;" align="right">{{hsn.igstRate|floatformat:2}}</td>
+                    <td style="border-top:1px solid black; border-right:1px solid black;" align="right">{{hsn.sumigstAmount|floatformat:2}}</td>
+                    <td style="border-top:1px solid black; border-right:1px solid black;" align="right">{{hsn.cgstRate|floatformat:2}}</td>
+                    <td style="border-top:1px solid black; border-right:1px solid black;" align="right">{{hsn.sumCgstAmount|floatformat:2}}</td>
+                    <td style="border-top:1px solid black; border-right:1px solid black;" align="right">{{hsn.sgstRate|floatformat:2}}</td>
+                    <td style="border-top:1px solid black;" align="right">{{hsn.sumSgstAmount|floatformat:2}}</td>
+                </tr> 
+                {% endfor %}         
+            <tr class="Arial10Bold">
+                <td style="border-top:1px solid black; border-right:1px solid black;">TOTAL</td>
+                <td style="border-top:1px solid black; border-right:1px solid black;" align="right">{{crnote.sumqty}}</td>
+                <td style="border-top:1px solid black; border-right:1px solid black;" align="right">{{crnote.sumamount}}</td>
+                <td style="border-top:1px solid black; border-right:1px solid black;" align="right">&nbsp;</td>
+                <td style="border-top:1px solid black; border-right:1px solid black;" align="right">{{crnote.igstValue}}</td>
+                <td style="border-top:1px solid black; border-right:1px solid black;" align="right">&nbsp;</td>
+                <td style="border-top:1px solid black; border-right:1px solid black;" align="right">{{crnote.cgstValue}}</td>
+                <td style="border-top:1px solid black; border-right:1px solid black;" align="right">&nbsp;</td>
+                <td style="border-top:1px solid black;" align="right">{{crnote.sgstValue}}</td>
+            </tr>
+                <tr>
+                    <td style="border-top:1px solid black;">&nbsp;</td>
+                    <td style="border-top:1px solid black;" align="right">&nbsp;</td>
+                    <td style="border-top:1px solid black;" align="right">&nbsp;</td>
+                    <td style="border-top:1px solid black;" align="right">&nbsp;</td>
+                    <td style="border-top:1px solid black;" align="right">&nbsp;</td>
+                    <td style="border-top:1px solid black;" align="right">&nbsp;</td>
+                    <td style="border-top:1px solid black;" align="right">&nbsp;</td>
+                    <td style="border-top:1px solid black;" align="right">&nbsp;</td>
+                    <td style="border-top:1px solid black;" align="right">&nbsp;</td>
+                </tr>     
+            </table>    
+        </td>
+        </tr>
+        <tr>
+        <td>
+            <table class="Arial10" cellspacing="0" cellpadding="0" border="0" width="100%">
+            <tr>
+            <td class="Arial8" style="width:500px;" valign="middle">E. & O. E.<br />- All disputes subject to Delhi Court's Jurisdiction.<br />- No Complaint shall be entertained after seven days of receipt of goods/credit note.<br /></span></td>
+            <td class="Arial10Bold" style="width:280px; text-align:right; padding-right:10px;" valign="middle">For {{crnote.legalName}}</td>
+            </tr>
+            <tr>
+            <td class="Arial8" style="width:500px; height:50px;" valign="bottom">&nbsp;</td>
+            <td style="width:280px; height:50px; text-align:right; padding-right:10px;font-weight: bold;" valign="bottom">Authorised Signatory</td>
+            </tr>
+            </table>
+        </td>
+        </tr>
+</td>
+</tr>
+</table>
+</body> 
+</html>

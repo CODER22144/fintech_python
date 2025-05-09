@@ -26,4 +26,16 @@ def getShippingReport(request):
         return Response(UNSUCCESSFUL_REQUEST, status=400)
     except Exception as e:
         return Response(generate_error_message(e), status=500, exception=e)
-    
+
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def getShippingByBpCode(request, bpCode):
+    try:
+        cursor = connections[request.user.cid.cid].cursor()
+        cursor.execute(f"EXEC [mastcode].[uspGetBPShippingByBpCode] %s",(bpCode,))
+        json_data = ConvertToJson(cursor)
+        cursor.close()
+        return JsonResponse(json_data, safe=False)        
+    except Exception as e:
+        return Response(generate_error_message(e), status=500, exception=e)

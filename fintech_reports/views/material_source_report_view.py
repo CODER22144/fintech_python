@@ -27,3 +27,20 @@ def getMaterialSourceReport(request):
         return Response(UNSUCCESSFUL_REQUEST, status=400)
     except Exception as e:
         return Response(generate_error_message(e), status=500, exception=e)
+    
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def getMaterialSourceExport(request):
+    try:
+        serializer = MaterialSourceRepSerializer(data=request.data)
+        if(serializer.is_valid()):
+            cursor = connections[request.user.cid.cid].cursor()
+            cursor.execute(f"EXEC [purchase].[uspGetMaterialSourceExport] %s",(json.dumps(serializer.data),))
+            json_data = ConvertToJson(cursor)
+            cursor.close()
+            return JsonResponse(json_data, safe=False)
+        UNSUCCESSFUL_REQUEST['message'] = serializer.errors
+        return Response(UNSUCCESSFUL_REQUEST, status=400)
+    except Exception as e:
+        return Response(generate_error_message(e), status=500, exception=e)

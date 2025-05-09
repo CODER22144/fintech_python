@@ -8,6 +8,7 @@ from CaFinTech.errors import UNSUCCESSFUL_REQUEST
 from CaFinTech.utility import generate_error_message
 import json
 
+from cafintech_api.serializers.edit_material_serializer import EditMaterialSerializer
 from cafintech_api.serializers.material_serializer import MaterialSerializer
 from cafintech_api.views.bill_receipt_view import ConvertToJson
 
@@ -175,3 +176,18 @@ def getAcGroups(request):
         return JsonResponse(json_data, safe=False)
     except Exception as e:
         return Response(data=generate_error_message(e), status=500, exception=e)
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def editMaterialBulk(request):
+    try:
+        serializer = EditMaterialSerializer(data=request.data, many=True)
+        if(serializer.is_valid()):
+            cursor = connections[request.user.cid.cid].cursor()
+            cursor.execute(f"EXEC [purchase].[uspAddMaterialBulkUpdate] %s",(json.dumps(serializer.data),))
+            cursor.close()
+            return Response(serializer.data)
+        UNSUCCESSFUL_REQUEST['message'] = serializer.errors
+        return Response(UNSUCCESSFUL_REQUEST, status=400)
+    except Exception as e:
+        return Response(generate_error_message(e), status=500, exception=e)

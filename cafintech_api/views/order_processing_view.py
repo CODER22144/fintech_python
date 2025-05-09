@@ -143,7 +143,7 @@ def addOrderApRequest(request):
 def GetOrderApRequestPending(request):
     try:
         cursor = connections[request.user.cid.cid].cursor()
-        cursor.execute(f"exec [sales].[uspGetOrderApRequestPending] %s,%s",(request.user.userId, request.user.roles))
+        cursor.execute(f"exec [sales].[uspGetOrderApRequestPending] %s,%s",(request.user.userId, request.user.roles.role_id))
         json_data = ConvertToJson(cursor)
         return JsonResponse(json_data, safe=False)
     except Exception as e:
@@ -154,7 +154,7 @@ def GetOrderApRequestPending(request):
 def GetOrderApprovalPending(request):
     try:
         cursor = connections[request.user.cid.cid].cursor()
-        cursor.execute(f"exec [sales].[uspGetOrderApprovalPending] %s,%s",(request.user.userId, request.user.roles))
+        cursor.execute(f"exec [sales].[uspGetOrderApprovalPending] %s,%s",(request.user.userId, request.user.roles.role_id))
         json_data = ConvertToJson(cursor)
         return JsonResponse(json_data, safe=False)
     except Exception as e:
@@ -165,7 +165,7 @@ def GetOrderApprovalPending(request):
 def GetOrderBilledPending(request):
     try:
         cursor = connections[request.user.cid.cid].cursor()
-        cursor.execute(f"exec [sales].[uspGetOrderBilledPending] %s,%s",(request.user.userId, request.user.roles))
+        cursor.execute(f"exec [sales].[uspGetOrderBilledPending] %s,%s",(request.user.userId, request.user.roles.role_id))
         json_data = ConvertToJson(cursor)
         return JsonResponse(json_data, safe=False)
     except Exception as e:
@@ -176,7 +176,7 @@ def GetOrderBilledPending(request):
 def GetOrderGoodsDispatchPending(request):
     try:
         cursor = connections[request.user.cid.cid].cursor()
-        cursor.execute(f"exec [sales].[uspGetOrderGoodsDispatchPending] %s,%s",(request.user.userId, request.user.roles))
+        cursor.execute(f"exec [sales].[uspGetOrderGoodsDispatchPending] %s,%s",(request.user.userId, request.user.roles.role_id))
         json_data = ConvertToJson(cursor)
         return JsonResponse(json_data, safe=False)
     except Exception as e:
@@ -187,7 +187,7 @@ def GetOrderGoodsDispatchPending(request):
 def GetOrderTransportPending(request):
     try:
         cursor = connections[request.user.cid.cid].cursor()
-        cursor.execute(f"exec [sales].[uspGetOrderTransportPending] %s,%s",(request.user.userId, request.user.roles))
+        cursor.execute(f"exec [sales].[uspGetOrderTransportPending] %s,%s",(request.user.userId, request.user.roles.role_id))
         json_data = ConvertToJson(cursor)
         return JsonResponse(json_data, safe=False)
     except Exception as e:
@@ -198,7 +198,7 @@ def GetOrderTransportPending(request):
 def GetOrderDeliveryPending(request):
     try:
         cursor = connections[request.user.cid.cid].cursor()
-        cursor.execute(f"exec [sales].[uspGetOrderDeliveryPending] %s,%s",(request.user.userId, request.user.roles))
+        cursor.execute(f"exec [sales].[uspGetOrderDeliveryPending] %s,%s",(request.user.userId, request.user.roles.role_id))
         json_data = ConvertToJson(cursor)
         return JsonResponse(json_data, safe=False)
     except Exception as e:
@@ -264,7 +264,7 @@ def getVehicleType(request):
 def getOrderHoldDenied(request):
     try:
         cursor = connections[request.user.cid.cid].cursor()
-        cursor.execute(f"exec [sales].[uspGetOrderHoldDenied] %s,%s",(request.user.userId, request.user.roles))
+        cursor.execute(f"exec [sales].[uspGetOrderHoldDenied] %s,%s",(request.user.userId, request.user.roles.role_id))
         json_data = ConvertToJson(cursor)
         return JsonResponse(json_data, safe=False)
     except Exception as e:

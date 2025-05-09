@@ -24,6 +24,14 @@ from .views import shipping_report_view as shrv
 from .views import bank_statement_view as bksv
 from .views import debit_note_report_view as dbnrv
 from .views import material_stock_view as matsv
+from .views import payment_inward_outward_report_view as piorv
+from .views import req_issue_slip as risv
+from .views import order_balance_report_view as obrv
+from .views import transporter_slip_view as transv
+from .views import cr_note_report as crnrv
+from .views import tds_report_view as tdsrv
+from .views import dbnote_rep as dbsnrv
+from .views import gst_return_view as gstv
 
 urlpatterns = [
 
@@ -44,6 +52,9 @@ urlpatterns = [
     re_path(r"^sales-order-report/$", sorv.getSalesOrderReport),
     re_path(r"^payment-pending/$", sorv.getPaymentPending),
     re_path(r"^get-sales-report/$", sorv.getSalesReport),
+    re_path(r"^order-status/$", sorv.getOrderStatus),
+    re_path(r"^order-clear-value/$", sorv.getOrderClearValue),
+    re_path(r"^order-slip/(?P<orderId>\d+)/(?P<cid>\w+)/$", sorv.getOrderSlip),
     re_path(r"^get-sales-order/(?P<orderId>\d+)/(?P<cid>\w+)/$", sorv.getSaleOrderByOrderId),
     re_path(r"^get-sales-order-pdf/(?P<orderId>\d+)/(?P<cid>\w+)/$", sorv.convertSaleOrderToPdf),
 
@@ -54,6 +65,7 @@ urlpatterns = [
 
     # Material Source
     re_path(r"^get-material-source-report/$", msrv.getMaterialSourceReport),
+    re_path(r"^get-mat-source-export/$", msrv.getMaterialSourceExport),
 
     # PAYMENT
     re_path(r"^get-payment-bill-pending/$", prv.getBillPending),
@@ -92,6 +104,7 @@ urlpatterns = [
 
     # Business Partner Sale Discount
     re_path(r"^get-shipping-report/$", shrv.getShippingReport),
+    re_path(r"^get-ship/(?P<bpCode>\w+)/$", shrv.getShippingByBpCode),
 
     # BANK STATEMENT
     re_path(r"^bank-statements/$", bksv.generateBankStatements),
@@ -105,11 +118,47 @@ urlpatterns = [
     # Material Stock Report
     re_path(r"^mat-stock-report/$", matsv.getMaterialStockReport),
 
+    re_path(r"^payment-inward-report/$", piorv.getPaymentInwardReport),
+    re_path(r"^payment-outward-report/$", piorv.getPaymentOutwardReport),
+
+    re_path(r"^req-slip/(?P<reqId>\d+)/(?P<cid>\w+)/$", risv.getReqSlip),
+
+    # ORDER BALANCE
+    re_path(r"^order-balance/$", obrv.getOrderBalanceReport),
+
+    # TRANSPORTER AND ACKNOWLEDGEMENT SLIP
+    re_path(r"^transporter-slip/(?P<inv>\d+)/(?P<cid>\w+)/$", transv.getTransporterSlip),
+    re_path(r"^ack-slip/(?P<inv>\d+)/(?P<cid>\w+)/$", transv.getAckSlip),
+
+    # CRNOTE REPORT
+    re_path(r"^cr-note/(?P<docno>\d+)/(?P<cid>\w+)/$", crnrv.getCrNoteFormat),
+    re_path(r"^get-ecr-note/$", crnrv.getECrNote),
+    re_path(r"^add-einvoice-to-crnote/$", crnrv.addEinvoiceToCrNote),
+
+    # TDS REPORT
+    re_path(r"^get-tds-report/$", tdsrv.getTdsReport),
+
+    # DEBIT NOTE SALE REPORT
+    re_path(r"^sale-db-note/(?P<docno>\d+)/(?P<cid>\w+)/$", dbsnrv.getDbSalesnoteSaleFormat),
+    re_path(r"^debit-note/(?P<docno>\d+)/(?P<cid>\w+)/$", dbsnrv.getDebitNoteFormat),
+    re_path(r"^prtax-invoice/(?P<docno>\d+)/(?P<cid>\w+)/$", dbsnrv.getPRTaxInvoiceFormat),
+
+    re_path(r"^get-edb-note/$", dbsnrv.getEDbNote),
+    re_path(r"^get-edb-sale-note/$", dbsnrv.getEDbSaleNote),
+    re_path(r"^get-epr-tax-invoice/$", dbsnrv.getEPRTaxInvoice),
+
+    # GST RETURN
+    re_path(r"^get-b2b/$", gstv.getB2b),
+    re_path(r"^get-b2c/$", gstv.getB2c),
+    re_path(r"^get-b2Cl/$", gstv.getB2Cl),
+    re_path(r"^get-gst-hsn/$", gstv.getGstHsnSummary),
+    re_path(r"^get-crdr-note/$", gstv.getCrDrNote),
+    re_path(r"^get-doc-type/$", gstv.getDocType),
+
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 # url(r'^edit-item/(?P<pk>[\w\-]+)/$', views.EditItem),
-
 
 
 

@@ -73,7 +73,7 @@ def getGrByGrno(request, grno):
 def deleteGr(request):
     try:
         cursor = connections[request.user.cid.cid].cursor()
-        cursor.execute(f"exec [docen].[uspDeleteGr] %s,%s", (request.data['grno'], request.user.roles))
+        cursor.execute(f"exec [docen].[uspDeleteGr] %s,%s", (request.data['grno'], request.user.roles.role_id))
         cursor.close()
         return Response(data={"status" : "OK"}, status=204)
     except Exception as e:

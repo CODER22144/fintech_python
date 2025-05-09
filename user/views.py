@@ -1,6 +1,6 @@
 from django.db.models.functions import Concat
 from django.db.models import Value
-from CaFinTech.errors import AUTHORIZATION_ERROR
+from CaFinTech.errors import AUTHORIZATION_ERROR, UNSUCCESSFUL_REQUEST
 from CaFinTech.utility import generate_error_message
 from user.serializers import user_serializer
 from .models import User
@@ -13,6 +13,10 @@ from django.contrib.auth.hashers import make_password
 import pyotp
 from django_otp.plugins.otp_totp.models import TOTPDevice
 from rest_framework import status
+from django.contrib.auth.tokens import default_token_generator
+from django.core.mail import send_mail
+
+
 
 # API
 @api_view(["GET"])
@@ -111,3 +115,45 @@ def register_2fa_device(request):
         "otp_auth_url": otp_auth_url,
         "secret_key": totp_device.secret  # Optional, for manual entry
     }, status=status.HTTP_201_CREATED)
+
+@api_view(['POST'])
+def send_verification_email(request):
+    try:
+        usr = User.objects.get(email=request.data['email'])
+
+        if usr is None:
+            UNSUCCESSFUL_REQUEST['message'] = 'No User found by email: ' + request.data['email']
+            return Response(data=UNSUCCESSFUL_REQUEST, status=UNSUCCESSFUL_REQUEST['status_code'])
+        
+        token = default_token_generator.make_token(usr)
+
+        send_mail(
+        subject='Email Verification',
+        message=f'Please note the verification Token : {token}',
+        from_email='heroup534@gmail.com',
+        recipient_list=[usr.email],
+        fail_silently=False,
+        )
+
+        return Response(data= {"status_code" : 200, "message" : "User verification token is generated please check your mail."}, status=201)
+
+    except Exception as e:
+        return Response(data=generate_error_message(e), status=400, exception=e)
+    
+@api_view(['POST'])
+def updatePassword(request):
+    user = User.objects.get(email=request.data['email'])
+
+    if not default_token_generator.check_token(user, request.data['token']):
+        UNSUCCESSFUL_REQUEST['message'] = 'Invalid Token'
+        return Response(data=UNSUCCESSFUL_REQUEST, status=UNSUCCESSFUL_REQUEST['status_code'])
+    
+    if user is None:
+        UNSUCCESSFUL_REQUEST['message'] = 'No User found by email: ' + request.data['email']
+        return Response(data=UNSUCCESSFUL_REQUEST, status=UNSUCCESSFUL_REQUEST['status_code'])
+    
+    new_pass = make_password(request.data['new_password'])
+    user.password = new_pass
+    user.save()
+
+    return Response(data={"message" : "Password reset completed"}, status=200)

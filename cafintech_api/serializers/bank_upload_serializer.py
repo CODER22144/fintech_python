@@ -8,6 +8,6 @@ class BankUploadSerializer(serializers.Serializer):
     withdrawal = serializers.DecimalField(max_digits=12, decimal_places=2, allow_null=True, required=False)
     deposit = serializers.DecimalField(max_digits=12, decimal_places=2, allow_null=True, required=False)
     bankCode = serializers.CharField(max_length=10)
-    lcode = serializers.CharField(max_length=10)
+    lcode = serializers.CharField(max_length=10, allow_null=True, required=False)
     postMethod = serializers.CharField(max_length=1)
     naration = serializers.CharField(max_length=100, allow_null=True, required=False)

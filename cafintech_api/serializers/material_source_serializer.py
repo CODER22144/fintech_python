@@ -13,3 +13,5 @@ class MaterialSourceSerializer(serializers.Serializer):
    moq = serializers.IntegerField()
    leadTime = serializers.IntegerField()
    bpRating = serializers.IntegerField()
+   puUnit = serializers.CharField(max_length=10)
+

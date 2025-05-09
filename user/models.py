@@ -34,7 +34,7 @@ class User(AbstractBaseUser):
     first_name = models.CharField(max_length=100)
     last_name = models.CharField(max_length=100)
     email = models.EmailField(verbose_name='email', max_length=60)
-    roles = models.CharField(max_length=2, default="", null=True, blank=True)
+    roles = models.ForeignKey('Roles', on_delete=models.CASCADE, verbose_name="roles", default='US')
     # cid = models.CharField(default=None, null=True, blank=True, max_length=2)
     cid = models.ForeignKey('Company', on_delete=models.CASCADE, verbose_name="cid", default='OW')
     date_joined = models.DateTimeField(verbose_name='date joined', auto_now_add=True)
@@ -72,7 +72,8 @@ class User(AbstractBaseUser):
             "first_name" : self.first_name,
             "last_name" : self.last_name,
             "email" : self.email,
-            "roles" : self.roles,
+            "roles" : self.roles.role_id,
+            "roles_description" : self.roles.role_description,
             "cid" : self.cid.cid,
             "company_name" : self.cid.companyName,
             "company_phone" : self.cid.phoneNumber,
@@ -85,9 +86,14 @@ class User(AbstractBaseUser):
             "is_superuser" : self.is_superuser
         }
 
+
 class Company(models.Model):
     cid = models.CharField(primary_key=True, max_length=2)
     companyName = models.CharField(max_length=100)
     phoneNumber = models.CharField(max_length=10, unique=True)
     logo = models.CharField(max_length=500, default='')
+
+class Roles(models.Model):
+    role_id = models.CharField(primary_key=True, max_length=2)
+    role_description = models.CharField(max_length=30)
 

@@ -1,0 +1,92 @@
+﻿<html xmlns="http://www.w3.org/1999/xhtml">
+<head id="Head1" runat="server">
+    <title>Acknowledgement Slip</title>
+    <link href="http://mapp.rcinz.com/static/css/main.css" type="text/css" rel="STYLESHEET" />
+  <link href="http://mapp.rcinz.com/static/css/tab.css" type="text/css" rel="STYLESHEET" />  
+</head>
+<body style="background-color: White;">
+    <table class="Arial12" cellpadding="0" cellspacing="0" border="0" width="790px" style="border-collapse: collapse;">
+        <tr class="prmRepMainHead">
+            <td align="center">ACKNOWLEDGEMENT SLIP</td>
+        </tr>
+        <tr>
+            <td>
+                <img src="http://mapp.rcinz.com{{ack.compLogo}}" width="780" height="70" alt="" />
+
+            </td>
+        </tr>
+
+        <tr>
+            <td class="Arial12Bold" valign="middle" style="height:30px;">Billing Address</td>
+        </tr>
+        <tr>
+            <td class="Arial12Bold">{% if ack.custName %} {{ack.custName}} {% endif %} &nbsp;</td>
+        </tr>
+        <tr>
+            <td>{% if ack.custAdd %} {{ack.custAdd}} {% endif %} &nbsp;</td>
+        </tr>
+        <tr>
+            <td>{% if ack.custAdd1 %} {{ack.custAdd1}} {% endif %} &nbsp;</td>
+        </tr>
+        <tr>
+            <td>{% if ack.custCity %} {{ack.custCity}} {% endif %} &nbsp;</td>
+        </tr>
+        <tr>
+            <td>{% if ack.custStateName %} {{ack.custStateName}} {% endif %} &nbsp; - {% if ack.custZipCode %} {{ack.custZipCode}} {% endif %} &nbsp;</td>
+        </tr>
+        <tr>
+            <td>GST NO. : {% if ack.custGSTIN %} {{ack.custGSTIN}} {% endif %} &nbsp;</td>
+        </tr>
+        <tr>
+            <td class="Arial12Bold" valign="middle" style="height:30px;">Shipping Address</td>
+        </tr>
+        <tr>
+            <td class="Arial12Bold">{% if ack.shipName %} {{ack.shipName}} {% endif %} &nbsp;</td>
+        </tr>
+        <tr>
+            <td>{% if ack.shipAdd %} {{ack.shipAdd}} {% endif %} &nbsp;</td>
+        </tr>
+        <tr>
+            <td>{% if ack.shipAdd1 %} {{ack.shipAdd1}} {% endif %} &nbsp;</td>
+        </tr>
+        <tr>
+            <td>{% if ack.shipCity %} {{ack.shipCity}} {% endif %} &nbsp;</td>
+        </tr>
+        <tr>
+            <td>{% if ack.shipStateName %} {{ack.shipStateName}} - {% endif %} &nbsp; {% if ack.shipZipCode %} {{ack.shipZipCode}} {% endif %} &nbsp;</td>
+        </tr>
+        <tr>
+            <td>&nbsp;&nbsp;</td>
+        </tr>
+        <tr>
+            <td>Package {% if ack.pkt %} {{ack.pkt}} {% endif %} &nbsp;</td>
+        </tr>
+        <tr>
+            <td>Qunatity {% if ack.sumqty %} {{ack.sumqty}} {% endif %} &nbsp;</td>
+        </tr>
+        <tr class="Arial12Bold">     
+            <td>Value (Rs.) : {% if ack.sumtAmount %} {{ack.sumtAmount}} {% endif %} &nbsp;</td>
+        </tr>
+        <tr class="Arial12">
+            <td valign="bottom">
+                <br />
+                <br />
+                I/We __________________________________________________________________________
+                <br />
+                received material with thanks vide Invoice No. {{ack.invNo}} Dated {{ack.dtDate}} of Values Rs. &nbsp;{{ack.sumtAmount}}<br />
+                <br />
+            </td>
+        </tr>
+        <tr class="Arial10Bold">
+            <td colspan="2" style="height: 80px">
+                <br />
+                <br />
+                Receiver Signature
+                <br />
+                With Company Stamp & Date
+
+            </td>
+        </tr>
+</table> 
+</body>
+</html>

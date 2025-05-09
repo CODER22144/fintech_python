@@ -128,7 +128,7 @@ DATABASES = {
             'driver': 'ODBC Driver 17 for SQL Server',
        }
     },
-    'SL': {
+    'SU': {
         'ENGINE': 'mssql',
         'NAME': 'SLRemoteMDb',
         'HOST': '36.255.3.34,15666',
@@ -138,7 +138,7 @@ DATABASES = {
             'driver': 'ODBC Driver 17 for SQL Server',
        }
     },
-    'ST': {
+    'SR': {
         'ENGINE': 'mssql',
         'NAME': 'STRemoteMDb',
         'HOST': '36.255.3.34,15666',
@@ -161,6 +161,76 @@ DATABASES = {
     'SW': {
         'ENGINE': 'mssql',
         'NAME': 'SWLiveDb',
+        'HOST': '36.255.3.34,15666',
+        'USER': 'usr365',
+        'PASSWORD': 'Pmc&$!@0011733',
+        'OPTIONS': {
+            'driver': 'ODBC Driver 17 for SQL Server',
+       }
+    },
+    'EM': {
+        'ENGINE': 'mssql',
+        'NAME': 'EMLiveDb',
+        'HOST': '36.255.3.34,15666',
+        'USER': 'usr365',
+        'PASSWORD': 'Pmc&$!@0011733',
+        'OPTIONS': {
+            'driver': 'ODBC Driver 17 for SQL Server',
+       }
+    },
+    'EL': {
+        'ENGINE': 'mssql',
+        'NAME': 'ELLiveDb',
+        'HOST': '36.255.3.34,15666',
+        'USER': 'usr365',
+        'PASSWORD': 'Pmc&$!@0011733',
+        'OPTIONS': {
+            'driver': 'ODBC Driver 17 for SQL Server',
+       }
+    },
+    'ST': {
+        'ENGINE': 'mssql',
+        'NAME': 'STLiveDb',
+        'HOST': '36.255.3.34,15666',
+        'USER': 'usr365',
+        'PASSWORD': 'Pmc&$!@0011733',
+        'OPTIONS': {
+            'driver': 'ODBC Driver 17 for SQL Server',
+       }
+    },
+    'SS': {
+        'ENGINE': 'mssql',
+        'NAME': 'SSLiveDb',
+        'HOST': '36.255.3.34,15666',
+        'USER': 'usr365',
+        'PASSWORD': 'Pmc&$!@0011733',
+        'OPTIONS': {
+            'driver': 'ODBC Driver 17 for SQL Server',
+       }
+    },
+    'SL': {
+        'ENGINE': 'mssql',
+        'NAME': 'SLLiveDb',
+        'HOST': '36.255.3.34,15666',
+        'USER': 'usr365',
+        'PASSWORD': 'Pmc&$!@0011733',
+        'OPTIONS': {
+            'driver': 'ODBC Driver 17 for SQL Server',
+       }
+    },
+    'SI': {
+        'ENGINE': 'mssql',
+        'NAME': 'SILiveDb',
+        'HOST': '36.255.3.34,15666',
+        'USER': 'usr365',
+        'PASSWORD': 'Pmc&$!@0011733',
+        'OPTIONS': {
+            'driver': 'ODBC Driver 17 for SQL Server',
+       }
+    },
+    'ED': {
+        'ENGINE': 'mssql',
+        'NAME': 'EMDLiveDb',
         'HOST': '36.255.3.34,15666',
         'USER': 'usr365',
         'PASSWORD': 'Pmc&$!@0011733',
@@ -221,7 +291,6 @@ LOGIN_REDIRECT_URL = '/'
 
 AUTH_USER_MODEL = 'user.User'
 DATA_UPLOAD_MAX_NUMBER_FIELDS = None
-APPEND_SLASH = True
 
 # OIDC_KEY = Path(str(BASE_DIR) + "/oidc.key").read_text()
 # OAUTH2_PROVIDER = {
@@ -270,3 +339,12 @@ SWAGGER_SETTINGS = {
 
 path_wkhtmltopdf = r'C:\\Program Files\wkhtmltopdf\bin\wkhtmltopdf.exe'
 File_Path = r'D:\sd\\fintech_api\\api\\CaFinTech\\docs\\docs'
+
+
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = 'heroup534@gmail.com'         # your Gmail address
+EMAIL_HOST_PASSWORD = 'kvcrdcswxtdxupcf'   # use App Password (not your Gmail password)
+
+X_FRAME_OPTIONS = 'ALLOW-FROM *'

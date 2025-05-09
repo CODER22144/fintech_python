@@ -1,0 +1,86 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head id="Head1" runat="server">
+    <title>MANUFACTURING INVOICE</title>
+    <link href="http://mapp.rcinz.com/static/css/main.css" type="text/css" rel="STYLESHEET" />
+  <link href="http://mapp.rcinz.com/static/css/tab.css" type="text/css" rel="STYLESHEET" />  
+</head>
+<body style="background-color: White;">
+    <table class="Arial12" cellpadding="0" cellspacing="1" border="1" width="500px" style="border-collapse: collapse;">
+        <tr class="prmRepMainHead">
+            <td colspan="2" align="center">TRANSPORTER SLIP</td>
+        </tr>
+        <tr class="Arial10Bold">
+            <td colspan="2" align="center" style="padding-top: 10px; padding-bottom: 10px;">
+                <img src="http://mapp.rcinz.com{{transport.compLogo}}" width="780" height="70" alt="" />
+            </td>
+        </tr>
+        <tr>
+            <td>&nbsp;</td>
+            <td align="center">Date :{{transport.dtDate}}</td>
+        </tr>
+        <tr class="Arial12Bold">
+            <td>Transporter Name</td>
+            <td>{{transport.carName}}</td>
+        </tr>
+        <tr>
+            <td rowspan="3" valign="top">Transporter Address</td>
+            <td>{{transport.carAdd}}</td>
+        </tr>
+        <tr>
+            <td>{% if transport.carAdd1 %} {{transport.carAdd1}} {% endif %}&nbsp;</td>
+        </tr>
+        <tr>
+            <td>{% if transport.carCity %} {{transport.carCity}} {% endif %}&nbsp;</td>
+        </tr>
+        <tr>
+            <td>Mode of Transport : </td>
+            <td>{% if transport.transDescription %} {{transport.transDescription}} {% endif %}&nbsp;</td>
+        </tr>
+        <tr>
+            <td>Freight : </td>
+            <td>{% if transport.mofDescription %} {{transport.mofDescription}} {% endif %}&nbsp;</td>
+        </tr>
+        <tr>
+            <td rowspan="6" valign="top">Party Name
+                <br />
+                Address</td>
+            <td class="Arial12Bold">{% if transport.custName %} {{transport.custName}} {% endif %}&nbsp;</td>
+        </tr>
+        <tr>
+            <td>{% if transport.custAdd %} {{transport.custAdd}} {% endif %}&nbsp;</td>
+        </tr>
+        <tr>
+            <td>{% if transport.custAdd1 %} {{transport.custAdd1}} {% endif %}&nbsp;</td>
+        </tr>
+        <tr>
+            <td>{% if transport.custStateName %} {{transport.custStateName}} {% endif %} - {% if transport.custZipCode %} {{transport.custZipCode}} {% endif %}&nbsp;</td>
+        </tr>
+        <tr>
+            <td>GST NO. : {% if transport.custGSTIN %} {{transport.custGSTIN}} {% endif %}&nbsp;</td>
+        </tr>
+        <tr class="Arial12Bold">
+            <td>Booking Station : {% if transport.custCity %} {{transport.custCity}} {% endif %}&nbsp;</td>
+        </tr>
+        <tr>
+            <td>Package</td>
+            <td>{% if transport.pkt %} {{transport.pkt}} {% endif %}&nbsp;</td>
+        </tr>
+        <tr>
+            <td>Invoice No.</td>
+            <td>{% if transport.invNo %} {{transport.invNo}} {% endif %}&nbsp;</td>
+        </tr>
+        <tr>
+            <td>Private Mark</td>
+            <td>{% if transport.privateMark %} {{transport.privateMark}} {% endif %}&nbsp;</td>
+        </tr>
+        <tr>
+            <td>Weight</td>
+            <td>{{transport.weight|floatformat:2}}</td>
+        </tr>
+        <tr class="Arial12Bold">
+            <td>Value (Rs.)</td>
+            <td>{{transport.sumtAmount}}</td>
+        </tr>
+    </table>
+</body>
+</html>

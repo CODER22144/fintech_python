@@ -146,3 +146,29 @@ def deletePartAssemblyProcessing(request, papId):
         return Response(data={"status" : "OK"}, status=204)
     except Exception as e:
         return Response(data=generate_error_message(e), status=500, exception=e)
+
+@api_view(["POST"])
+@permission_classes([IsAuthenticated])
+def getPartAssemblyReport(request):
+    try:
+        cursor = connections[request.user.cid.cid].cursor()
+        cursor.execute(f"exec [cost].[PartAssemblyReport] %s", (request.data['matno'],))
+        json_data = [data[0] for data in cursor.fetchall()]
+        json_data = "".join(json_data)
+        cursor.close()
+        return Response(json_data)
+    except Exception as e:
+        return Response(data=generate_error_message(e), status=500, exception=e)
+    
+
+@api_view(["GET"])
+@permission_classes([IsAuthenticated])
+def getWorkInProgress(request):
+    try:
+        cursor = connections[request.user.cid.cid].cursor()
+        cursor.execute(f"exec [inven].[wip]")
+        json_data = ConvertToJson(cursor)
+        cursor.close()
+        return JsonResponse(json_data, safe=False)
+    except Exception as e:
+        return Response(data=generate_error_message(e), status=500, exception=e)

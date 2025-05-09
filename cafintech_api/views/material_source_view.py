@@ -8,6 +8,7 @@ from CaFinTech.errors import UNSUCCESSFUL_REQUEST
 from CaFinTech.utility import generate_error_message
 import json
 
+from cafintech_api.serializers.edit_material_source_serializer import EditMaterialSourceSerializer
 from cafintech_api.serializers.material_source_serializer import MaterialSourceSerializer
 from cafintech_api.views.bill_receipt_view import ConvertToJson
 
@@ -48,6 +49,21 @@ def updateMaterialSource(request):
         if(serializer.is_valid()):
             cursor = connections[request.user.cid.cid].cursor()
             cursor.execute(f"EXEC [purchase].[uspUpdateMaterialSource] %s",(json.dumps(request.data),))
+            cursor.close()
+            return Response(serializer.data)
+        UNSUCCESSFUL_REQUEST['message'] = serializer.errors
+        return Response(UNSUCCESSFUL_REQUEST, status=400)
+    except Exception as e:
+        return Response(generate_error_message(e), status=500, exception=e)
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def editMaterialSourceBulk(request):
+    try:
+        serializer = EditMaterialSourceSerializer(data=request.data, many=True)
+        if(serializer.is_valid()):
+            cursor = connections[request.user.cid.cid].cursor()
+            cursor.execute(f"EXEC [purchase].[uspAddMaterialSourceBulkUpdate] %s",(json.dumps(serializer.data),))
             cursor.close()
             return Response(serializer.data)
         UNSUCCESSFUL_REQUEST['message'] = serializer.errors

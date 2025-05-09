@@ -32,7 +32,7 @@ def addOrderPackaging(request):
 def getOrderPackingPending(request):
     try:
         cursor = connections[request.user.cid.cid].cursor()
-        cursor.execute(f"exec [sales].[uspGetOrderPackingPending] %s,%s",(request.user.userId, request.user.roles))
+        cursor.execute(f"exec [sales].[uspGetOrderPackingPending] %s,%s",(request.user.userId, request.user.roles.role_id))
         json_data = ConvertToJson(cursor)
         return JsonResponse(json_data, safe=False)
     except Exception as e:

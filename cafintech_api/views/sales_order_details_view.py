@@ -42,7 +42,7 @@ def addSaleOrderDetails(request):
 def getShipping(request):
     try:
         cursor = connections[request.user.cid.cid].cursor()
-        cursor.execute(f"select shipCode, shipName from [mastcode].[BPShipping]")
+        cursor.execute(f"select shipCode, shipName,bpCode from [mastcode].[BPShipping]")
         json_data = ConvertToJson(cursor)
         return JsonResponse(json_data, safe=False)
     except Exception as e:

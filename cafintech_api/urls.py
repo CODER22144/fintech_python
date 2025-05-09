@@ -68,6 +68,10 @@ from .views import production_plan_view as ppv
 from .views import production_plan_A_view as ppav
 from .views import material_return_view as matrv
 from .views import line_rejection_view as lrv
+from .views import advance_sales_order_view as asov
+from .views import payment_inward_clear_view as picv
+from .views import advance_req_view as advreqv
+from .views import re_order_bal_material_view as rovmv
 
 urlpatterns = [
 # Home
@@ -95,11 +99,12 @@ urlpatterns = [
     re_path(r"^delete-br/(?P<brid>\d+)/$", br.deleteBillReceipt),
     re_path(r"^get-br/(?P<brid>\d+)/$", br.getBrById),
     re_path(r"^get-bt-br/(?P<bt>\w+)/$", br.getBybtBr),
+    re_path(r"^br-report/$", br.getBrReport),
 
     # Business Partner
     re_path(r"^add-business-partner/$", bp.addBusinessPartner),
     re_path(r"^update-business-partner/$", bp.updateBusinessPartner),
-    re_path(r"^get-business-partner/(?P<bpCode>\w+)/$", bp.getByIdBusinessPartner),
+    re_path(r"^get-business-partner/(?P<bpCode>[\w\-]+)/$", bp.getByIdBusinessPartner),
     re_path(r"^get-business-relation-type/$", bp.getBusinessRelationType),
     re_path(r"^gst-type/$", bp.getGSTRegnType),
     re_path(r"^get-company-type/$", bp.getCompanyType),
@@ -140,6 +145,7 @@ urlpatterns = [
     re_path(r"^get-material-discount-type/$", mt.getMaterialDiscountType),
     re_path(r"^get-mat-details/(?P<matno>[\w\-.]+)/$", mt.getMaterialDetails),
     re_path(r"^get-ac-groups/$", mt.getAcGroups),
+    re_path(r"^edit-material-bulk/$", mt.editMaterialBulk),
     
     # File Upload
     re_path(r"^upload/$", upload_view.fileUploadView.as_view()),
@@ -149,6 +155,7 @@ urlpatterns = [
     re_path(r"^add-material-source/$", mts.addMaterialSource),
     re_path(r"^update-material-source/$", mts.updateMaterialSource),
     re_path(r"^get-material-source-details/$", mts.getMaterialSourceDetails),
+    re_path(r"^edit-material-source-bulk/$", mts.editMaterialSourceBulk),
 
     # Business Partner Pay and Tax Info
     re_path(r"^add-business-partner-tax-info/$", bpt.createBusinessPartnerTaxInfo),
@@ -157,10 +164,14 @@ urlpatterns = [
     re_path(r"^add-warehouse/$", whv.addWarehouse),
     re_path(r"^get-warehouse/$", whv.getAllWareHouse),
 
+    re_path(r"^update-bp-tax-info/$", bpt.updateBusinessPartnerTaxInfo),
+    re_path(r"^get-bp-tax-info/$", bpt.getBpTaxInfoById),
+
     # Purchase Order
     re_path(r"^create-purchase-order/$", pov.createPurchaseOrder),
     re_path(r"^get-priority/$", pov.getAllPriority),
     re_path(r"^get-po-type/$", pov.getAllPoType),
+    re_path(r"^short-qty/$", pov.getShortQty),
 
     # GR DETAILS
     re_path(r"^create-gr/$", grv.addGrDetails),
@@ -195,6 +206,7 @@ urlpatterns = [
     re_path(r"^get-obalance-type/$", obv.getBalanceType),
     re_path(r"^get-obalance/(?P<obId>[\w\-]+)/$", obv.getByIdOBalance),
     re_path(r"^delete-obalance/(?P<obId>[\w\-]+)/$", obv.deleteOBlance),
+    re_path(r"^obalance-report/$", obv.getOBalanceReport),
 
     # Bill Payable
     re_path(r"^add-bill-payable/$", bpv.addBillPayable),
@@ -247,6 +259,7 @@ urlpatterns = [
     re_path(r"^add-credit-note/$", dbv.addCrNote),
     re_path(r"^get-doc-against/$", dbv.getDocAgainst),
     re_path(r"^get-doc-reason/$", dbv.getDocReason),
+    re_path(r"^get-cr-mat-details/$", dbv.getCrNoteMaterialDetails),
 
     # Sales debit note
     re_path(r"^add-sale-debit-note/$", sbnv.addSaleDebitNote),
@@ -366,6 +379,10 @@ urlpatterns = [
 
     # Bank Details
     re_path(r"^upload-bank-details/$", buv.uploadBankDetails),
+    re_path(r"^update-bank-statement/$", buv.updateBankStatement),
+    re_path(r"^upload-hdfc/$", buv.uploadHdfc),
+    re_path(r"^upload-kotak/$", buv.uploadKotak),
+    
 
     # Part Assembly
     re_path(r"^get-work-process/$", papv.getWorkProcess),
@@ -379,6 +396,8 @@ urlpatterns = [
     re_path(r"^delete-pa/(?P<matno>[\w\-.]+)/$", papv.deletePartAssembly),
     re_path(r"^delete-pa-details/(?P<padId>\d+)/$", papv.deletePartAssemblyDetails),
     re_path(r"^delete-pa-processing/(?P<papId>\d+)/$", papv.deletePartAssemblyProcessing),
+    re_path(r"^part-assembly-report/$", papv.getPartAssemblyReport),
+    re_path(r"^get-wip/$", papv.getWorkInProgress),
 
     # Part Sub Assembly
     re_path(r"^add-psa/$", psapv.addPartSubAssembly),
@@ -390,6 +409,7 @@ urlpatterns = [
     re_path(r"^delete-psa/(?P<matno>[\w\-.]+)/$", psapv.deletePartSubAssembly),
     re_path(r"^delete-psa-details/(?P<padId>\d+)/$", psapv.deletePartSubAssemblyDetails),
     re_path(r"^delete-psa-processing/(?P<papId>\d+)/$", psapv.deletePartSubAssemblyProcessing),
+    re_path(r"^part-sub-assembly-report/$", psapv.getPartSubAssemblyReport),
 
     # Product Breakup
     re_path(r"^add-pbu/$", pbuv.addProductBreakup),
@@ -406,6 +426,7 @@ urlpatterns = [
     re_path(r"^add-pbu-tech-details/$", pbuv.addProductBreakup_TechDetails),
     re_path(r"^add-pbu-rm-process/$", pbuv.addRmInprocessStandard),
     re_path(r"^add-pbu-final-standard/$", pbuv.addProductFinalStandard),
+    re_path(r"^pbu-report/$", pbuv.getProductBreakupReport),
 
     # Journal Voucher
     re_path(r"^add-jvoucher/$", jvv.addJournalVoucher),
@@ -424,6 +445,8 @@ urlpatterns = [
     re_path(r"^get-unadjusted-payment-inward/$", payiv.getUnadjustedPaymentInward),
     re_path(r"^get-payment-pending-lcode/(?P<lcode>[\w\-\.]+)/$", payiv.getPaymentPendingByLcode),
     re_path(r"^get-payment-pending-transId/$", payiv.getPaymentPendingByTransIdVtype),
+    re_path(r"^post-payment-inward/$", payiv.postPaymentInward),
+    re_path(r"^bank-statement-transDate/$", payiv.getBankStatementByTransDate),
 
     # Work Process
     re_path(r"^add-work-process/$", wpv.addWorkProcess),
@@ -479,6 +502,9 @@ urlpatterns = [
     re_path(r"^add-req-issue/$", rqeiv.addReqIssue),
     re_path(r"^get-req-issue-pending/$", rqeiv.getReqIssuePending),
     re_path(r"^get-req-mat-by-reqId/$", rqeiv.getReqMaterialPendingByReqId),
+    re_path(r"^get-department/$", rqeiv.getDepartment),
+    re_path(r"^req-type/$", rqeiv.getRequirementType),
+    re_path(r"^req-summary/$", rqeiv.getReqSummary),
 
     # DL CHALLAN
     re_path(r"^add-dl-challan/$", dlcv.addDlChallan),
@@ -500,7 +526,20 @@ urlpatterns = [
     re_path(r"^add-material-return/$", matrv.addMaterialReturn),
 
     # LINE REJECTION
-    re_path(r'^add-line-rejection/$', lrv.addLineRejection)
+    re_path(r'^add-line-rejection/$', lrv.addLineRejection),
+
+    # Advance Sales Order
+    re_path(r'^add-sale-order-adv/$', asov.addAdvanceSaleOrderDetails),
+
+    # Payment Inward Clear
+    re_path(r'^add-payment-inward-clear/$', picv.addPaymentInwardClear),
+
+    # Advance Requirement
+    re_path(r'^add-advance-req/$', advreqv.addAdvanceReq),
+
+    # RE-Order Balance Material
+    re_path(r'^reorder-balance-material/$', rovmv.reportReOrderBalanceMaterial),
+    re_path(r'^create-balance-order/$', rovmv.createBalanceOrder),
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 

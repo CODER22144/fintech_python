@@ -185,14 +185,15 @@
                     <td style="border-top:1px solid black;" align="right">&nbsp;</td>
                     <td style="border-top:1px solid black;" align="right">&nbsp;</td>
                     <td style="border-top:1px solid black;" align="right">&nbsp;</td>
-                </tr>    
+                </tr>   
+                {% endfor %} 
                 <tr>
                     <td colspan="4" style="border-top:1px solid black;">
                         E. & O. E.<br />- All disputes subject to Delhi Courts Jurisdiction.<br />- No Complaint shall be entertained after seven days of receipt of goods.<br />- If Payment is not received within 7 days, interest will be charged @24% p.a.<br />- The liability of pay GST on such Interest charge on delayed payment will arise at the time of receipt of such charges.<br/><span style="font-weight:bold;">- Payments to be made through RTGS/NEFT/Cheque/DD Only.</span><br /><span style="font-weight:bold;">- Bank Details : {{sale.bankName}} Account No. : {{sale.accountNo}} IFSC Code : {{sale.ifscCode}}</span>
                     </td>
                     <td colspan="5" style="border-top:1px solid black; text-align:right; font-weight: bold;">FOR {{sale.legalName}}<br /><br /><br /><br />AUTHORISED SIGNATORY</td>
                 </tr> 
-                {% endfor %}    
+                    
                 </table>
         </td>
         </tr>
