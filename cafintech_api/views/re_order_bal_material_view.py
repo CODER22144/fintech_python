@@ -15,6 +15,8 @@ from cafintech_api.views.bill_receipt_view import ConvertToJson
 @permission_classes([IsAuthenticated])
 def reportReOrderBalanceMaterial(request):
     try:
+        request.data['userid'] = request.user.userId
+        request.data['roleid'] = request.user.roles.role_id
         serializer = ReOrderBalanceMaterialSerializer(data=request.data)
         if(serializer.is_valid()):
             cursor = connections[request.user.cid.cid].cursor()

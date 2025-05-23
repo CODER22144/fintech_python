@@ -109,3 +109,79 @@ def getDocType(request):
     except Exception as e:
         return Response(generate_error_message(e), status=500, exception=e)
                                   
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def uploadGstR2b(request):
+    try:
+        
+        cursor = connections[request.user.cid.cid].cursor()
+        cursor.execute(f"EXEC [fiac].[GSTR2BUPLOAD] %s",(json.dumps(request.data),))
+        cursor.close()
+        return Response({"message": "GST R2B uploaded successfully"}, status=200)
+    except Exception as e:
+        return Response(generate_error_message(e), status=500, exception=e)
+    
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def get2bb2bnoMatchReport(request):
+    try:
+        cursor = connections[request.user.cid.cid].cursor()
+        cursor.execute(f"exec [fiac].[2BB2bNoMatch] %s",(json.dumps(request.data),))
+        json_data = [data[0] for data in cursor.fetchall()]
+        json_data = "".join(json_data)
+        json_data = json.loads(json_data)
+        cursor.close()
+        return Response(data=json_data, status=200)
+    except Exception as e:
+        return Response(generate_error_message(e), status=500, exception=e)
+    
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def get2bb2bMatchReport(request):
+    try:
+        cursor = connections[request.user.cid.cid].cursor()
+        cursor.execute(f"exec [fiac].[2BB2bMatch] %s",(json.dumps(request.data),))
+        json_data = [data[0] for data in cursor.fetchall()]
+        json_data = "".join(json_data)
+        json_data = json.loads(json_data)
+        cursor.close()
+        return Response(data=json_data, status=200)
+    except Exception as e:
+        return Response(generate_error_message(e), status=500, exception=e)
+    
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def get2bb2bNotInReport(request):
+    try:
+        cursor = connections[request.user.cid.cid].cursor()
+        cursor.execute(f"exec [fiac].[2BB2bNotIn] %s",(request.data['rtnPrd'],))
+        json_data = [data[0] for data in cursor.fetchall()]
+        json_data = "".join(json_data)
+        json_data = json.loads(json_data)
+        cursor.close()
+        return Response(data=json_data, status=200)
+    except Exception as e:
+        return Response(generate_error_message(e), status=500, exception=e)
+    
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def updateInwId(request):
+    try:
+        cursor = connections[request.user.cid.cid].cursor()
+        cursor.execute(f"exec [fiac].[2BB2bUpdateInwId] %s",(json.dumps(request.data),))
+        cursor.close()
+        return Response({"message": "Inward ID updated successfully"}, status=200)
+    except Exception as e:
+        return Response(generate_error_message(e), status=500, exception=e)
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def convertGstRate(request):
+    try:
+        cursor = connections[request.user.cid.cid].cursor()
+        cursor.execute(f"exec [sales].[ConvertGst] %s,%s",(request.data['inv'],request.data['gst']))
+        cursor.close()
+        return Response({"message": "SUCCESS"}, status=200)
+    except Exception as e:
+        return Response(generate_error_message(e), status=500, exception=e)

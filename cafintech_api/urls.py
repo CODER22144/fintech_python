@@ -72,6 +72,7 @@ from .views import advance_sales_order_view as asov
 from .views import payment_inward_clear_view as picv
 from .views import advance_req_view as advreqv
 from .views import re_order_bal_material_view as rovmv
+from .views import reverse_charges_view as rcv
 
 urlpatterns = [
 # Home
@@ -306,6 +307,11 @@ urlpatterns = [
     re_path(r"^add-gr-other-charges/$", gocv.addGrOtherCharges),
     re_path(r"^delete-gr-other-charges/(?P<grno>\w+)/$", gocv.deleteGrOtherCharges),
     re_path(r"^get-gr-iqs-pending/$", gocv.getGrIqsPending),
+    re_path(r"^gr-other-charges-pending/$", gocv.grOtherChargesPending),
+    re_path(r"^approve-gr-other-charges/$", gocv.approveCharges),
+    re_path(r"^get-days/$", gocv.getDays),
+
+
 
     # GR IQS REP
     re_path(r"^add-gr-iqs-rep/$", girv.addGrIqsRep),
@@ -540,6 +546,10 @@ urlpatterns = [
     # RE-Order Balance Material
     re_path(r'^reorder-balance-material/$', rovmv.reportReOrderBalanceMaterial),
     re_path(r'^create-balance-order/$', rovmv.createBalanceOrder),
+
+    # REVERSE CHARGES
+    re_path(r'^add-reverse-charge/$', rcv.addReverseCharges),
+
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 

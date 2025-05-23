@@ -32,6 +32,7 @@ from .views import cr_note_report as crnrv
 from .views import tds_report_view as tdsrv
 from .views import dbnote_rep as dbsnrv
 from .views import gst_return_view as gstv
+from .views import ledger_view as lrv
 
 urlpatterns = [
 
@@ -60,6 +61,8 @@ urlpatterns = [
 
     # GR REP
     re_path(r"^gr-report/$", grrv.getGrRep),
+    re_path(r"^gr-detail-byId/$", grrv.getGrDetailsById),
+    re_path(r"^update-gr/$", grrv.updateGrDetails),
     re_path(r"^srv/(?P<grno>\d+)/(?P<cid>\w+)/$", grrv.srvFormat),
     re_path(r"^srv-pdf/(?P<grno>\d+)/(?P<cid>\w+)/$", grrv.srvFormatPdf),
 
@@ -154,6 +157,16 @@ urlpatterns = [
     re_path(r"^get-gst-hsn/$", gstv.getGstHsnSummary),
     re_path(r"^get-crdr-note/$", gstv.getCrDrNote),
     re_path(r"^get-doc-type/$", gstv.getDocType),
+    re_path(r"^upload-gst-r2b/$", gstv.uploadGstR2b),
+    re_path(r"^get-2bb2b-no-match/$", gstv.get2bb2bnoMatchReport),
+    re_path(r"^get-2bb2b-match/$", gstv.get2bb2bMatchReport),
+    re_path(r"^get-2bb2b-not-in/$", gstv.get2bb2bNotInReport),
+    re_path(r"^update-inw/$", gstv.updateInwId),
+    re_path(r"^convert-gst-rate/$", gstv.convertGstRate),
+
+    # Ledger
+    re_path(r"^ledger/$", lrv.getLedgerReport),
+    re_path(r"^trial/$", lrv.getTrail),
 
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

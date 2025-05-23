@@ -1,0 +1,56 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head id="Head1" runat="server">
+    <title>Trial</title>
+    <link href="http://mapp.rcinz.com/static/css/main.css" type="text/css" rel="STYLESHEET" />
+  <link href="http://mapp.rcinz.com/static/css/tab.css" type="text/css" rel="STYLESHEET" />
+</head>
+<body style="background-color:White;">
+
+    <table cellpadding="0" cellspacing="0" border="0" width="750">
+        <tr class="prmRepMainHead">
+            <td>Trial Balance</td>
+        </tr>
+        <tr class="prmRepMainHeadTD">
+            <td align="right"><asp:Label ID="lblSearch" runat="server" /></td>
+        </tr>
+        <tr class="Arial10Bold" align="center">
+            <td>{{trial.legalName}}</td>
+        </tr>
+    </table>
+    <table class="Arial10" cellspacing="0" cellpadding="0" border="1" width="750" style="border-collapse:collapse;">
+        <tr class="Arial10Bold">
+            <td valign="top">Lcode</td>
+            <td valign="top">Parter NAME</td>
+            <td valign="top" align="right">Debit</td>
+            <td valign="top" align="right">Credit</td>
+        </tr>
+        {% for item in trial.trial %}
+        <tr>
+            <td valign="middle" colspan="4" class="Arial10Bold" style="height:30;">{{item.agCode}} : {{item.agDescription}}</td>
+        </tr>
+        {% for data in item.trialdet %}
+        <tr class="Arial10">
+            <td valign="top">{{data.lcode}}</td>
+            <td valign="top">{{data.lname}}</td>
+            <td valign="top" align="right">{{data.dbAmount}}</td>
+            <td valign="top" align="right">{{data.crAmount}}</td>
+        </tr>
+        {% endfor %}
+        <!-- Child CHILD TOTAL -->
+        <tr class="Arial10Bold">
+            <td valign="top" colspan="2">Total</td>
+            <td valign="top" align="right">{{item.dbAmount}}</td>
+            <td valign="top" align="right">{{item.crAmount}}</td>
+        </tr>
+        {% endfor %}
+        <!-- Master Total -->
+        <tr class="Arial10Bold">
+            <td valign="top" colspan="2">Grand Total</td>
+            <td valign="top" align="right">{{trial.totdbAmount}}</td>
+            <td valign="top" align="right">{{trial.totcrAmount}}</td>
+        </tr>
+
+    </table>
+
+</body>
+</html>

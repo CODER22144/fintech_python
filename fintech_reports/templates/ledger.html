@@ -1,0 +1,51 @@
+﻿<html xmlns="http://www.w3.org/1999/xhtml">
+  <head id="Head1" runat="server">
+  <title>Ledger</title>
+  <link href="http://mapp.rcinz.com/static/css/main.css" type="text/css" rel="STYLESHEET" />
+  <link href="http://mapp.rcinz.com/static/css/tab.css" type="text/css" rel="STYLESHEET" />
+  </head>
+  <body style="background-color:White;">
+      
+<table cellpadding="0" cellspacing="0" border="0" width="750">
+    <tr class="prmRepMainHead">
+        <td>LEDGER</td>
+    </tr>
+    <tr class="Arial10Bold">
+        <td align="center" style="padding-top:10px; padding-bottom:10px;">{{ledger.legalName}}<br />{{ledger.compAdd}}<br />{{ledger.Add1}} {{ledger.compCity}}</td>
+    </tr>
+    <tr>
+        <td class="Arial10">LEDGER ACCOUNT FROM DATE : {{ledger.fromDate}}&nbsp; TO DATE : {{ledger.toDate}} <br />OF {{ledger.lcode}} <span style="font-weight:bold;">{{ledger.lname}}</span></td>
+    </tr>
+</table>
+<table class="Arial10" cellspacing="0" cellpadding="0" border="1" width="750" style="border-collapse:collapse;">
+<tr>
+<td valign="top">DATE</td>
+<td valign="top">DESCRIPTION</td>
+<td valign="top" align="right">DEBIT</td>
+<td valign="top" align="right">CREDIT</td>
+<td valign="top" align="right">BALANCE</td>
+<td valign="top" align="right">&nbsp;</td>
+</tr>
+
+{% for item in ledger.ledgerdet %}
+<tr>
+<td valign="top">{% if item.billDate %} {{item.billDate}} {% endif %}</td>
+<td valign="top">{{item.lName}}<br />{% if item.naration %} {{item.naration}} {% endif %}</td>
+<td valign="top" align="right">{{item.dbamount}}</td>
+<td valign="top" align="right">{{item.cramount}}</td>
+<td valign="top" align="right">{{item.rowtotal}}</td>
+<td valign="top" align="right">{{item.ty}}</td>
+</tr>
+{% endfor %}
+<tr>
+<td valign="top" style="font-weight:bold">TOTAL</td>
+<td valign="top">&nbsp;</td>
+<td valign="top" align="right" style="font-weight:bold">{{ledger.ledgersum.0.totdbAmount}}</td>
+<td valign="top" align="right" style="font-weight:bold">{{ledger.ledgersum.0.totcrAmount}}</td>
+<td valign="top" align="right" style="font-weight:bold">{{ledger.ledgersum.0.balAmount}}</td>
+<td valign="top" align="right" style="font-weight:bold">{{ledger.ledgersum.0.ty}}</td>
+</tr>
+</table>	
+
+</body> 
+</html>

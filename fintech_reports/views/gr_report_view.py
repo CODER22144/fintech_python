@@ -1,5 +1,6 @@
 from django.db import connections
 
+from django.http import JsonResponse
 from django.shortcuts import render, redirect
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
@@ -11,6 +12,7 @@ import json
 
 from CaFinTech.settings import File_Path, path_wkhtmltopdf
 import pdfkit
+from cafintech_api.views.bill_receipt_view import ConvertToJson
 from fintech_reports.serializers.gr_report_serializer import GrReportSerializer
 
 
@@ -59,3 +61,26 @@ def srvFormatPdf(request, grno, cid):
     config = pdfkit.configuration(wkhtmltopdf=path_wkhtmltopdf)
     pdfkit.from_url(url,filename, configuration=config)
     return redirect('http://mapp.rcinz.com/media/docs/'+redirectTO)
+
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def getGrDetailsById(request):
+    try:        
+        cursor = connections[request.user.cid.cid].cursor()
+        cursor.execute(f"EXEC [purchase].[uspGetGrDetailsById] %s",(request.data['grdId'],))
+        json_data = ConvertToJson(cursor)
+        cursor.close()
+        return JsonResponse(json_data, safe=False)
+    except Exception as e:
+        return Response(generate_error_message(e), status=500, exception=e)
+    
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def updateGrDetails(request):
+    try:        
+        cursor = connections[request.user.cid.cid].cursor()
+        cursor.execute(f"EXEC [purchase].[uspUpdateGrDetails] %s",(json.dumps(request.data),))
+        return Response({"message": "Updated Successfully"}, status=200)
+    except Exception as e:
+        return Response(generate_error_message(e), status=500, exception=e)
