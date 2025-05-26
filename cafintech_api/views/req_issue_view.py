@@ -85,3 +85,25 @@ def getReqSummary(request):
         return JsonResponse(json_data, safe=False)
     except Exception as e:
         return Response(data=generate_error_message(e), status=500, exception=e)
+    
+@api_view(["POST"])
+@permission_classes([IsAuthenticated])
+def getReqDetailsById(request):
+    try:
+        cursor = connections[request.user.cid.cid].cursor()
+        cursor.execute(f"exec [inven].[uspGetReqDetailsById] %s", (request.data['reqdId'],))
+        json_data = ConvertToJson(cursor)
+        return JsonResponse(json_data, safe=False)
+    except Exception as e:
+        return Response(data=generate_error_message(e), status=500, exception=e)
+    
+@api_view(["POST"])
+@permission_classes([IsAuthenticated])
+def updateReqDetails(request):
+    try:
+        cursor = connections[request.user.cid.cid].cursor()
+        cursor.execute(f"exec [inven].[uspUpdateReqDetails] %s", (json.dumps(request.data),))
+        cursor.close()
+        return Response({"message": "Requirement details updated successfully"}, status=200)
+    except Exception as e:
+        return Response(data=generate_error_message(e), status=500, exception=e)

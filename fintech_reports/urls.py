@@ -33,6 +33,7 @@ from .views import tds_report_view as tdsrv
 from .views import dbnote_rep as dbsnrv
 from .views import gst_return_view as gstv
 from .views import ledger_view as lrv
+from .views import production_plan_report_view as pprv
 
 urlpatterns = [
 
@@ -46,6 +47,7 @@ urlpatterns = [
 
     # Purchase Order Details
     re_path(r"^purchase-order-report/$", porv.getPurchaseOrderDetails),
+    re_path(r"^po-item-report/$", porv.getPurchaseOrderItemReport),
     re_path(r"^purchase-order-invoice/(?P<orderId>\d+)/(?P<cid>\w+)/$", porv.purchaseOrderInvoice),
     re_path(r"^purchase-order-invoice-pdf/(?P<orderId>\d+)/(?P<cid>\w+)/$", porv.convertToPdf),
 
@@ -63,6 +65,8 @@ urlpatterns = [
     re_path(r"^gr-report/$", grrv.getGrRep),
     re_path(r"^gr-detail-byId/$", grrv.getGrDetailsById),
     re_path(r"^update-gr/$", grrv.updateGrDetails),
+    re_path(r"^gr-item-report/$", grrv.getGrItemReport),
+    re_path(r"^sale-item-report/$", grrv.getSaleItemReport),
     re_path(r"^srv/(?P<grno>\d+)/(?P<cid>\w+)/$", grrv.srvFormat),
     re_path(r"^srv-pdf/(?P<grno>\d+)/(?P<cid>\w+)/$", grrv.srvFormatPdf),
 
@@ -85,6 +89,8 @@ urlpatterns = [
 
     # Manufacturing Report
     re_path(r"^get-manufacturing-report/$", manu.getManufacturingReport),
+    re_path(r"^part-search/$", manu.getPartSearchReport),
+    re_path(r"^not-in-bill-of-mat/$", manu.notInBillOfMaterial),
 
     # QR CODE GENERATION
     re_path(r"^get-qr/$", qr.generate_qr),
@@ -167,6 +173,10 @@ urlpatterns = [
     # Ledger
     re_path(r"^ledger/$", lrv.getLedgerReport),
     re_path(r"^trial/$", lrv.getTrail),
+
+    # PRODUCTION PLAN REPORT
+    re_path(r"^production-plan-report/$", pprv.productionPlanReport),
+    re_path(r"^pp-rep-type/$", pprv.getProductionPlanRepType),
 
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

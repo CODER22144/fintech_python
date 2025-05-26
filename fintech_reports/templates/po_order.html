@@ -15,9 +15,14 @@
 <table cellpadding="0" cellspacing="1" border="0" width="780px">
 <tr>
 <!-- <td style="width:320; padding-bottom: 10px;"><span class="Arial12Bold">{{data.bpName}}</span><br /><span class="Arial10">{{data.bpAdd}}<br />{{data.bpAdd1}}</span><br /></td> -->
-<td style="width:320; font-family: Arial; font-size:14pt; font-weight:bold;text-align:center;" valign="middle">Purchase Order</td>
-<td style="width:200;" valign="top">&nbsp;</td>
+<td style="font-family: Arial; font-size:14pt; font-weight:bold;text-align:center;" valign="middle">Purchase Order</td>
+
 </tr>  
+
+{% if data.compLogo %}
+	<tr><td><img src="http://mapp.rcinz.com{{data.compLogo}}" alt="image"></td></tr>
+	{% endif %}
+
 </table> 
 <table cellpadding="0" cellspacing="1" border="0" width="780px">
     <tr>
@@ -51,6 +56,15 @@
             <tr>
                 <td class="Arial10Bold">P. O. NO. AND DATE: {{data.poId}} &nbsp;: {{data.dpoDate}} <br /><span class="Arial10">PERIOD FROM :{{data.validFrom}} TO {{data.validTo}}<br />GST No. : {{data.compGstin}}<br />PAN : {{data.compPAN}} </span></td>
             </tr>
+
+            <tr>
+                <td class="Arial10Bold">Shipping Address</td>
+            </tr>
+
+            <tr>
+                <td class="Arial10">{{data.whName}}<br/> {{data.whAdd}}, {{data.whAdd1}} <br />{{data.whCity}} - {{data.whstateName}}, {{data.whZipCode}}</td>
+            </tr>
+            
         </table>
     </td>		    
 
@@ -116,6 +130,7 @@
 		    <li>Please inform immediately of inability/delay expected in servicing the supply as per schedule.</li>
    		    <li>Prices are at our works.</li>            
 		    <li>GST as applicable</li>
+		    <li>Purchase order rate must be adhere</li>
             <!-- <li>Payment will be made after <% = rstParent.Fields("CRDAYS").Value%> days from the date of material receipt.</li>  -->
             <li><span style="font-weight:bold;">For any change in specifications of the item(s) please do obtain our prior written approval or revised approved drawing </span></li>
 		    </ul>

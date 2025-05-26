@@ -13,6 +13,7 @@ import json
 from CaFinTech.settings import File_Path, path_wkhtmltopdf
 import pdfkit
 from cafintech_api.views.bill_receipt_view import ConvertToJson
+from fintech_reports.serializers.gr_item_report_serializer import GrItemReportSerializer
 from fintech_reports.serializers.gr_report_serializer import GrReportSerializer
 
 
@@ -84,3 +85,40 @@ def updateGrDetails(request):
         return Response({"message": "Updated Successfully"}, status=200)
     except Exception as e:
         return Response(generate_error_message(e), status=500, exception=e)
+    
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def getGrItemReport(request):
+    try:
+        serializer = GrItemReportSerializer(data=request.data)
+        if(serializer.is_valid()):
+            cursor = connections[request.user.cid.cid].cursor()
+            cursor.execute(f"EXEC [purchase].[GRItemRep] %s",(json.dumps(serializer.data),))
+            json_data = [data[0] for data in cursor.fetchall()]
+            json_data = "".join(json_data)
+            cursor.close()
+            return Response(json.loads(json_data))
+        UNSUCCESSFUL_REQUEST['message'] = serializer.errors
+        return Response(UNSUCCESSFUL_REQUEST, status=400)
+    except Exception as e:
+        return Response(generate_error_message(e), status=500, exception=e)
+    
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def getSaleItemReport(request):
+    try:
+        serializer = GrItemReportSerializer(data=request.data)
+        if(serializer.is_valid()):
+            cursor = connections[request.user.cid.cid].cursor()
+            cursor.execute(f"EXEC [sales].[SaleItemRep] %s",(json.dumps(serializer.data),))
+            json_data = [data[0] for data in cursor.fetchall()]
+            json_data = "".join(json_data)
+            cursor.close()
+            return Response(json.loads(json_data))
+        UNSUCCESSFUL_REQUEST['message'] = serializer.errors
+        return Response(UNSUCCESSFUL_REQUEST, status=400)
+    except Exception as e:
+        return Response(generate_error_message(e), status=500, exception=e)
+    
+
+    

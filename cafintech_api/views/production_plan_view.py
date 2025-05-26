@@ -59,3 +59,4 @@ def deleteAllProductionPlan(request):
         return Response(data={"status" : "OK"}, status=204)
     except Exception as e:
         return Response(data=generate_error_message(e), status=500, exception=e)
+

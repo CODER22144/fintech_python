@@ -27,3 +27,28 @@ def getManufacturingReport(request):
         return Response(UNSUCCESSFUL_REQUEST, status=400)
     except Exception as e:
         return Response(generate_error_message(e), status=500, exception=e)
+    
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def getPartSearchReport(request):
+    try:
+        cursor = connections[request.user.cid.cid].cursor()
+        cursor.execute(f"EXEC [cost].[PartSearchReport] %s",(request.data['matno'],))
+        json_data = ConvertToJson(cursor)
+        cursor.close()
+        return JsonResponse(json_data, safe=False)
+    except Exception as e:
+        return Response(generate_error_message(e), status=500, exception=e)
+    
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def notInBillOfMaterial(request):
+    try:
+        cursor = connections[request.user.cid.cid].cursor()
+        cursor.execute(f"EXEC [cost].[NotInBreakupReport] %s",(request.data['rmType'],))
+        json_data = ConvertToJson(cursor)
+        cursor.close()
+        return JsonResponse(json_data, safe=False)
+    except Exception as e:
+        return Response(generate_error_message(e), status=500, exception=e)
+    
