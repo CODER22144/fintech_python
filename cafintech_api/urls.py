@@ -73,6 +73,8 @@ from .views import payment_inward_clear_view as picv
 from .views import advance_req_view as advreqv
 from .views import re_order_bal_material_view as rovmv
 from .views import reverse_charges_view as rcv
+from .views import ob_material_view as obmv
+from .views import material_assembly_view as mav
 
 urlpatterns = [
 # Home
@@ -511,6 +513,8 @@ urlpatterns = [
     re_path(r"^get-department/$", rqeiv.getDepartment),
     re_path(r"^req-type/$", rqeiv.getRequirementType),
     re_path(r"^req-summary/$", rqeiv.getReqSummary),
+    re_path(r"^req-detail-byId/$", rqeiv.getReqDetailsById),
+    re_path(r"^update-req-details/$", rqeiv.updateReqDetails),
 
     # DL CHALLAN
     re_path(r"^add-dl-challan/$", dlcv.addDlChallan),
@@ -549,6 +553,29 @@ urlpatterns = [
 
     # REVERSE CHARGES
     re_path(r'^add-reverse-charge/$', rcv.addReverseCharges),
+
+    # OB MATERIAL
+    re_path(r'^add-ob-material/$', obmv.addObMaterial),
+    re_path(r'^update-ob-material/$', obmv.UpdateObMaterial),
+    re_path(r'^get-ob-material/$', obmv.getObMaterialByMatno),
+    re_path(r'^delete-ob-material/$', obmv.deleteObMaterial),
+
+    # MATERIAL ASSEMBLY
+    re_path(r'^add-material-assembly/$', mav.addMaterialAssembly),
+    re_path(r'^update-material-assembly/$', mav.updateMaterialAssembly),
+    re_path(r'^add-material-assembly-details/$', mav.addMaterialAssemblyDetails),
+    re_path(r'^add-material-assembly-processing/$', mav.addMaterialAssemblyProcessing),
+    re_path(r'^get-material-assembly/$', mav.getMaterialAssemblyByMatno),
+    re_path(r'^get-material-assembly-details/$', mav.getMaterialAssemblyDetailsByMatno),
+    re_path(r'^get-material-assembly-processing/$', mav.getMaterialAssemblyProcessingByMatno),
+
+
+    re_path(r'^delete-mat-assembly/$', mav.deleteMaterialAssembly),
+    re_path(r'^delete-mat-assembly-details/$', mav.deleteMaterialAssemblyDetails),
+    re_path(r'^delete-mat-assembly-processing/$', mav.deleteMaterialAssemblyProcessing),
+
+    re_path(r"^mat-assembly-breakup/(?P<matno>[\w\-]+)/(?P<cid>\w+)/$", mav.getMaterialAssemblyBreakup),
+
 
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
