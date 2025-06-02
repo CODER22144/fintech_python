@@ -32,7 +32,7 @@ def addWireSizeDetails(request):
 def getWireSizeByMatNo(request, matno):
     try:
         cursor = connections[request.user.cid.cid].cursor()
-        cursor.execute(f"exec [cost].[uspGetBymatnoWireSize] %s",(matno,))
+        cursor.execute(f"exec [cost].[uspGetWireSizeBymatno] %s",(matno,))
         json_data = ConvertToJson(cursor)
         return JsonResponse(json_data, safe=False)
     except Exception as e:
@@ -54,7 +54,7 @@ def getCostStatus(request):
 def getWireSizeDetailsByMatNo(request, matno):
     try:
         cursor = connections[request.user.cid.cid].cursor()
-        cursor.execute(f"exec [cost].[uspGetBymatnoWireSizeDetails] %s",(matno,))
+        cursor.execute(f"exec [cost].[uspGetWireSizeDetailsBymatno] %s",(matno,))
         json_data = [data[0] for data in cursor.fetchall()]
         json_data = "".join(json_data)
         return Response(json.loads(json_data))

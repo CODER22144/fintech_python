@@ -34,6 +34,8 @@ from .views import dbnote_rep as dbsnrv
 from .views import gst_return_view as gstv
 from .views import ledger_view as lrv
 from .views import production_plan_report_view as pprv
+from .views import ob_material_report_view as obmrv
+from .views import bp_ob_report_view as bporv
 
 urlpatterns = [
 
@@ -178,6 +180,11 @@ urlpatterns = [
     re_path(r"^production-plan-report/$", pprv.productionPlanReport),
     re_path(r"^pp-rep-type/$", pprv.getProductionPlanRepType),
 
+    # OB MATERIAL REPORT
+
+    re_path(r"^ob-mat-report/$", obmrv.getObMaterialReport),
+    re_path(r"^raw-material/$", obmrv.rawMaterial),
+    re_path(r"^get-bp-ob-material-report/$", bporv.getBusinessPartnerObMaterialReport),
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 

@@ -12,3 +12,10 @@ class MaterialAssemblySerializer(serializers.Serializer):
     asdrawing = serializers.CharField(max_length=100, allow_null=True, required=False)
     revisionNo = serializers.CharField(max_length=10)
     csId = serializers.CharField(max_length=2)
+    icc = serializers.IntegerField()
+
+    stdPack = serializers.IntegerField(allow_null=True, required=False)
+    mstPack = serializers.IntegerField(allow_null=True, required=False)
+    jamboPack = serializers.IntegerField(allow_null=True, required=False)
+    grossWeight = serializers.DecimalField(max_digits=10, decimal_places=3, allow_null=True, required=False)
+    netWeight = serializers.DecimalField(max_digits=10, decimal_places=3, allow_null=True, required=False)

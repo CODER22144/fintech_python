@@ -75,6 +75,13 @@ from .views import re_order_bal_material_view as rovmv
 from .views import reverse_charges_view as rcv
 from .views import ob_material_view as obmv
 from .views import material_assembly_view as mav
+from .views import business_partner_onboard_view as bponv
+
+from .views import bp_ob_material_view as bpobmv
+from .views import material_assembly_tech_details_view as matatv
+from .views import bp_breakup_view as bpbreakv
+from .views import business_partner_processing_view as bppv
+
 
 urlpatterns = [
 # Home
@@ -575,6 +582,52 @@ urlpatterns = [
     re_path(r'^delete-mat-assembly-processing/$', mav.deleteMaterialAssemblyProcessing),
 
     re_path(r"^mat-assembly-breakup/(?P<matno>[\w\-]+)/(?P<cid>\w+)/$", mav.getMaterialAssemblyBreakup),
+
+
+    # OB MATERIAL
+    re_path(r'^add-bp-on-board/$', bponv.addBusinessPartnerOnBoard),
+    re_path(r'^update-bp-on-board/$', bponv.UpdateBusinessPartnerOnBoard),
+    re_path(r'^get-bp-on-board/$', bponv.getBusinessPartnerOnBoardByMatno),
+    re_path(r'^delete-bp-on-board/$', bponv.deleteBusinessPartnerOnBoard),
+    re_path(r'^bp-on-board-report/$', bponv.getBpOnBoardReport),
+
+    # BUSINESS PARTNER OB MATERIAL
+    re_path(r'^add-bp-ob-material/$', bpobmv.addBusinessPartnerObMaterial),
+    re_path(r'^update-bp-ob-material/$', bpobmv.UpdateBusinessPartnerObMaterial),
+    re_path(r'^get-bp-ob-material/$', bpobmv.getBusinessPartnerObMaterialById),
+    re_path(r'^delete-bp-ob-material/$', bpobmv.deleteBusinessPartnerObMaterial),
+    re_path(r'^get-bp-ob/$', bpobmv.getBpObDropdown),
+    
+    
+    # BUSINESS PARTNER OB MATERIAL
+    re_path(r'^add-material-assembly-tech-details/$', matatv.addMaterialAssemblyTechDetails),
+    re_path(r'^update-material-assembly-tech-details/$', matatv.UpdateMaterialAssemblyTechDetails),
+    re_path(r'^get-material-assembly-tech-details/$', matatv.getMaterialAssemblyTechDetailsById),
+    re_path(r'^delete-material-assembly-tech-details/$', matatv.deleteMaterialAssemblyTechDetails),
+
+    # BP BREAKUP
+    re_path(r'^add-bp-breakup/$', bpbreakv.addBpBreakup),
+    re_path(r'^update-bp-breakup/$', bpbreakv.updateBpBreakup),
+    re_path(r'^add-bp-breakup-details/$', bpbreakv.addBpBreakupDetails),
+    re_path(r'^add-bp-breakup-processing/$', bpbreakv.addBpBreakupProcessing),
+
+    re_path(r'^get-bp-breakup/$', bpbreakv.getBybpbIdBPBreakup),
+    re_path(r'^get-bp-breakup-details/$', bpbreakv.getBybpbIdBPBreakupDetails),
+    re_path(r'^get-bp-breakup-processing/$', bpbreakv.getBybpbIdBPBreakupProcessing),
+
+    re_path(r'^delete-bp-breakup/$', bpbreakv.deleteBpBreakup),
+    re_path(r'^delete-bp-breakup-details/$', bpbreakv.deleteBpBreakupDetails),
+    re_path(r'^delete-bp-breakup-processing/$', bpbreakv.deleteBpBreakupProcessing),
+    re_path(r'^get-ob-mat/(?P<bpCode>[\w\-]+)/$', bpbreakv.getObMaterialbyObBpCode),
+    re_path(r'^get-ob-mat-dropdown/(?P<bpCode>[\w\-]+)/$', bpbreakv.getObMaterialDropdown),
+    re_path(r'^get-bp-processing/(?P<bpCode>[\w\-]+)/$', bpbreakv.getPid),
+
+    # BUSINESS PARTNER PROCESSING
+    re_path(r'^add-bp-processing/$', bppv.addBusinessPartnerProcessing),
+    re_path(r'^update-bp-processing/$', bppv.UpdateBusinessPartnerProcessing),
+    re_path(r'^delete-bp-processing/$', bppv.deleteBusinessPartnerProcessing),
+    re_path(r'^get-bp-processing/$', bppv.getBusinessPartnerProcessingById),
+
 
 
 

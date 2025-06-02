@@ -8,18 +8,18 @@ from CaFinTech.errors import UNSUCCESSFUL_REQUEST
 from CaFinTech.utility import generate_error_message
 import json
 
-from cafintech_api.serializers.ob_material_serializer import OBMaterialSerializer
+from cafintech_api.serializers.material_assembly_tech_details_serializer import MaterialAssemblyTechDetailsSerializer
 from cafintech_api.views.bill_receipt_view import ConvertToJson
 
 
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
-def addObMaterial(request):
+def addMaterialAssemblyTechDetails(request):
     try:
-        serializer = OBMaterialSerializer(data=request.data)     # CAN HAVE IMPORT HERE
+        serializer = MaterialAssemblyTechDetailsSerializer(data=request.data)     # CAN HAVE IMPORT HERE
         if(serializer.is_valid()):
             cursor = connections[request.user.cid.cid].cursor()
-            cursor.execute(f"EXEC [cost].[uspAddObMaterial] %s",(json.dumps(serializer.data),))
+            cursor.execute(f"EXEC [cost].[uspAddMaterialAssemblyTechDetails] %s",(json.dumps(serializer.data),))
             cursor.close()
             return Response(serializer.data)
         UNSUCCESSFUL_REQUEST['message'] = serializer.errors
@@ -29,12 +29,12 @@ def addObMaterial(request):
     
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
-def UpdateObMaterial(request):
+def UpdateMaterialAssemblyTechDetails(request):
     try:
-        serializer = OBMaterialSerializer(data=request.data)
+        serializer = MaterialAssemblyTechDetailsSerializer(data=request.data)
         if(serializer.is_valid()):
             cursor = connections[request.user.cid.cid].cursor()
-            cursor.execute(f"EXEC [cost].[uspUpdateObMaterial] %s",(json.dumps(serializer.data),))
+            cursor.execute(f"EXEC [cost].[uspUpdateMaterialAssemblyTechDetails] %s",(json.dumps(serializer.data),))
             cursor.close()
             return Response(serializer.data)
         UNSUCCESSFUL_REQUEST['message'] = serializer.errors
@@ -44,10 +44,10 @@ def UpdateObMaterial(request):
     
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
-def getObMaterialByMatno(request):
+def getMaterialAssemblyTechDetailsById(request):
     try:        
         cursor = connections[request.user.cid.cid].cursor()
-        cursor.execute(f"EXEC [cost].[uspGetObMaterialById] %s",(request.data['matno'],))
+        cursor.execute(f"EXEC [cost].[uspGetMaterialAssemblyTechDetailsById] %s",(request.data['matno'],))
         json_data = ConvertToJson(cursor)
         cursor.close()
         return JsonResponse(json_data, safe=False)  
@@ -56,10 +56,10 @@ def getObMaterialByMatno(request):
     
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
-def deleteObMaterial(request):
+def deleteMaterialAssemblyTechDetails(request):
     try:        
         cursor = connections[request.user.cid.cid].cursor()
-        cursor.execute(f"EXEC [cost].[uspDeleteObMaterial] %s",(request.data['matno'],))
+        cursor.execute(f"EXEC [cost].[uspDeleteMaterialAssemblyTechDetails] %s",(request.data['matno'],))
         cursor.close()
         return Response({'message': 'Material deleted successfully'})
     except Exception as e:

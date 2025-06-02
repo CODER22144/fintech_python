@@ -9,20 +9,20 @@ from CaFinTech.errors import UNSUCCESSFUL_REQUEST
 from CaFinTech.utility import generate_error_message
 import json
 
-from cafintech_api.serializers.material_assembly_details_serializer import MaterialAssemblyDetailsSerializer
-from cafintech_api.serializers.material_assembly_processing_serializer import MaterialAssemblyProcessingSerializer
-from cafintech_api.serializers.material_assembly_serializer import MaterialAssemblySerializer
+from cafintech_api.serializers.bp_breakup_details_serializer import BpBreakupDetailsSerializer
+from cafintech_api.serializers.bp_breakup_processing_serializer import BpBreakupProcessingSerializer
+from cafintech_api.serializers.bp_breakup_serializer import BpBreakupSerializer
 from cafintech_api.views.bill_receipt_view import ConvertToJson
 
 
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
-def addMaterialAssembly(request):
+def addBpBreakup(request):
     try:
-        serializer = MaterialAssemblySerializer(data=request.data)     # CAN HAVE IMPORT HERE
+        serializer = BpBreakupSerializer(data=request.data)     # CAN HAVE IMPORT HERE
         if(serializer.is_valid()):
             cursor = connections[request.user.cid.cid].cursor()
-            cursor.execute(f"EXEC [cost].[uspAddMaterialAssembly] %s",(json.dumps(serializer.data),))
+            cursor.execute(f"EXEC [cost].[uspAddBpBreakup] %s",(json.dumps(serializer.data),))
             cursor.close()
             return Response(serializer.data)
         UNSUCCESSFUL_REQUEST['message'] = serializer.errors
@@ -32,12 +32,12 @@ def addMaterialAssembly(request):
 
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
-def updateMaterialAssembly(request):
+def updateBpBreakup(request):
     try:
-        serializer = MaterialAssemblySerializer(data=request.data)     # CAN HAVE IMPORT HERE
+        serializer = BpBreakupSerializer(data=request.data)     # CAN HAVE IMPORT HERE
         if(serializer.is_valid()):
             cursor = connections[request.user.cid.cid].cursor()
-            cursor.execute(f"EXEC [cost].[uspUpdateMaterialAssembly] %s",(json.dumps(serializer.data),))
+            cursor.execute(f"EXEC [cost].[uspUpdateBpBreakup] %s",(json.dumps(serializer.data),))
             cursor.close()
             return Response(serializer.data)
         UNSUCCESSFUL_REQUEST['message'] = serializer.errors
@@ -47,12 +47,12 @@ def updateMaterialAssembly(request):
     
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
-def addMaterialAssemblyDetails(request):
+def addBpBreakupDetails(request):
     try:
-        serializer = MaterialAssemblyDetailsSerializer(data=request.data, many=True)
+        serializer = BpBreakupDetailsSerializer(data=request.data, many=True)
         if(serializer.is_valid()):
             cursor = connections[request.user.cid.cid].cursor()
-            cursor.execute(f"EXEC [cost].[uspAddMaterialAssemblyDetails] %s",(json.dumps(serializer.data),))
+            cursor.execute(f"EXEC [cost].[uspAddBpBreakupDetails] %s",(json.dumps(serializer.data),))
             cursor.close()
             return Response(serializer.data)
         UNSUCCESSFUL_REQUEST['message'] = serializer.errors
@@ -62,62 +62,63 @@ def addMaterialAssemblyDetails(request):
 
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
-def addMaterialAssemblyProcessing(request):
+def addBpBreakupProcessing(request):
     try:
-        serializer = MaterialAssemblyProcessingSerializer(data=request.data, many=True)
+        serializer = BpBreakupProcessingSerializer(data=request.data, many=True)
         if(serializer.is_valid()):
             cursor = connections[request.user.cid.cid].cursor()
-            cursor.execute(f"EXEC [cost].[uspAddMaterialAssemblyProcessing] %s",(json.dumps(serializer.data),))
+            cursor.execute(f"EXEC [cost].[uspAddBpBreakupProcessing] %s",(json.dumps(serializer.data),))
             cursor.close()
             return Response(serializer.data)
         UNSUCCESSFUL_REQUEST['message'] = serializer.errors
         return Response(UNSUCCESSFUL_REQUEST, status=400)
     except Exception as e:
         return Response(generate_error_message(e), status=500, exception=e)
-
     
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
-def getMaterialAssemblyByMatno(request):
+def getBybpbIdBPBreakup(request):
     try:        
         cursor = connections[request.user.cid.cid].cursor()
-        cursor.execute(f"EXEC [cost].[uspGetMaterialAssemblyById] %s",(request.data['matno'],))
+        cursor.execute(f"EXEC [cost].[uspGetBPBreakupById] %s,%s",(request.data['bpCode'],request.data['matno']))
+        json_data = ConvertToJson(cursor)
+        cursor.close()
+        return JsonResponse(json_data, safe=False)
+    except Exception as e:
+        return Response(generate_error_message(e), status=500, exception=e)
+    
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def getBybpbIdBPBreakupDetails(request):
+    try:        
+        cursor = connections[request.user.cid.cid].cursor()
+        cursor.execute(f"EXEC [cost].[uspGetBpBreakupDetailsById] %s,%s",(request.data['bpCode'],request.data['pId']))
         json_data = ConvertToJson(cursor)
         cursor.close()
         return JsonResponse(json_data, safe=False)  
     except Exception as e:
         return Response(generate_error_message(e), status=500, exception=e)
     
+
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
-def getMaterialAssemblyDetailsByMatno(request):
+def getBybpbIdBPBreakupProcessing(request):
     try:        
         cursor = connections[request.user.cid.cid].cursor()
-        cursor.execute(f"EXEC [cost].[uspGetMaterialAssemblyDetailsBymatno] %s",(request.data['matno'],))
-        json_data = ConvertToJson(cursor)
-        cursor.close()
-        return JsonResponse(json_data, safe=False)  
-    except Exception as e:
-        return Response(generate_error_message(e), status=500, exception=e)
-    
-@api_view(['POST'])
-@permission_classes([IsAuthenticated])
-def getMaterialAssemblyProcessingByMatno(request):
-    try:        
-        cursor = connections[request.user.cid.cid].cursor()
-        cursor.execute(f"EXEC [cost].[uspGetMaterialAssemblyProcessingBymatno] %s",(request.data['matno'],))
+        cursor.execute(f"EXEC [cost].[uspGetBPBreakupProcessingById] %s,%s",(request.data['bpCode'],request.data['matno']))
         json_data = ConvertToJson(cursor)
         cursor.close()
         return JsonResponse(json_data, safe=False)  
     except Exception as e:
         return Response(generate_error_message(e), status=500, exception=e)
 
+    
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
-def deleteMaterialAssembly(request):
+def deleteBpBreakup(request):
     try:        
         cursor = connections[request.user.cid.cid].cursor()
-        cursor.execute(f"EXEC [cost].[uspDeleteMaterialAssembly] %s",(request.data['matno'],))
+        cursor.execute(f"EXEC [cost].[uspDeleteBpBreakup] %s",(request.data['bpbId'],))
         cursor.close()
         return Response({'message': 'Material deleted successfully'})
     except Exception as e:
@@ -125,10 +126,10 @@ def deleteMaterialAssembly(request):
     
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
-def deleteMaterialAssemblyDetails(request):
+def deleteBpBreakupDetails(request):
     try:        
         cursor = connections[request.user.cid.cid].cursor()
-        cursor.execute(f"EXEC [cost].[uspDeleteMaterialAssemblyDetails] %s",(request.data['madId'],))
+        cursor.execute(f"EXEC [cost].[uspDeleteBpBreakupDetails] %s",(request.data['bpbdId'],))
         cursor.close()
         return Response({'message': 'Material deleted successfully'})
     except Exception as e:
@@ -136,29 +137,49 @@ def deleteMaterialAssemblyDetails(request):
     
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
-def deleteMaterialAssemblyProcessing(request):
+def deleteBpBreakupProcessing(request):
     try:        
         cursor = connections[request.user.cid.cid].cursor()
-        cursor.execute(f"EXEC [cost].[uspDeleteMaterialAssemblyProcessing] %s",(request.data['mapId'],))
+        cursor.execute(f"EXEC [cost].[uspDeleteBpBreakupProcessing] %s",(request.data['bpbpId'],))
         cursor.close()
         return Response({'message': 'Material deleted successfully'})
     except Exception as e:
         return Response(generate_error_message(e), status=500, exception=e)
-    
 
-def getMaterialAssemblyBreakup(request, matno, cid):
-    try:
-        cursor = connections[cid].cursor()
-        cursor.execute(f"EXEC [cost].[getMaterialAssembly] %s",(matno,))
-        json_data = [data[0] for data in cursor.fetchall()]
-        json_data = "".join(json_data)
-        json_data = json.loads(json_data)
 
-        context = {
-            "mat" : json_data[0],
-        }
-
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def getObMaterialbyObBpCode(request, bpCode):
+    try:        
+        cursor = connections[request.user.cid.cid].cursor()
+        cursor.execute(f"EXEC [cost].[uspGetBusinessPartnerObMaterialDropdown] %s", (bpCode,))
+        json_data = ConvertToJson(cursor)
         cursor.close()
-        return render(request, "material_assembly.html", context)
+        return JsonResponse(json_data, safe=False)
     except Exception as e:
         return Response(generate_error_message(e), status=500, exception=e)
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def getObMaterialDropdown(request, bpCode):
+    try:        
+        cursor = connections[request.user.cid.cid].cursor()
+        cursor.execute(f"EXEC [cost].[uspGetBusinessPartnerObMaterialMatnoDropdown] %s", (bpCode,))
+        json_data = ConvertToJson(cursor)
+        cursor.close()
+        return JsonResponse(json_data, safe=False)
+    except Exception as e:
+        return Response(generate_error_message(e), status=500, exception=e)
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def getPid(request, bpCode):
+    try:        
+        cursor = connections[request.user.cid.cid].cursor()
+        cursor.execute(f"EXEC [cost].[uspGetBusinessPartnerProcessingDropdown] %s", (bpCode,))
+        json_data = ConvertToJson(cursor)
+        cursor.close()
+        return JsonResponse(json_data, safe=False)
+    except Exception as e:
+        return Response(generate_error_message(e), status=500, exception=e)
+    
