@@ -369,6 +369,8 @@ urlpatterns = [
     re_path(r"^add-wire-size-details-only/$", wsv.addWireSizeMasterDetailsOnly),
     re_path(r"^get-cost-status/$", wsv.getCostStatus),
     re_path(r"^get-color-code/$", wsv.getColorCodes),
+    re_path(r"^wire-rep/$", wsv.getWireRepType),
+    re_path(r"^wire-sort-type/$", wsv.getWireSortType),
     re_path(r"^get-wire-size/(?P<matno>[\w\-.]+)/$", wsv.getWireSizeByMatNo),
     re_path(r"^get-wire-size-details/(?P<matno>[\w\-.]+)/$", wsv.getWireSizeDetailsByMatNo),
     re_path(r"^delete-full-wire-size-details/$", wsv.deleteWholeWireSizeDetails),
@@ -621,6 +623,7 @@ urlpatterns = [
     re_path(r'^get-ob-mat/(?P<bpCode>[\w\-]+)/$', bpbreakv.getObMaterialbyObBpCode),
     re_path(r'^get-ob-mat-dropdown/(?P<bpCode>[\w\-]+)/$', bpbreakv.getObMaterialDropdown),
     re_path(r'^get-bp-processing/(?P<bpCode>[\w\-]+)/$', bpbreakv.getPid),
+    re_path(r'^get-bp-breakup-report/$', bpbreakv.getBpBreakupReport),
 
     # BUSINESS PARTNER PROCESSING
     re_path(r'^add-bp-processing/$', bppv.addBusinessPartnerProcessing),

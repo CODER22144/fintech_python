@@ -16,9 +16,9 @@
 <table cellpadding="1" cellspacing="0" border="1" width="780" style="border-collapse:collapse; border:solid 1px black;">
     <!--Loop Begin-->
     <tr class="RepHead">
-        <td valign="top" colspan="3">matno</td>        
-        <td valign="top" colspan="3" style="font-size:14pt;" align="center">chrDescription</td>
-        <td valign="top" colspan="4">Create/Modified Date: lastModified></td>
+        <td valign="top" colspan="3">{{ws.matno}}</td>        
+        <td valign="top" colspan="3" style="font-size:14pt;" align="center">{{ws.chrDescription}}</td>
+        <td valign="top" colspan="4">Create/Modified: </td>
     </tr>
     <tr class="Arial10Bold">
 	<td valign="top">WIRE NO.</ td>
@@ -35,22 +35,22 @@
 	<td valign="top">RIGHT <br />TERMINAL</ td>    
     </tr>
 
-    <!--Loop Begin-->    
+    {% for item in details %}
     <tr class="Arial10">
-	<td  valign="top">JTL</td>        
-        <td  valign="top">LEFTTL</td>
-        <td  valign="top" align="right">LEFTSL</td>
-        <td  valign="top" align="right">LEFTPL</ td>
-        <td  valign="top" align="right">RIGHTSL</td>
-        <td  valign="top" align="right">RIGHTPL</ td>
-        <td  valign="top">PARTNO</td>  
-        <td  valign="top">COLNAME</td>
-        <td  valign="top" align="right">WLENGTH</td>
-	<td  valign="top">LEFTCAP</td>
-	<td  valign="top">RIGHTCAP</td>
-        <td  valign="top">RIGHTTL</td>
+	<td  valign="top">{%  if  item.wireNo %} {{item.wireNo}} {% endif %}</td>        
+        <td  valign="top">{%  if  item.leftTL %} {{item.leftTL}} {% endif %}</td>
+        <td  valign="top" align="right">{%  if  item.leftSL %} {{item.leftSL}} {% endif %}</td>
+        <td  valign="top" align="right">{%  if  item.leftPL %} {{item.leftPL}} {% endif %}</td>
+        <td  valign="top" align="right">{%  if  item.rightSL %} {{item.rightSL}} {% endif %}</td>
+        <td  valign="top" align="right">{%  if  item.rightPL %} {{item.rightPL}} {% endif %}</ td>
+        <td  valign="top">{%  if  item.partNo %} {{item.partNo}} {% endif %}</td>  
+        <td  valign="top">{%  if  item.colName %} {{item.colName}} {% endif %}</td>
+        <td  valign="top" align="right">{%  if  item.wlength %} {{item.wlength}} {% endif %}</td>
+	<td  valign="top">{%  if  item.leftCap %} {{item.leftCap}} {% endif %}</td>
+	<td  valign="top">{%  if  item.rightCap %} {{item.rightCap}} {% endif %}</td>
+        <td  valign="top">{%  if  item.rightTL %} {{item.rightTL}} {% endif %}</td>
     </tr>
-<!--Loop End-->   
+{% endfor %}
          
 <!--Loop End-->  
                

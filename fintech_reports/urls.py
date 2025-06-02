@@ -36,6 +36,7 @@ from .views import ledger_view as lrv
 from .views import production_plan_report_view as pprv
 from .views import ob_material_report_view as obmrv
 from .views import bp_ob_report_view as bporv
+from .views import wire_size_report_view as wsr
 
 urlpatterns = [
 
@@ -185,6 +186,9 @@ urlpatterns = [
     re_path(r"^ob-mat-report/$", obmrv.getObMaterialReport),
     re_path(r"^raw-material/$", obmrv.rawMaterial),
     re_path(r"^get-bp-ob-material-report/$", bporv.getBusinessPartnerObMaterialReport),
+
+    # WIRE SIZE REPORT
+    re_path(r"^get-wire-size-report/$", wsr.getWireSizeReport),
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 

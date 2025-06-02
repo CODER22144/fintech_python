@@ -5,6 +5,7 @@ from rest_framework.response import Response
 from CaFinTech.utility import generate_error_message
 import json
 
+from cafintech_api.views.bill_receipt_view import ConvertToJson
 from fintech_reports.serializers.wire_size_report_serializer import WireSizeReportSerializer
 
 def getWireSizeReport(request):
@@ -17,12 +18,12 @@ def getWireSizeReport(request):
         if(serializer.is_valid()):
             cursor = connections[request.GET.get("cid")].cursor()
             cursor.execute(f"EXEC [cost].[WireSizeTl] %s",(json.dumps(serializer.data),))
-            json_data = [data[0] for data in cursor.fetchall()]
-            json_data = "".join(json_data)
-            cursor.close()
+            json_data = ConvertToJson(cursor)
+            
 
         context = {
-            "ws" : json.loads(json_data),
+            "ws" : json_data[0],
+            "details" : json.loads(json_data[0]['wiredetail'])
         }
         cursor.close()
         return render(request, "wire_size.html", context)

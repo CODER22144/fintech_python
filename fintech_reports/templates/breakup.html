@@ -1,0 +1,95 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head id="Head1" runat="server">
+    <title>Product Breakup</title>
+    <link href="http://mapp.rcinz.com/static/css/main.css" type="text/css" rel="STYLESHEET" />
+    <link href="http://mapp.rcinz.com/static/css/tab.css" type="text/css" rel="STYLESHEET" />  
+</head>
+<body style="background-color:White;">
+    <table cellpadding="0" cellspacing="0" border="0" width="100%">
+        <tr class="prmRepMainHead">
+            <td>Partner Breakup</td>
+        </tr>
+    </table>
+    <table cellpadding="0" cellspacing="0" border="1" width="100%" style="border-collapse:collapse; border:solid 1px black;">
+        <tr class="RepHeadGEN">
+            <td style="width:15%;" valign="top">PART NO.</ td>
+            <td style="width:40%;" valign="top">DESCRIPTION</ td>
+            <td style="width:10%;" valign="top">QTY</ td>
+            <td style="width:5%;" valign="top">UNIT</ td>
+            <td style="width:10%;" valign="top">RATE</ td>
+            <td style="width:10%;" valign="top">AMOUNT</ td>
+        </tr>
+        
+        <tr class="Arial10">
+            <td class="Arial10Bold" colspan="6" style="background-color: AntiqueWhite;">{{data.bpName}}</td>
+        </tr>
+        <tr class="Arial10">
+            <td class="Arial10Bold" style="background-color: AntiqueWhite;">{{data.matno}}</td>
+            <td class="Arial10Bold" colspan="5" style="background-color: AntiqueWhite;">{{data.chrDescription}}</td>
+        </tr>
+        {% for item in data.mad %}
+        <tr class="Arial10">
+            <td style="width:15%;" valign="top">{{item.partno}}</td>
+            <td style="width:40%;" valign="top">{{item.chrDescription}}</ td>
+            <td style="width:10%;" valign="top" align="right">{{item.qty|floatformat:2}}</td>
+            <td style="width:5%; padding-left:5px;" valign="top">{{item.unit}}</td>
+            <td style="width:10%;" valign="top" align="right">{{item.brate|floatformat:2}}</td>
+            <td style="width:10%;" valign="top" align="right">{{item.rmamount|floatformat:2}}</td>
+        </tr>
+        {% endfor %}
+        <tr class="Arial10Bold">
+            <td valign="top" colspan="5">TOTAL (A):</ td>
+            <td valign="top" align="right">{{data.rmamount|floatformat:2}}</td>
+        </tr>
+        <tr class="Arial10">
+            <td class="Arial10Bold" colspan="6" style="background-color:Aqua;">Processing</td>
+        </tr>
+        {% for itm in data.map %}
+        <tr class="Arial10">
+            <td style="width:15%;" valign="top">{{itm.pId}}</td>
+            <td style="width:50%;" valign="top">{{itm.proDescription}}</ td>
+            <td style="width:10%;" valign="top" align="right">{{itm.lqty|floatformat:2}}</td>
+            <td style="width:5%; padding-left:5px;" valign="top">
+            <td style="width:10%;" valign="top" align="right">{{itm.proRate|floatformat:2}}</td>
+            <td style="width:10%;" valign="top" align="right">{{itm.pramount|floatformat:2}}</td>
+        </tr>
+        {% endfor %}
+        <tr class="Arial10Bold">
+            <td valign="top" colspan="5">TOTAL (B) :</ td>
+            <td valign="top" align="right">{{data.pramount|floatformat:2}}</td>
+        </tr>
+
+        <tr class="Arial10Bold">
+            <td valign="top" colspan="5">Processing</ td>
+            <td style="width:10%;" valign="top" align="right">{{data.processing|floatformat:2}}</td>
+        </tr>
+
+        <tr class="Arial10Bold">
+            <td valign="top" colspan="5">(C) Rejection @ 2% (On A)</ td>
+            <td style="width:10%;" valign="top" align="right">{{data.rejamount|floatformat:2}}</td>
+        </tr>
+
+        <tr class="Arial10Bold">
+            <td valign="top" colspan="5">(D) ICC @{{data.icc}}% (On A + B + C)</ td>
+            <td style="width:10%;" valign="top" align="right">{{data.iccamount|floatformat:2}}</td>
+        </tr>
+
+        <tr class="Arial10Bold">
+            <td valign="top" colspan="5">(E) Over Head @ {{data.overhead}}% (On A + B + C) </ td>
+            <td style="width:10%;" valign="top" align="right">{{data.overheadamount|floatformat:2}}</td>
+        </tr>
+
+        <tr class="Arial10Bold">
+            <td valign="top" colspan="5">(F) Profit @ {{data.profit}}% (On A + B + C) </ td>
+            <td style="width:10%;" valign="top" align="right">{{data.profitamount|floatformat:2}}</td>
+        </tr>
+
+        <tr class="Arial10Bold">
+            <td valign="top" colspan="5">Product Cost (A+B+C+D+E+F) </ td>
+            <td style="width:10%;" valign="top" align="right">{{data.tamount|floatformat:2}}</td>
+        </tr>
+
+    </table>
+
+</body>
+</html>

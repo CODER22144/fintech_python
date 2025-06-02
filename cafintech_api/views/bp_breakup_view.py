@@ -183,3 +183,25 @@ def getPid(request, bpCode):
     except Exception as e:
         return Response(generate_error_message(e), status=500, exception=e)
     
+
+
+def getBpBreakupReport(request):
+    try:        
+        bpCode = request.GET.get("bpCode")
+        matno = request.GET.get("matno")
+        cursor = connections[request.GET.get("cid")].cursor()
+        cursor.execute(f"EXEC [cost].[getBPBreakup] %s,%s", (bpCode,matno))
+        json_data = [data[0] for data in cursor.fetchall()]
+        json_data = "".join(json_data)
+        json_data = json.loads(json_data)[0]
+        
+
+        context = {
+            "data" : json_data,
+        }
+        cursor.close()
+        return render(request, "breakup.html", context)
+    
+    except Exception as e:
+        return Response(generate_error_message(e), status=500, exception=e)
+    

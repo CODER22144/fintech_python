@@ -138,3 +138,27 @@ def getColorCodes(request):
         return JsonResponse(json_data, safe=False)
     except Exception as e:
         return Response(data=generate_error_message(e), status=500, exception=e)
+    
+@api_view(["GET"])
+@permission_classes([IsAuthenticated])
+def getWireRepType(request):
+    try:
+        cursor = connections[request.user.cid.cid].cursor()
+        cursor.execute(f"exec [mastcode].[uspGetWireRepType]")
+        json_data = ConvertToJson(cursor)
+        cursor.close()
+        return JsonResponse(json_data, safe=False)
+    except Exception as e:
+        return Response(data=generate_error_message(e), status=500, exception=e)
+    
+@api_view(["GET"])
+@permission_classes([IsAuthenticated])
+def getWireSortType(request):
+    try:
+        cursor = connections[request.user.cid.cid].cursor()
+        cursor.execute(f"exec [mastcode].[uspGetWireSortType]")
+        json_data = ConvertToJson(cursor)
+        cursor.close()
+        return JsonResponse(json_data, safe=False)
+    except Exception as e:
+        return Response(data=generate_error_message(e), status=500, exception=e)
