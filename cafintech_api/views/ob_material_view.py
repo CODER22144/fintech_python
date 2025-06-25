@@ -16,7 +16,7 @@ from cafintech_api.views.bill_receipt_view import ConvertToJson
 @permission_classes([IsAuthenticated])
 def addObMaterial(request):
     try:
-        serializer = OBMaterialSerializer(data=request.data)     # CAN HAVE IMPORT HERE
+        serializer = OBMaterialSerializer(data=request.data, many=True)
         if(serializer.is_valid()):
             cursor = connections[request.user.cid.cid].cursor()
             cursor.execute(f"EXEC [cost].[uspAddObMaterial] %s",(json.dumps(serializer.data),))

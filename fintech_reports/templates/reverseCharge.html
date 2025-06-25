@@ -1,0 +1,67 @@
+﻿<html xmlns="http://www.w3.org/1999/xhtml">
+  <head id="Head1" runat="server">
+  <title>Reverse Charges</title>
+  <link href="http://mapp.rcinz.com/static/css/main.css" type="text/css" rel="STYLESHEET" />
+  <link href="http://mapp.rcinz.com/static/css/tab.css" type="text/css" rel="STYLESHEET" />  
+  </head>
+  <body style="background-color:White;">
+
+<table cellpadding="0" cellspacing="0" border="0" width="100%">
+<tr class="prmRepMainHead">
+<td>REVERSE CHARGES</td>
+</tr>
+<tr class="prmRepMainHeadTD">
+<td align="right"><asp:Label ID="lblSearch" runat="server" /></td>
+</tr>
+</table> 
+<table cellpadding="0" cellspacing="0" border="1" width="100%" style="border-collapse:collapse; border:solid 1px black;">
+    <tr class="RepHeadGEN">        
+        <td valign="top">SNO</td>
+        <td valign="top">RCSNO</td>
+        <td valign="top">PCODE</td>
+        <td valign="top">PARTY NAME</td>
+        <td valign="top">CITY</td>
+        <td valign="top">STATE</td>
+        <td valign="top">BILL NO.</td>
+        <td valign="top">DATE</td>
+        <td valign="top" align="right">AMOUNT</td> 
+        <td valign="top" align="right">DISCOUNT <br />AMOUNT</td> 
+        <td valign="top" align="right">PURCHASE <br />AMOUNT</td>                  
+        <td valign="top" align="right">IGST</td>
+        <td valign="top" align="right">CGST</td>
+        <td valign="top" align="right">SGST</td>
+        <td valign="top" align="right">NET <br /> AMOUNT</td>
+    </tr>
+
+    {% for data in rc %}
+    <tr class="Arial10">
+        <td valign="top">{{forloop.counter}}</td>
+        <td valign="top">{{data.docno}}</td>
+        <td valign="top">{{data.bpCode}}</td>
+        <td valign="top">{{data.bpName}}</td>
+        <td valign="top">{{data.bpCity}}</td>
+        <td valign="top">{{data.bpState}}</td>
+        <td valign="top">{{data.billno}}</td>
+        <td valign="top">{{data.billDate}}</td>
+        <td valign="top" align="right">{{data.amount}}</td>        
+        <td valign="top" align="right">{{data.discountAmount}}</td>
+        <td valign="top" align="right">{{data.taxAmount}}</td>
+        <td valign="top" align="right">{{data.igstAmount}}</td>
+        <td valign="top" align="right">{{data.cgstAmount}}</td>
+        <td valign="top" align="right">{{data.sgstAmount}}</td>
+        <td valign="top" align="right">{{data.tamount}}</td>
+    </tr>            
+{% endfor %}
+<tr class="Arial10Bold" style="height:30px; vertical-align:middle;">
+        <td colspan="8">Total :</td>
+        <td align="right">{{sumArr.0}}</td>
+        <td align="right">{{sumArr.1}}</td>
+        <td align="right">{{sumArr.2}}</td>
+        <td align="right">{{sumArr.3}}</td>
+        <td align="right">{{sumArr.4}}</td>
+        <td align="right">{{sumArr.5}}</td>
+        <td align="right">{{sumArr.6}}</td>
+</tr>         
+</table>
+</body> 
+</html>

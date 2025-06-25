@@ -37,6 +37,9 @@ from .views import production_plan_report_view as pprv
 from .views import ob_material_report_view as obmrv
 from .views import bp_ob_report_view as bporv
 from .views import wire_size_report_view as wsr
+from .views import gr_details_report_view as grdetv
+from .views import tod_report_view as todv
+from .views import reverse_charge_view as rcview
 
 urlpatterns = [
 
@@ -113,6 +116,7 @@ urlpatterns = [
 
     # Business Partner Sale Discount
     re_path(r"^get-bp-sale-discount/$", bpsdv.getBpSaleDiscountReport),
+    re_path(r"^get-bp-payment-info/$", bpsdv.getBpPaymentInfo),
 
     # Business Partner Sale Discount
     re_path(r"^get-shipping-report/$", shrv.getShippingReport),
@@ -189,6 +193,21 @@ urlpatterns = [
 
     # WIRE SIZE REPORT
     re_path(r"^get-wire-size-report/$", wsr.getWireSizeReport),
+    re_path(r"^ws-report/$", wsr.getWsReport),
+    re_path(r"^pb-costing/$", wsr.getPbCostingReport),
+    re_path(r"^part-assembly-costing/$", wsr.getPartAssemblyCosting),
+    re_path(r"^part-sub-assembly-costing/$", wsr.getPartSubAssemblyCosting),
+    re_path(r"^material-assembly-costing/$", wsr.getMaterialAssemblyCosting),
+
+    # GR DETAILS REPORT
+    re_path(r"^gr-details-report/$", grdetv.grDetails),
+
+    # TOD REPORT
+    re_path(r"^tod-report/$", todv.getTodReport),
+    re_path(r"^get-period/$", todv.getPeriod),
+
+    # REVERSE CHARGE REPORT
+    re_path(r"^reverse-charge-report/$", rcview.getReverseCharge),
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 

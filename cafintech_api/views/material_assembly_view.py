@@ -162,3 +162,54 @@ def getMaterialAssemblyBreakup(request, matno, cid):
         return render(request, "material_assembly.html", context)
     except Exception as e:
         return Response(generate_error_message(e), status=500, exception=e)
+    
+def getProductBreakup(request, matno, cid):
+    try:
+        cursor = connections[cid].cursor()
+        cursor.execute(f"EXEC [cost].[getProductBreakup] %s",(matno,))
+        json_data = [data[0] for data in cursor.fetchall()]
+        json_data = "".join(json_data)
+        json_data = json.loads(json_data)
+
+        context = {
+            "mat" : json_data[0],
+        }
+
+        cursor.close()
+        return render(request, "product_breakup.html", context)
+    except Exception as e:
+        return Response(generate_error_message(e), status=500, exception=e)
+    
+def getPartAssembly(request, matno, cid):
+    try:
+        cursor = connections[cid].cursor()
+        cursor.execute(f"EXEC [cost].[getPartAssembly] %s",(matno,))
+        json_data = [data[0] for data in cursor.fetchall()]
+        json_data = "".join(json_data)
+        json_data = json.loads(json_data)
+
+        context = {
+            "mat" : json_data[0],
+        }
+
+        cursor.close()
+        return render(request, "part_assembly.html", context)
+    except Exception as e:
+        return Response(generate_error_message(e), status=500, exception=e)
+    
+def getPartSubAssembly(request, matno, cid):
+    try:
+        cursor = connections[cid].cursor()
+        cursor.execute(f"EXEC [cost].[getPartSubAssembly] %s",(matno,))
+        json_data = [data[0] for data in cursor.fetchall()]
+        json_data = "".join(json_data)
+        json_data = json.loads(json_data)
+
+        context = {
+            "mat" : json_data[0],
+        }
+
+        cursor.close()
+        return render(request, "part_sub_assembly.html", context)
+    except Exception as e:
+        return Response(generate_error_message(e), status=500, exception=e)

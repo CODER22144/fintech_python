@@ -15,3 +15,4 @@ class ReverseChargesSerializer(serializers.Serializer):
     amount = serializers.DecimalField(max_digits=12, decimal_places=2)
     discountAmount = serializers.DecimalField(max_digits=12, decimal_places=2)
     rgst = serializers.DecimalField(max_digits=12, decimal_places=2)
+    gstAmount = serializers.DecimalField(max_digits=12, decimal_places=2)

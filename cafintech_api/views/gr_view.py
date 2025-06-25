@@ -137,7 +137,7 @@ def debitNoteShortage(request):
 def debitNoteRejection(request):
     try:
         cursor = connections[request.user.cid.cid].cursor()
-        cursor.execute(f"exec [fiac].[PRTaxInvoiceRejection] %s", (request.data['grno'], ))
+        cursor.execute(f"exec [fiac].[DbNoteRejection] %s", (request.data['grno'], ))
         return JsonResponse({"status" : "OK"}, safe=False)
     except Exception as e:
         return Response(data=generate_error_message(e), status=500, exception=e)

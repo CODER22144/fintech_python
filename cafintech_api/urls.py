@@ -82,6 +82,8 @@ from .views import material_assembly_tech_details_view as matatv
 from .views import bp_breakup_view as bpbreakv
 from .views import business_partner_processing_view as bppv
 
+from .views import material_tech_details_view as mtv
+
 
 urlpatterns = [
 # Home
@@ -270,6 +272,7 @@ urlpatterns = [
     re_path(r"^get-doc-against/$", dbv.getDocAgainst),
     re_path(r"^get-doc-reason/$", dbv.getDocReason),
     re_path(r"^get-cr-mat-details/$", dbv.getCrNoteMaterialDetails),
+    re_path(r"^get-mat-wh/$", dbv.getMaterialWhByBpCodeMatno),
 
     # Sales debit note
     re_path(r"^add-sale-debit-note/$", sbnv.addSaleDebitNote),
@@ -356,8 +359,14 @@ urlpatterns = [
     re_path(r"^reject-hold-order/$", opv.rejectOrders),
     re_path(r"^export-eway-bill-sale/$", opv.exportEwaybill),
     re_path(r"^export-einvoice/$", opv.getEInvoice),
+    re_path(r"^get-billed-order/$", opv.getOrderBilledById),
+    re_path(r"^update-billed-order/$", opv.updateOrderBilled),
     re_path(r"^get-order-balance/(?P<orderId>\d+)/$", opv.getOrderBalanceByOrderId),
     re_path(r"^delete-order-packaging/(?P<id>\d+)/$", opv.deleteOrderPackaging),
+
+    re_path(r"^append-order-billed/$", opv.appendOrderBilled),
+    re_path(r"^get-gst-api/$", opv.getGstApiDetails),
+
 
     # Order Packaging
     re_path(r"^add-order-packaging/$", opackv.addOrderPackaging),
@@ -405,6 +414,7 @@ urlpatterns = [
     re_path(r"^get-work-process/$", papv.getWorkProcess),
     re_path(r"^get-rm-type/$", papv.getRmType),
     re_path(r"^add-pa/$", papv.addPartAssembly),
+    re_path(r"^update-pa/$", papv.updatePartAssembly),
     re_path(r"^add-pa-details/$", papv.addPartAssemblyDetails),
     re_path(r"^add-pa-processing/$", papv.addPartAssemblyProcessing),
     re_path(r"^get-pa-matno/(?P<matno>[\w\-.]+)/$", papv.getPartAssemblyByMatno),
@@ -418,6 +428,7 @@ urlpatterns = [
 
     # Part Sub Assembly
     re_path(r"^add-psa/$", psapv.addPartSubAssembly),
+    re_path(r"^update-psa/$", psapv.updatePartSubAssembly),
     re_path(r"^add-psa-details/$", psapv.addPartSubAssemblyDetails),
     re_path(r"^add-psa-processing/$", psapv.addPartSubAssemblyProcessing),
     re_path(r"^get-psa-matno/(?P<matno>[\w\-.]+)/$", psapv.getBymatnoPartSubAssembly),
@@ -430,6 +441,7 @@ urlpatterns = [
 
     # Product Breakup
     re_path(r"^add-pbu/$", pbuv.addProductBreakup),
+    re_path(r"^update-pbu/$", pbuv.updateProductBreakup),
     re_path(r"^add-pbu-details/$", pbuv.addProductBreakupDetails),
     re_path(r"^add-pbu-processing/$", pbuv.addProductBreakupProcessing),
     re_path(r"^get-pbu-matno/(?P<matno>[\w\-.]+)/$", pbuv.getProductBreakupByMatno),
@@ -546,12 +558,16 @@ urlpatterns = [
 
     # LINE REJECTION
     re_path(r'^add-line-rejection/$', lrv.addLineRejection),
+    re_path(r'^line-rejection-pending/$', lrv.getLineRejectionPending),
+    re_path(r'^delete-line-rejection/$', lrv.deleteLineRejection),
 
     # Advance Sales Order
     re_path(r'^add-sale-order-adv/$', asov.addAdvanceSaleOrderDetails),
 
     # Payment Inward Clear
     re_path(r'^add-payment-inward-clear/$', picv.addPaymentInwardClear),
+    re_path(r'^add-unadj-payment-inward-clear/$', picv.addUnadjustedPaymentInwardClear),
+    re_path(r'^add-unadj-payment-clear/$', picv.addUnAdjustedPaymentClear),
 
     # Advance Requirement
     re_path(r'^add-advance-req/$', advreqv.addAdvanceReq),
@@ -584,6 +600,9 @@ urlpatterns = [
     re_path(r'^delete-mat-assembly-processing/$', mav.deleteMaterialAssemblyProcessing),
 
     re_path(r"^mat-assembly-breakup/(?P<matno>[\w\-]+)/(?P<cid>\w+)/$", mav.getMaterialAssemblyBreakup),
+    re_path(r"^product-breakup/(?P<matno>[\w\-]+)/(?P<cid>\w+)/$", mav.getProductBreakup),
+    re_path(r"^part-assembly/(?P<matno>[\w\-]+)/(?P<cid>\w+)/$", mav.getPartAssembly),
+    re_path(r"^part-sub-assembly/(?P<matno>[\w\-]+)/(?P<cid>\w+)/$", mav.getPartSubAssembly),
 
 
     # OB MATERIAL
@@ -630,6 +649,13 @@ urlpatterns = [
     re_path(r'^update-bp-processing/$', bppv.UpdateBusinessPartnerProcessing),
     re_path(r'^delete-bp-processing/$', bppv.deleteBusinessPartnerProcessing),
     re_path(r'^get-bp-processing/$', bppv.getBusinessPartnerProcessingById),
+
+    # MATERIAL TECH DETAILS
+    re_path(r'^add-material-tech-details/$', mtv.addMaterialTechDetails),
+    re_path(r'^update-material-tech-details/$', mtv.updateMaterialTechDetails),
+    re_path(r'^delete-material-tech-details/$', mtv.deleteMaterialTechDetails),
+    re_path(r'^get-material-tech-details/$', mtv.getMaterialTechDetails),
+    re_path(r'^material-tech-details-report/$', mtv.getMaterialTechDetailsReport),
 
 
 

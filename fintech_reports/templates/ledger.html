@@ -29,7 +29,7 @@
 
 {% for item in ledger.ledgerdet %}
 <tr>
-<td valign="top">{% if item.billDate %} {{item.billDate}} {% endif %}</td>
+<td valign="top" NOWRAP>{% if item.billDate %} {{item.billDate}} {% endif %}</td>
 <td valign="top">{{item.lName}}<br />{% if item.naration %} {{item.naration}} {% endif %}</td>
 <td valign="top" align="right">{{item.dbamount}}</td>
 <td valign="top" align="right">{{item.cramount}}</td>

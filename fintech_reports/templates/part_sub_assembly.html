@@ -1,0 +1,116 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head id="Head1" runat="server">
+  <title>Part Sub Assembly</title>
+  <link href="http://mapp.rcinz.com/static/css/main.css" type="text/css" rel="STYLESHEET" />
+    <link href="http://mapp.rcinz.com/static/css/tab.css" type="text/css" rel="STYLESHEET" />  
+  </head>
+  <body style="background-color:White;">
+
+<div style="float:left; vertical-align:middle; width:800; border:1px solid black; margin:10px; padding:5px;">
+<table cellpadding="0" cellspacing="0" border="0" width="100%">
+<tr class="prmRepMainHead">
+<td>PART SUB ASSEMBLY</td>
+</tr>
+</table> 
+<table cellpadding="0" cellspacing="0" border="1" width="100%" style="border-collapse:collapse; border:1px solid black;">
+    <tr class="Arial10">
+        <td class="Arial12Bold">{{mat.matno}}</td>
+        <td class="Arial12Bold">{{mat.chrDescription}}</td>
+        <td class="Arial10Bold" colspan="2">{{mat.mrp}}</td>
+        <td class="Arial10Bold" colspan="2">{{mat.oerate}}</td>
+    </tr>
+    <tr class="Arial10">
+        <td class="Arial12Bold">&nbsp;</td>
+        <td class="Arial12Bold">Remarks : </td>
+        <td class="Arial10Bold" colspan="2">Target Price: </td>
+        <td class="Arial10Bold" colspan="2">&nbsp;</td>
+    </tr>
+    <tr class="RepHeadGEN">
+        <td style="width:15%;" valign="top">PART NO.</ td>
+        <td style="width:50%; padding-left:5px;" valign="top">DESCRIPTION</ td>
+        <td style="width:10%;" valign="top">QTY</ td>
+        <td style="width:5%;" valign="top">UNIT</ td>
+        <td style="width:10%;" valign="top">RATE</ td>
+        <td style="width:10%;" valign="top">AMOUNT</ td>
+    </tr>
+
+    {% for group in mat.gmad %}
+    <tr class="Arial10">
+        <td class="Arial12Bold" style="width:180px;" colspan="6">{{group.mgDescription}}</td>
+    </tr>
+    {% for item in group.mad %}
+
+    <tr class="Arial10">
+
+        <td style="width:100px; text-align:left;">{{item.partno}}</a></td>
+        <td style="width:100px; text-align:left;">{{item.chrDescription}}</td>
+        <td style="width:10%;" valign="top" align="right">{{item.qty}}</td>
+        <td style="width:5%; padding-left:5px;" valign="top">{{item.unit}}</ td>
+        <td style="width:10%;" valign="top" align="right">{{item.brate}}</td>
+        <td style="width:10%;" valign="top" align="right">{{item.amount}}</td>
+    </tr>
+    {% endfor %}
+
+    {% endfor %}
+    <tr>
+        <td class="Arial10Bold" colspan="5">(A) Total - RMC</td>
+        <td class="Arial10Bold" align="right">{{mat.asamount}}</td>
+    </tr>
+
+    <tr class="Arial10">
+        <td class="Arial10Bold" colspan="6" style="background-color:Aqua;">Processing Cost</td>
+    </tr>
+    {% for map in mat.map  %}
+    <tr class="Arial10">
+        
+        <td style="width:50%; padding-left:5px;" valign="top" colspan="2">{{map.wpName}}</td>
+        <td style="width:10%;" valign="top" align="right">{{map.rQty}}</td>
+        <td style="width:5%; padding-left:5px;" valign="top">{{map.lrate}}</td>
+        <td style="width:10%;" valign="top" align="right">{{map.dayProduction}}</td>
+        <td style="width:10%;" valign="top" align="right">{{map.amount}}</td>
+    </tr>
+    {% endfor %}
+    <tr class="Arial10Bold">
+        <td colspan="2" valign="top">(B) Total Processing Cost</ td>
+        <td style="width:10%;" valign="top" align="right">&nbsp;</td>
+        <td style="width:5%;" valign="top">&nbsp;</td>
+        <td style="width:10%;" valign="top">&nbsp;</td>
+        <td style="width:10%;" valign="top" align="right">{{mat.pramount}}</td>
+    </tr>
+
+    <tr class="Arial10Bold">
+        <td valign="top" colspan="5">Processing</ td>
+        <td style="width:10%;" valign="top" align="right">{{mat.processing}}</td>
+    </tr>
+
+    <tr class="Arial10Bold">
+        <td valign="top" colspan="5">(C) Rejection @ 2% (On A)</ td>
+        <td style="width:10%;" valign="top" align="right">{{mat.rejamount}}</td>
+    </tr>
+
+    <tr class="Arial10Bold">
+        <td valign="top" colspan="5">(D) ICC @ {{mat.icc}}% (On A + B + C)</ td>
+        <td style="width:10%;" valign="top" align="right">{{mat.iccamount}}</td>
+    </tr>
+
+    <tr class="Arial10Bold">
+        <td valign="top" colspan="5">(E) Over Head @ {{mat.overhead}}% (On A + B + C) </ td>
+        <td style="width:10%;" valign="top" align="right">{{mat.overheadamount}}</td>
+    </tr>
+
+    <tr class="Arial10Bold">
+        <td valign="top" colspan="5">(F) Profit @ {{mat.profit}}% (On A + B + C) </ td>
+        <td style="width:10%;" valign="top" align="right">{{mat.profitamount}}</td>
+    </tr>
+
+    <tr class="Arial10Bold">
+        <td valign="top" colspan="5">Product Cost (A+B+C+D+E+F) </ td>
+        <td style="width:10%;" valign="top" align="right">{{mat.tamount}}</td>
+    </tr>
+
+    <!-- loop END-->
+</table>
+
+</div>
+</body> 
+</html>

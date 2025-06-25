@@ -31,10 +31,10 @@
         <tr class="Arial10">
             <td style="width:15%;" valign="top">{{item.partno}}</td>
             <td style="width:40%;" valign="top">{{item.chrDescription}}</ td>
-            <td style="width:10%;" valign="top" align="right">{{item.qty|floatformat:2}}</td>
+            <td style="width:10%;" valign="top" align="right">{{item.qty|floatformat:5}}</td>
             <td style="width:5%; padding-left:5px;" valign="top">{{item.unit}}</td>
-            <td style="width:10%;" valign="top" align="right">{{item.brate|floatformat:2}}</td>
-            <td style="width:10%;" valign="top" align="right">{{item.rmamount|floatformat:2}}</td>
+            <td style="width:10%;" valign="top" align="right">{{item.brate|floatformat:3}}</td>
+            <td style="width:10%;" valign="top" align="right">{{item.rmamount|floatformat:3}}</td>
         </tr>
         {% endfor %}
         <tr class="Arial10Bold">
@@ -48,45 +48,45 @@
         <tr class="Arial10">
             <td style="width:15%;" valign="top">{{itm.pId}}</td>
             <td style="width:50%;" valign="top">{{itm.proDescription}}</ td>
-            <td style="width:10%;" valign="top" align="right">{{itm.lqty|floatformat:2}}</td>
+            <td style="width:10%;" valign="top" align="right">{{itm.lqty|floatformat:5}}</td>
             <td style="width:5%; padding-left:5px;" valign="top">
-            <td style="width:10%;" valign="top" align="right">{{itm.proRate|floatformat:2}}</td>
-            <td style="width:10%;" valign="top" align="right">{{itm.pramount|floatformat:2}}</td>
+            <td style="width:10%;" valign="top" align="right">{{itm.proRate|floatformat:3}}</td>
+            <td style="width:10%;" valign="top" align="right">{{itm.pramount|floatformat:3}}</td>
         </tr>
         {% endfor %}
         <tr class="Arial10Bold">
             <td valign="top" colspan="5">TOTAL (B) :</ td>
-            <td valign="top" align="right">{{data.pramount|floatformat:2}}</td>
+            <td valign="top" align="right">{{data.pramount|floatformat:3}}</td>
         </tr>
 
         <tr class="Arial10Bold">
             <td valign="top" colspan="5">Processing</ td>
-            <td style="width:10%;" valign="top" align="right">{{data.processing|floatformat:2}}</td>
+            <td style="width:10%;" valign="top" align="right">{{data.processing|floatformat:3}}</td>
         </tr>
 
         <tr class="Arial10Bold">
             <td valign="top" colspan="5">(C) Rejection @ 2% (On A)</ td>
-            <td style="width:10%;" valign="top" align="right">{{data.rejamount|floatformat:2}}</td>
+            <td style="width:10%;" valign="top" align="right">{{data.rejamount|floatformat:3}}</td>
         </tr>
 
         <tr class="Arial10Bold">
             <td valign="top" colspan="5">(D) ICC @{{data.icc}}% (On A + B + C)</ td>
-            <td style="width:10%;" valign="top" align="right">{{data.iccamount|floatformat:2}}</td>
+            <td style="width:10%;" valign="top" align="right">{{data.iccamount|floatformat:3}}</td>
         </tr>
 
         <tr class="Arial10Bold">
             <td valign="top" colspan="5">(E) Over Head @ {{data.overhead}}% (On A + B + C) </ td>
-            <td style="width:10%;" valign="top" align="right">{{data.overheadamount|floatformat:2}}</td>
+            <td style="width:10%;" valign="top" align="right">{{data.overheadamount|floatformat:3}}</td>
         </tr>
 
         <tr class="Arial10Bold">
             <td valign="top" colspan="5">(F) Profit @ {{data.profit}}% (On A + B + C) </ td>
-            <td style="width:10%;" valign="top" align="right">{{data.profitamount|floatformat:2}}</td>
+            <td style="width:10%;" valign="top" align="right">{{data.profitamount|floatformat:3}}</td>
         </tr>
 
         <tr class="Arial10Bold">
             <td valign="top" colspan="5">Product Cost (A+B+C+D+E+F) </ td>
-            <td style="width:10%;" valign="top" align="right">{{data.tamount|floatformat:2}}</td>
+            <td style="width:10%;" valign="top" align="right">{{data.tamount|floatformat:3}}</td>
         </tr>
 
     </table>

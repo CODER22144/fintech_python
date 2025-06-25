@@ -178,10 +178,25 @@ def addProductFinalStandard(request):
 def getProductBreakupReport(request):
     try:
         cursor = connections[request.user.cid.cid].cursor()
-        cursor.execute(f"exec [cost].[ProductBreakupReport] %s", (request.data['matno'],))
+        cursor.execute(f"exec [cost].[ProductBreakupReport] %s", (json.dumps(request.data),))
         json_data = [data[0] for data in cursor.fetchall()]
         json_data = "".join(json_data)
         cursor.close()
         return Response(json_data)
     except Exception as e:
         return Response(data=generate_error_message(e), status=500, exception=e)
+    
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def updateProductBreakup(request):
+    try:
+        serializer = ProductBreakupSerializer(data=request.data)
+        if(serializer.is_valid()):
+            cursor = connections[request.user.cid.cid].cursor()
+            cursor.execute(f"EXEC [cost].[uspUpdateProductBreakup] %s",(json.dumps(serializer.data),))
+            cursor.close()
+            return Response(serializer.data)
+        UNSUCCESSFUL_REQUEST['message'] = serializer.errors
+        return Response(UNSUCCESSFUL_REQUEST, status=400)
+    except Exception as e:
+        return Response(generate_error_message(e), status=500, exception=e)

@@ -1,7 +1,7 @@
 from rest_framework import serializers
 
 class DbNoteSerializer(serializers.Serializer):
-    docno = serializers.IntegerField()
+    # docno = serializers.IntegerField()
     docDate = serializers.CharField(max_length = 20)
     lcode = serializers.CharField(max_length = 10)
     drId = serializers.CharField(max_length = 2)

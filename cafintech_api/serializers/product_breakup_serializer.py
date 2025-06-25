@@ -15,3 +15,9 @@ class ProductBreakupSerializer(serializers.Serializer):
     netWeight = serializers.DecimalField(max_digits=12, decimal_places=3)
     csId = serializers.CharField(max_length=2)
     remarks = serializers.CharField(max_length=200, allow_null=True, required=False)
+
+    processing = serializers.DecimalField(max_digits=5, decimal_places=2, default=0)
+    rejection = serializers.DecimalField(max_digits=5, decimal_places=2, default=0)
+    icc = serializers.DecimalField(max_digits=5, decimal_places=2, default=0)
+    overhead = serializers.DecimalField(max_digits=5, decimal_places=2, default=0)
+    profit = serializers.DecimalField(max_digits=5, decimal_places=2, default=0)

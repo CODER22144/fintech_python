@@ -1,0 +1,72 @@
+﻿<html xmlns="http://www.w3.org/1999/xhtml">
+  <head id="Head1" runat="server">
+  <title>GR DETAILS</title>
+  <link href="http://mapp.rcinz.com/static/css/main.css" type="text/css" rel="STYLESHEET" />
+  <link href="http://mapp.rcinz.com/static/css/tab.css" type="text/css" rel="STYLESHEET" />  
+  </head>
+  <body style="background-color:White;">
+  
+<table cellpadding="0" cellspacing="0" border="0" width="100%">
+<tr class="prmRepMainHead">
+    <td>GR DETAILS</td>
+</tr>
+</table>
+<table cellspacing="0" cellpadding="0" border="1" width="100%" style="border-collapse:collapse;">
+    <tr>
+	    <td class="Arial10Bold">SNO</td>
+            <td class="Arial10Bold">POLNO</td>
+            <td class="Arial10Bold" align="right">TAXABLE AMOUNT</td>
+            <td class="Arial10Bold" align="right">TOT. AMOUNT</td>
+	    <td class="Arial10Bold">INVNO</td>
+            <td class="Arial10Bold">INV. DATE</td>            
+            <td class="Arial10Bold">EWAY BILL No.</td>
+	    <td class="Arial10Bold">GRNO</td>
+	    <td class="Arial10Bold">GRDATE</td>
+            <td class="Arial10Bold">FREIGHT</td>
+            <td class="Arial10Bold">PNAME</td>
+            <td class="Arial10Bold">FROM LOCATION</td>
+            <td class="Arial10Bold">TO LOCATION</td>
+            <td class="Arial10Bold" align="right">QTY</td>
+            <td class="Arial10Bold">TRANSPORTER NAME</td>
+            <td class="Arial10Bold">REMARK</td>
+            <td class="Arial10Bold">PLI</td>
+            <td class="Arial10Bold">MOD OF TRANSPORT</td>
+            <td class="Arial10Bold">MOD FREIGHT</td>
+            <td class="Arial10Bold">DIC</td>            
+    </tr>
+{% for gr in grDetails %}
+	<tr>
+	<td class="Arial10">{{forloop.counter}}</td>
+        <td class="Arial10">&nbsp;</td>
+	<td class="Arial10" align="right">{% if gr.sumtaxableAmount %} {{gr.sumtaxableAmount|floatformat:2}} {% endif %}</td>
+        <td class="Arial10" align="right">{% if gr.sumtamount %} {{gr.sumtamount|floatformat:2}} {% endif %}</td>
+	<td class="Arial10">{% if gr.invNo %} {{gr.invNo}} {% endif %}</td>
+        <td class="Arial10" NOWRAP>{% if gr.dtDate %} {{gr.dtDate}} {% endif %}</td>
+        <td class="Arial10">{% if gr.ewbno %} {{gr.ewbno}} {% endif %}</td>
+        <td class="Arial10">{% if gr.grno %} {{gr.grno}} {% endif %}</td>
+	<td class="Arial10" NOWRAP>{% if gr.grDate %} {{gr.grDate}} {% endif %}</td>
+        <td class="Arial10" align="right">{% if gr.freight %} {{gr.freight|floatformat:2}} {% endif %}</td>
+        <td class="Arial10">{% if gr.custName %} {{gr.custName}} {% endif %}</td>
+        <td class="Arial10">Delhi</td>
+        <td class="Arial10">{% if gr.custCity %} {{gr.custCity}} {% endif %}</td>
+        <td class="Arial10" align="right">{% if gr.sumqty %} {{gr.sumqty|floatformat:2}} {% endif %}</td>
+        <td class="Arial10">{% if gr.carName %} {{gr.carName}} {% endif %}</td>
+        <td class="Arial10">&nbsp;</td>
+        <td class="Arial10">&nbsp;</td>
+        <td class="Arial10">{% if gr.transDescription %} {{gr.transDescription}} {% endif %}</td>
+        <td class="Arial10">{% if gr.mofDescription %} {{gr.mofDescription}} {% endif %}</td>
+        <td class="Arial10">&nbsp;</td>
+	</tr>
+
+{% endfor %}
+	<tr>
+	<td class="Arial10Bold" colspan="2">TOTAL</td>
+	<td class="Arial10Bold" align="right">{{tax|floatformat:2}}</td>
+        <td class="Arial10Bold" align="right">{{amount|floatformat:2}}</td>
+	<td class="Arial10Bold" colspan="5">&nbsp;</td>
+        <td class="Arial10Bold" align="right">{{freight|floatformat:2}}</td>
+        <td class="Arial10Bold" colspan="10">&nbsp;</td>        
+	</tr>
+</table>
+</body> 
+</html>

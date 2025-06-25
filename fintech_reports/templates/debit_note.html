@@ -70,16 +70,16 @@
                     <!--Loop Start-->
                     {% for items in db.itemList %}
                     <tr>
-                        <td style="width:30px;">&nbsp;{% if items.matno %} {{forloop.counter}} {% else %} &nbsp; {% endif %}</td>
-                        <td style="border-left:solid 1px black;">{{items.matno}}</td>
-                        <td style="border-left:solid 1px black;">{{items.hsnCode}}</td>
-                        <td class="Arial8" style="border-left:solid 1px black;">{{items.naration}}</td> 
-                        <td style="border-left:solid 1px black;" align="right">{{items.qty|floatformat:2}}</td>
-                        <td style="border-left:solid 1px black;" align="center">{{items.unit}}</td>                
-                        <td style="border-left:solid 1px black;" align="right">{{items.rate|floatformat:2}}</td>
-                        <td style="border-left:solid 1px black;" align="right">{{items.amount|floatformat:2}}</td>
-                        <td style="border-left:solid 1px black;" align="right">{{items.rgst|floatformat:2}}</td>
-                        <td style="border-left:solid 1px black;" align="right">{{items.gstAmount|floatformat:2}}</td>                
+                        <td valign="top" style="width:30px;">&nbsp;{% if items.matno %} {{forloop.counter}} {% else %} &nbsp; {% endif %}</td>
+                        <td valign="top" style="border-left:solid 1px black;">{{items.matno}}</td>
+                        <td valign="top" style="border-left:solid 1px black;">{{items.hsnCode}}</td>
+                        <td valign="top" class="Arial8" style="border-left:solid 1px black;">{{items.naration}}{% if items.naration %} </br>Bill No: {% if items.billNo %} {{items.billNo}} {% endif %}&emsp; Bill Date: {% if items.dbillDate %} {{items.dbillDate}} {% endif %} {% endif %}</td> 
+                        <td valign="top" style="border-left:solid 1px black;" align="right">{{items.qty|floatformat:2}}</td>
+                        <td valign="top" style="border-left:solid 1px black;" align="center">{{items.unit}}</td>                
+                        <td valign="top" style="border-left:solid 1px black;" align="right">{{items.rate|floatformat:2}}</td>
+                        <td valign="top" style="border-left:solid 1px black;" align="right">{{items.amount|floatformat:2}}</td>
+                        <td valign="top" style="border-left:solid 1px black;" align="right">{{items.rgst|floatformat:2}}</td>
+                        <td valign="top" style="border-left:solid 1px black;" align="right">{{items.gstAmount|floatformat:2}}</td>                
                     </tr> 
                     {% endfor %}
 

@@ -17,7 +17,7 @@ from cafintech_api.views.bill_receipt_view import ConvertToJson
 @permission_classes([IsAuthenticated])
 def addBusinessPartnerObMaterial(request):
     try:
-        serializer = BusinessPartnerObMaterialSerializer(data=request.data)     # CAN HAVE IMPORT HERE
+        serializer = BusinessPartnerObMaterialSerializer(data=request.data, many=True)
         if(serializer.is_valid()):
             cursor = connections[request.user.cid.cid].cursor()
             cursor.execute(f"EXEC [cost].[uspAddBusinessPartnerObMaterial] %s",(json.dumps(serializer.data),))
@@ -48,7 +48,7 @@ def UpdateBusinessPartnerObMaterial(request):
 def getBusinessPartnerObMaterialById(request):
     try:        
         cursor = connections[request.user.cid.cid].cursor()
-        cursor.execute(f"EXEC [cost].[uspGetBusinessPartnerObMaterialById] %s",(request.data['bpmId'],))
+        cursor.execute(f"EXEC [cost].[uspGetBusinessPartnerObMaterialByBpCodeMatno] %s,%s",(request.data['bpCode'],request.data['matno']))
         json_data = ConvertToJson(cursor)
         cursor.close()
         return JsonResponse(json_data, safe=False)  

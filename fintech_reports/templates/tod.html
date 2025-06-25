@@ -1,0 +1,67 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head id="Head1" runat="server">
+  <title>PARTY TOD REPORTS</title>
+  <link href="http://mapp.rcinz.com/static/css/main.css" type="text/css" rel="STYLESHEET" />
+  <link href="http://mapp.rcinz.com/static/css/tab.css" type="text/css" rel="STYLESHEET" />
+  </head>
+  <body style="background-color:White;">
+
+<table cellpadding="0" cellspacing="0" border="0" width="1500">
+<tr class="prmRepMainHead">
+<td>TOD REPORT</td>
+</tr>
+<tr class="prmRepMainHeadTD">
+<td align="right"><asp:Label ID="lblSearch" runat="server" /></td>
+</tr>
+</table> 
+<table cellpadding="0" cellspacing="0" border="1" width="1500" style="border-collapse:collapse; border:solid 1px black;">
+    <tr class="RepHeadGEN">        
+        <td valign="top">SNO</td>
+        <td valign="top">PARTY CODE</td>
+        <td valign="top">PARTY NAME</td>
+        <td valign="top">STATION</td>
+        <td valign="top">SALES</td>
+        <td valign="top">REJECTION</td>                
+        <td valign="top">NET SALES</td>
+        <td valign="top" align="center">REJECTION<br />@%</td>                
+        <td valign="top" align="right">TOD RATE</td>        
+        <td valign="top" align="center">1%<br />>=1Lac AND < 2.7Lac </td>
+        <td valign="top" align="center">2%<br />>=2.7Lac AND < 4.5Lac </td>
+        <td valign="top" align="center">3%<br />>=4.5Lac AND < 9Lac</td>
+        <td valign="top" align="center">4%<br />>=9Lac AND < 15Lac</td>
+        <td valign="top" align="center">5%<br />>=15lac</td>
+    </tr>
+ {% for item in tod %}
+    <tr class="Arial10">
+        <td class="Arial10" valign="top">{{forloop.counter}}.</td>
+        <td class="Arial10" valign="top">{{item.bpCode}}</td>
+        <td class="Arial10" valign="top">{{item.bpName}}</td>
+        <td class="Arial10" valign="top">{{item.bpCity}} - {{item.stateName}}</td>        
+        <td class="Arial10" valign="top" align="right">{{item.samount|floatformat:2}}</td>
+        <td class="Arial10" valign="top" align="right">{{item.ramount|floatformat:2}}</td>
+        <td class="Arial10" valign="top" align="right">{{item.todamount|floatformat:2}}</td>
+        <td class="Arial10" valign="top" align="right">{{item.rpercent|floatformat:2}}</td>
+        <td class="Arial10" valign="top" align="right">{{item.todrate|floatformat:2}}</td>
+        <td class="Arial10" valign="top" align="right">{{item.tod1amount|floatformat:2}}</td>
+        <td class="Arial10" valign="top" align="right">{{item.tod2amount|floatformat:2}}</td>
+        <td class="Arial10" valign="top" align="right">{{item.tod3amount|floatformat:2}}</td>
+        <td class="Arial10" valign="top" align="right">{{item.tod4amount|floatformat:2}}</td>
+        <td class="Arial10" valign="top" align="right">{{item.tod5amount|floatformat:2}}</td>
+    </tr>            
+  {% endfor %}
+    <tr class="Arial10Bold">
+        <td valign="top" colspan="4">TOTAL</td>   
+        <td valign="top" align="right">{{sum.0|floatformat:2}}</td>
+        <td valign="top" align="right">{{sum.1|floatformat:2}}</td>
+        <td valign="top" align="right">{{sum.2|floatformat:2}}</td>
+        <td valign="top" align="right">&nbsp;</td>
+        <td valign="top" align="right">{{sum.3|floatformat:2}}</td>
+        <td valign="top" align="right">{{sum.4|floatformat:2}}</td>
+        <td valign="top" align="right">{{sum.5|floatformat:2}}</td>
+        <td valign="top" align="right">{{sum.6|floatformat:2}}</td>
+        <td valign="top" align="right">{{sum.7|floatformat:2}}</td>
+        <td valign="top" align="right">{{sum.8|floatformat:2}}</td>     
+    </tr>
+</table>
+</body> 
+</html>

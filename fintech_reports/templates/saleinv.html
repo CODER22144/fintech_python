@@ -76,10 +76,10 @@
             
             {% for items in sale.itemList %}      
             <tr class="Arial10">
-                <td valign="top" style="width:30px; text-align:center;">{% if items.icode %} {{forloop.counter}} {% else %} &nbsp; {% endif %}</td>
-	            <td valign="top" style="border-left:solid 1px black; padding-left:2px; width:70px;">{{items.icode}}</td>	            
+                <td valign="top" style="width:25px; text-align:center;">{% if items.icode %} {{forloop.counter}} {% else %} &nbsp; {% endif %}</td>
+	            <td valign="top" style="border-left:solid 1px black; padding-left:2px; width:85px;" NOWRAP>{{items.icode}}</td>	            
 	            <td valign="top" style="border-left:solid 1px black; padding-left:2px; width:60px;">{{items.hsnCode}}</td>
-                <td valign="top" style="border-left:solid 1px black; padding-left:2px; font-size:7pt; width:360px;">{{items.saleDescription}}</td>
+                <td valign="top" style="border-left:solid 1px black; padding-left:2px; font-size:7pt; width:350px;">{{items.saleDescription}}</td>
                 <td valign="top" style="border-left:solid 1px black; padding-right:2px; text-align:right; width:50px;">{{items.listPrice|floatformat:2}}</td>
                 <td valign="top" style="border-left:solid 1px black; padding-right:2px; text-align:right; width:50px;">{{items.rate|floatformat:2}}</td>	            
 	            <td valign="top" style="border-left:solid 1px black; padding-right:2px; text-align:right; width:50px;">{{items.qty|floatformat:2}}</td>
@@ -191,7 +191,7 @@
                     <td colspan="4" style="border-top:1px solid black;">
                         E. & O. E.<br />- All disputes subject to Delhi Courts Jurisdiction.<br />- No Complaint shall be entertained after seven days of receipt of goods.<br />- If Payment is not received within 7 days, interest will be charged @24% p.a.<br />- The liability of pay GST on such Interest charge on delayed payment will arise at the time of receipt of such charges.<br/><span style="font-weight:bold;">- Payments to be made through RTGS/NEFT/Cheque/DD Only.</span><br /><span style="font-weight:bold;">- Bank Details : {{sale.bankName}} Account No. : {{sale.accountNo}} IFSC Code : {{sale.ifscCode}}</span>
                     </td>
-                    <td colspan="5" style="border-top:1px solid black; text-align:right; font-weight: bold;">FOR {{sale.legalName}}<br /><br /><br /><br />AUTHORISED SIGNATORY</td>
+                    <td colspan="5" style="border-top:1px solid black; text-align:right; font-weight: bold;">FOR {{sale.legalName}}<br />{% if sale.signImage %}<img src="http://mapp.rcinz.com{{sale.signImage}}" alt="">{% endif %}<br />AUTHORISED SIGNATORY</td>
                 </tr> 
                     
                 </table>
