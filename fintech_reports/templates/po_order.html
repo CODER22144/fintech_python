@@ -35,16 +35,19 @@
                 <td class="Arial10">{{data.bpAdd}}</td>
             </tr>
             <tr>
-		        <td class="Arial10">{{data.bpAdd1}}</td>
+		        <td class="Arial10">{% if data.bpAdd1 %} {{data.bpAdd1}} {% endif %}</td>
             </tr>
             <tr>
-                <td class="Arial10">{{data.bpCity}}</td>
+                <td class="Arial10">{{data.bpCity}} </td>
             </tr>
             <tr>
-                <td class="Arial10">{{data.stateName}}</td>
+                <td class="Arial10">{{data.stateName}} - {{data.bpZipCode}}</td>
             </tr>
             <tr>
-                <td class="Arial10">GSTIN : {{data.bpGSTIN}}</td>
+                <td class="Arial10">Email: {{data.bpEmail}}</td>
+            </tr>
+            <tr>
+                <td class="Arial10">{% if data.bpGSTIN %} GSTIN : {{data.bpGSTIN}} {% endif %}</td>
             </tr>
             <!-- <tr>
                 <td class="Arial10"><%=rstParent.Fields("EMAILID").Value%></td>
@@ -131,6 +134,8 @@
    		    <li>Prices are at our works.</li>            
 		    <li>GST as applicable</li>
 		    <li>Purchase order rate must be adhere</li>
+		    <li>Payment will be made after {{data.crDays}} days from the date of material receipt.</li>
+
             <!-- <li>Payment will be made after <% = rstParent.Fields("CRDAYS").Value%> days from the date of material receipt.</li>  -->
             <li><span style="font-weight:bold;">For any change in specifications of the item(s) please do obtain our prior written approval or revised approved drawing </span></li>
 		    </ul>

@@ -152,3 +152,15 @@ def getOrderClearValue(request):
         return JsonResponse(json_data, safe=False)
     except Exception as e:
         return Response(generate_error_message(e), status=500, exception=e)
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def getEInvoicePending(request):
+    try:
+        cursor = connections[request.user.cid.cid].cursor()
+        cursor.execute(f"exec  [sales].[uspGetEInvoicePending] %s,%s",(request.user.userId,request.user.roles.role_id))
+        json_data = ConvertToJson(cursor)
+        cursor.close()
+        return JsonResponse(json_data, safe=False)
+    except Exception as e:
+        return Response(generate_error_message(e), status=500, exception=e)

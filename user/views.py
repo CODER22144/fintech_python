@@ -2,7 +2,7 @@ from django.db.models.functions import Concat
 from django.db.models import Value
 from CaFinTech.errors import AUTHORIZATION_ERROR, UNSUCCESSFUL_REQUEST
 from CaFinTech.utility import generate_error_message
-from user.serializers import user_serializer
+from user.serializers import error_log_serializer, user_serializer
 from .models import User
 from rest_framework.response import Response
 from rest_framework.decorators import api_view, permission_classes
@@ -15,6 +15,9 @@ from django_otp.plugins.otp_totp.models import TOTPDevice
 from rest_framework import status
 from django.contrib.auth.tokens import default_token_generator
 from django.core.mail import send_mail
+from cryptography.fernet import Fernet
+from CaFinTech.settings import FERNET_KEY
+
 
 
 
@@ -157,3 +160,20 @@ def updatePassword(request):
     user.save()
 
     return Response(data={"message" : "Password reset completed"}, status=200)
+
+
+# ******************************ERROR LOGS******************************
+
+@api_view(['POST'])
+def log_error(request):
+    fernet = Fernet(FERNET_KEY.encode())
+    request.data['api_payload'] = fernet.encrypt(str(request.data['api_payload']).encode()).decode()
+    serializer = error_log_serializer(data=request.data)
+    if serializer.is_valid():
+        serializer.save()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+# note: To decode the token, you can use the following code:
+# fernet.decrypt(token.encode()).decode()

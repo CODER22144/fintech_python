@@ -18,4 +18,7 @@ urlpatterns = [
     re_path(r'^login/$', auth_views.LoginView.as_view(template_name="user/login.html"), name='login'),
     re_path(r'^logout/$', auth_views.LogoutView.as_view(template_name="user/logout.html"), name='logout'),
 
+    # ERROR LOGS
+    re_path(r'^error-logs/$', views.log_error),
+
 ]

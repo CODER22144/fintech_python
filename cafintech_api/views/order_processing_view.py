@@ -338,6 +338,17 @@ def getGstApiDetails(request):
     except Exception as e:
         return Response(data=generate_error_message(e), status=500, exception=e)
     
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def updateGstApiCreds(request):
+    try:
+        cursor = connections[request.user.cid.cid].cursor()
+        cursor.execute(f"EXEC [mastcode].[uspUpdateApi] %s,%s",(request.data['token'],request.data['exdate']))
+        cursor.close()
+        return Response({"message": "GST API credentials updated successfully"}, status=200)
+    except Exception as e:
+        return Response(generate_error_message(e), status=500, exception=e)
+    
 
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
@@ -363,5 +374,18 @@ def appendOrderBilled(request):
         cursor.execute(f"EXEC [sales].[uspAddEInvoiceAPI] %s,%s",(request.data['ordId'],json.dumps(request.data)))
         cursor.close()
         return Response({"status": "OK"}, status=200)
+    except Exception as e:
+        return Response(generate_error_message(e), status=500, exception=e)
+    
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def getGstEInvoice(request):
+    try:
+        cursor = connections[request.user.cid.cid].cursor()
+        cursor.execute(f"EXEC [sales].[uspGetEInvoiceAPI] %s",(request.data['docno'],))
+        json_data = [data[0] for data in cursor.fetchall()]
+        json_data = "".join(json_data)
+        cursor.close()
+        return Response(json.loads(json_data))
     except Exception as e:
         return Response(generate_error_message(e), status=500, exception=e)

@@ -83,6 +83,7 @@ from .views import bp_breakup_view as bpbreakv
 from .views import business_partner_processing_view as bppv
 
 from .views import material_tech_details_view as mtv
+from .views import color_view as colorv
 
 
 urlpatterns = [
@@ -198,6 +199,7 @@ urlpatterns = [
     re_path(r"^debit-note-rate-diff/$", grv.debitNoteRateDifference),
     re_path(r"^debit-note-shortage/$", grv.debitNoteShortage),
     re_path(r"^tax-invoice-rejection/$", grv.debitNoteRejection),
+    re_path(r"^export-gr-data/$", grv.getExportDataForGr),
 
     # ADDITIONAL ORDER
     re_path(r"^additional-purchase-order/$", aov.addAdditionalPurchaseOrder),
@@ -364,8 +366,12 @@ urlpatterns = [
     re_path(r"^get-order-balance/(?P<orderId>\d+)/$", opv.getOrderBalanceByOrderId),
     re_path(r"^delete-order-packaging/(?P<id>\d+)/$", opv.deleteOrderPackaging),
 
+    # GST API
+    re_path(r"^export-einvoice-api/$", opv.getGstEInvoice),
+
     re_path(r"^append-order-billed/$", opv.appendOrderBilled),
     re_path(r"^get-gst-api/$", opv.getGstApiDetails),
+    re_path(r"^update-gst-api/$", opv.updateGstApiCreds),
 
 
     # Order Packaging
@@ -656,6 +662,14 @@ urlpatterns = [
     re_path(r'^delete-material-tech-details/$', mtv.deleteMaterialTechDetails),
     re_path(r'^get-material-tech-details/$', mtv.getMaterialTechDetails),
     re_path(r'^material-tech-details-report/$', mtv.getMaterialTechDetailsReport),
+
+    # COLOR CODE
+    re_path(r'^add-color/$', colorv.addColourCode),
+    re_path(r'^update-color/$', colorv.updateColourCode),
+    re_path(r'^delete-color/$', colorv.deleteColourCode),
+    re_path(r'^get-color/$', colorv.getColourCodeById),
+    re_path(r'^color-report/$', colorv.getColorReport),
+
 
 
 

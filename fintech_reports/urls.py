@@ -63,6 +63,7 @@ urlpatterns = [
     re_path(r"^get-sales-report/$", sorv.getSalesReport),
     re_path(r"^order-status/$", sorv.getOrderStatus),
     re_path(r"^order-clear-value/$", sorv.getOrderClearValue),
+    re_path(r"^einvoice-pending/$", sorv.getEInvoicePending),
     re_path(r"^order-slip/(?P<orderId>\d+)/(?P<cid>\w+)/$", sorv.getOrderSlip),
     re_path(r"^get-sales-order/(?P<orderId>\d+)/(?P<cid>\w+)/$", sorv.getSaleOrderByOrderId),
     re_path(r"^get-sales-order-pdf/(?P<orderId>\d+)/(?P<cid>\w+)/$", sorv.convertSaleOrderToPdf),

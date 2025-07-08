@@ -97,3 +97,19 @@ class Roles(models.Model):
     role_id = models.CharField(primary_key=True, max_length=2)
     role_description = models.CharField(max_length=30)
 
+
+class ErrorLog(models.Model):
+    id = models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID', default=None)
+    error_code = models.IntegerField()
+    error_message = models.TextField()
+    error_time = models.DateTimeField(auto_now_add=True)
+    api_method_type = models.TextField(default='POST')  # GET, POST, PUT, DELETE
+    api_endpoint = models.TextField()
+    api_payload = models.TextField(blank=True, null=True)  # Encrypted payload
+    ip_address = models.TextField()
+    user_id = models.TextField()
+    
+    # error_platform = models.TextField()
+
+    def __str__(self):
+        return f"Error {self.error_code} by {self.user_id} at {self.error_time}"

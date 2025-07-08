@@ -263,9 +263,9 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/4.2/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'en-in'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'UTC+05:30'
 
 USE_I18N = True
 
@@ -348,3 +348,5 @@ EMAIL_HOST_USER = 'heroup534@gmail.com'         # your Gmail address
 EMAIL_HOST_PASSWORD = 'kvcrdcswxtdxupcf'   # use App Password (not your Gmail password)
 
 X_FRAME_OPTIONS = 'ALLOW-FROM *'
+
+FERNET_KEY = 'LvFBgaOkI7H0Mm1RvqU6VV-rLVUTyLJClLB6z0HwbtE='
