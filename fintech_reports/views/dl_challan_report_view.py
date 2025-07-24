@@ -52,10 +52,10 @@ def getDlChallanFormat(request, docno, cid):
         return Response(generate_error_message(e), status=500, exception=e)
     
 def getDlChallanFormatPdf(request, docno, cid):
-    url = 'http://mapp.rcinz.com/get-dl-challan/'+docno + "/" + cid
-    redirectTO = 'JWO_'+docno+'.pdf'
+    url = 'http://erpapi.rcinz.com/get-dl-challan/'+docno + "/" + cid
+    redirectTO = 'DL_'+docno+'_'+cid+'.pdf'
     filename = File_Path + "\\" +redirectTO
     
     config = pdfkit.configuration(wkhtmltopdf=path_wkhtmltopdf)
     pdfkit.from_url(url,filename, configuration=config)
-    return redirect('http://mapp.rcinz.com/media/docs/'+redirectTO)
+    return redirect('http://erpapi.rcinz.com/media/docs/'+redirectTO)

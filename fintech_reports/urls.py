@@ -40,8 +40,13 @@ from .views import wire_size_report_view as wsr
 from .views import gr_details_report_view as grdetv
 from .views import tod_report_view as todv
 from .views import reverse_charge_view as rcview
+from .views import exp_order_report_view as exporv
+from .views import menu_view
 
 urlpatterns = [
+
+    re_path(r"^menu/$", menu_view.getMenu),
+    
 
     re_path(r"^search-business-partner/$", bps.searchBusinessPartner),
     re_path(r"^get-material-rep/$", mr.getMaterialRep),
@@ -93,6 +98,13 @@ urlpatterns = [
     # SALE BY INV. NO
     re_path(r"^get-sale-invc/(?P<inv>\d+)/(?P<cid>\w+)/$", sewbv.getSaleByInvNo),
     re_path(r"^get-sale-invc-pdf/(?P<inv>\d+)/(?P<cid>\w+)/$", sewbv.convertSaleInvToPdf),
+
+    # EXPORT ORDER
+    re_path(r"^get-exp-order/(?P<inv>\d+)/(?P<cid>\w+)/$", exporv.getExpOrder),
+    re_path(r"^get-exp-order-pdf/(?P<inv>\d+)/(?P<cid>\w+)/$", exporv.getExpOrderPdf),
+
+    re_path(r"^get-exp-inv/(?P<inv>\d+)/(?P<cid>\w+)/$", exporv.getExpInvoice),
+    re_path(r"^get-exp-inv-pdf/(?P<inv>\d+)/(?P<cid>\w+)/$", exporv.getExpInvoicePdf),
 
     # Manufacturing Report
     re_path(r"^get-manufacturing-report/$", manu.getManufacturingReport),

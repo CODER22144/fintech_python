@@ -25,7 +25,13 @@ def addGrDetails(request):
             cursor.execute(f"EXEC [purchase].[uspAddGr] %s",(json.dumps(param),))
             cursor.close()
             return Response(grSerializer.data)
-        UNSUCCESSFUL_REQUEST['message'] = grSerializer.errors
+        errors = {}
+        if not grSerializer.is_valid():
+            errors["Master"] = grSerializer.errors
+        if not grDetailsSerializer.is_valid():
+            errors["Details"] = grDetailsSerializer.errors
+
+        UNSUCCESSFUL_REQUEST['message'] = errors
         return Response(UNSUCCESSFUL_REQUEST, status=400)
     except Exception as e:
         return Response(data=generate_error_message(e), status=500, exception=e)

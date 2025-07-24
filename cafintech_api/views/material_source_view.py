@@ -70,3 +70,14 @@ def editMaterialSourceBulk(request):
         return Response(UNSUCCESSFUL_REQUEST, status=400)
     except Exception as e:
         return Response(generate_error_message(e), status=500, exception=e)
+    
+@api_view(["POST"])
+@permission_classes([IsAuthenticated])
+def deleteMaterialSource(request):
+    try:
+        cursor = connections[request.user.cid.cid].cursor()
+        cursor.execute(f"exec [purchase].[uspDeleteMaterialSource] %s", (request.data['msId'], ))
+        cursor.close()
+        return Response(data={"status" : "OK"}, status=204)
+    except Exception as e:
+        return Response(data=generate_error_message(e), status=500, exception=e)

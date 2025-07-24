@@ -35,8 +35,8 @@ def getSaleByInvNo(request, inv, cid):
 
             grouped_data[rate]['totalTaxableAmount'] = round(grouped_data[rate]['totalTaxableAmount'], 2)
 
-        if(len(json_data['itemList']) <= 35):
-            for i in range(len(json_data['itemList']), 35):
+        if(len(json_data['itemList']) <= 30):
+            for i in range(len(json_data['itemList']), 30):
                 json_data['itemList'].append({'icode' : ''})
 
         context = {
@@ -44,15 +44,15 @@ def getSaleByInvNo(request, inv, cid):
             'hsnList' : list(grouped_data.values())
         }
         cursor.close()
-        return render(request, "saleinv.html", context)
+        return render(request, "sale_inv.html", context)
     except Exception as e:
         return Response(generate_error_message(e), status=500, exception=e)
     
 def convertSaleInvToPdf(request, inv, cid):
-    url = 'http://mapp.rcinz.com/get-sale-invc/'+inv + "/" + cid
+    url = 'http://erpapi.rcinz.com/get-sale-invc/'+inv + "/" + cid
     redirectTO = 'INV_'+inv+'.pdf'
     filename = File_Path + "\\" +redirectTO
     
     config = pdfkit.configuration(wkhtmltopdf=path_wkhtmltopdf)
     pdfkit.from_url(url,filename, configuration=config)
-    return redirect('http://mapp.rcinz.com/media/docs/'+redirectTO)
+    return redirect('http://erpapi.rcinz.com/media/docs/'+redirectTO)

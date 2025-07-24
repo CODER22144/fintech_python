@@ -101,9 +101,9 @@ DATABASES = {
     'default': {
         'ENGINE': 'mssql',
         'NAME': 'masterDb',
-        'HOST': '36.255.3.34,15666',
-        'USER': 'usr365',
-        'PASSWORD': 'Pmc&$!@0011733',
+        'HOST': '103.205.67.4,35353',
+        'USER': 'usrerp',
+        'PASSWORD': 'Lrig2#;qw941Tb*y',
         'OPTIONS': {
             'driver': 'ODBC Driver 17 for SQL Server',
        }
@@ -111,9 +111,9 @@ DATABASES = {
     'SA': {
         'ENGINE': 'mssql',
         'NAME': 'SARemoteMDb',
-        'HOST': '36.255.3.34,15666',
-        'USER': 'usr365',
-        'PASSWORD': 'Pmc&$!@0011733',
+        'HOST': '103.205.67.4,35353',
+        'USER': 'usrerp',
+        'PASSWORD': 'Lrig2#;qw941Tb*y',
         'OPTIONS': {
             'driver': 'ODBC Driver 17 for SQL Server',
        }
@@ -121,9 +121,9 @@ DATABASES = {
     'SE': {
         'ENGINE': 'mssql',
         'NAME': 'SERemoteMDb',
-        'HOST': '36.255.3.34,15666',
-        'USER': 'usr365',
-        'PASSWORD': 'Pmc&$!@0011733',
+        'HOST': '103.205.67.4,35353',
+        'USER': 'usrerp',
+        'PASSWORD': 'Lrig2#;qw941Tb*y',
         'OPTIONS': {
             'driver': 'ODBC Driver 17 for SQL Server',
        }
@@ -131,9 +131,9 @@ DATABASES = {
     'SU': {
         'ENGINE': 'mssql',
         'NAME': 'SLRemoteMDb',
-        'HOST': '36.255.3.34,15666',
-        'USER': 'usr365',
-        'PASSWORD': 'Pmc&$!@0011733',
+        'HOST': '103.205.67.4,35353',
+        'USER': 'usrerp',
+        'PASSWORD': 'Lrig2#;qw941Tb*y',
         'OPTIONS': {
             'driver': 'ODBC Driver 17 for SQL Server',
        }
@@ -141,9 +141,9 @@ DATABASES = {
     'SR': {
         'ENGINE': 'mssql',
         'NAME': 'STRemoteMDb',
-        'HOST': '36.255.3.34,15666',
-        'USER': 'usr365',
-        'PASSWORD': 'Pmc&$!@0011733',
+        'HOST': '103.205.67.4,35353',
+        'USER': 'usrerp',
+        'PASSWORD': 'Lrig2#;qw941Tb*y',
         'OPTIONS': {
             'driver': 'ODBC Driver 17 for SQL Server',
        }
@@ -161,9 +161,9 @@ DATABASES = {
     'SW': {
         'ENGINE': 'mssql',
         'NAME': 'SWLiveDb',
-        'HOST': '36.255.3.34,15666',
-        'USER': 'usr365',
-        'PASSWORD': 'Pmc&$!@0011733',
+        'HOST': '103.205.67.4,35353',
+        'USER': 'usrerp',
+        'PASSWORD': 'Lrig2#;qw941Tb*y',
         'OPTIONS': {
             'driver': 'ODBC Driver 17 for SQL Server',
        }
@@ -171,9 +171,9 @@ DATABASES = {
     'EM': {
         'ENGINE': 'mssql',
         'NAME': 'EMLiveDb',
-        'HOST': '36.255.3.34,15666',
-        'USER': 'usr365',
-        'PASSWORD': 'Pmc&$!@0011733',
+        'HOST': '103.205.67.4,35353',
+        'USER': 'usrerp',
+        'PASSWORD': 'Lrig2#;qw941Tb*y',
         'OPTIONS': {
             'driver': 'ODBC Driver 17 for SQL Server',
        }
@@ -181,9 +181,9 @@ DATABASES = {
     'EL': {
         'ENGINE': 'mssql',
         'NAME': 'ELLiveDb',
-        'HOST': '36.255.3.34,15666',
-        'USER': 'usr365',
-        'PASSWORD': 'Pmc&$!@0011733',
+        'HOST': '103.205.67.4,35353',
+        'USER': 'usrerp',
+        'PASSWORD': 'Lrig2#;qw941Tb*y',
         'OPTIONS': {
             'driver': 'ODBC Driver 17 for SQL Server',
        }
@@ -191,9 +191,9 @@ DATABASES = {
     'ST': {
         'ENGINE': 'mssql',
         'NAME': 'STLiveDb',
-        'HOST': '36.255.3.34,15666',
-        'USER': 'usr365',
-        'PASSWORD': 'Pmc&$!@0011733',
+        'HOST': '103.205.67.4,35353',
+        'USER': 'usrerp',
+        'PASSWORD': 'Lrig2#;qw941Tb*y',
         'OPTIONS': {
             'driver': 'ODBC Driver 17 for SQL Server',
        }
@@ -201,9 +201,9 @@ DATABASES = {
     'SS': {
         'ENGINE': 'mssql',
         'NAME': 'SSLiveDb',
-        'HOST': '36.255.3.34,15666',
-        'USER': 'usr365',
-        'PASSWORD': 'Pmc&$!@0011733',
+        'HOST': '103.205.67.4,35353',
+        'USER': 'usrerp',
+        'PASSWORD': 'Lrig2#;qw941Tb*y',
         'OPTIONS': {
             'driver': 'ODBC Driver 17 for SQL Server',
        }
@@ -211,9 +211,9 @@ DATABASES = {
     'SL': {
         'ENGINE': 'mssql',
         'NAME': 'SLLiveDb',
-        'HOST': '36.255.3.34,15666',
-        'USER': 'usr365',
-        'PASSWORD': 'Pmc&$!@0011733',
+        'HOST': '103.205.67.4,35353',
+        'USER': 'usrerp',
+        'PASSWORD': 'Lrig2#;qw941Tb*y',
         'OPTIONS': {
             'driver': 'ODBC Driver 17 for SQL Server',
        }
@@ -221,9 +221,9 @@ DATABASES = {
     'SI': {
         'ENGINE': 'mssql',
         'NAME': 'SILiveDb',
-        'HOST': '36.255.3.34,15666',
-        'USER': 'usr365',
-        'PASSWORD': 'Pmc&$!@0011733',
+        'HOST': '103.205.67.4,35353',
+        'USER': 'usrerp',
+        'PASSWORD': 'Lrig2#;qw941Tb*y',
         'OPTIONS': {
             'driver': 'ODBC Driver 17 for SQL Server',
        }
@@ -231,9 +231,9 @@ DATABASES = {
     'ED': {
         'ENGINE': 'mssql',
         'NAME': 'EMDLiveDb',
-        'HOST': '36.255.3.34,15666',
-        'USER': 'usr365',
-        'PASSWORD': 'Pmc&$!@0011733',
+        'HOST': '103.205.67.4,35353',
+        'USER': 'usrerp',
+        'PASSWORD': 'Lrig2#;qw941Tb*y',
         'OPTIONS': {
             'driver': 'ODBC Driver 17 for SQL Server',
        }
@@ -265,7 +265,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-in'
 
-TIME_ZONE = 'UTC+05:30'
+TIME_ZONE = "Asia/Kolkata"
 
 USE_I18N = True
 
@@ -338,14 +338,14 @@ SWAGGER_SETTINGS = {
 }
 
 path_wkhtmltopdf = r'C:\\Program Files\wkhtmltopdf\bin\wkhtmltopdf.exe'
-File_Path = r'D:\sd\\fintech_api\\api\\CaFinTech\\docs\\docs'
+File_Path = r'F:\\repo\\fintech_python\\docs\\docs'
 
 
-EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST = 'mail.sapswiss.in'
 EMAIL_PORT = 587
-EMAIL_USE_TLS = True
-EMAIL_HOST_USER = 'heroup534@gmail.com'         # your Gmail address
-EMAIL_HOST_PASSWORD = 'kvcrdcswxtdxupcf'   # use App Password (not your Gmail password)
+EMAIL_USE_SSL = False
+EMAIL_HOST_USER = 'info.sst@sapswiss.in'
+EMAIL_HOST_PASSWORD = 'Ab0c$%7289Pm'
 
 X_FRAME_OPTIONS = 'ALLOW-FROM *'
 

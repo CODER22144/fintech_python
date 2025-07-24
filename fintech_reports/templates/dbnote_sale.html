@@ -1,8 +1,8 @@
 ﻿<html xmlns="http://www.w3.org/1999/xhtml">
 <head id="Head1" runat="server">
     <title>Debit Note (Sale)</title>
-    <link href="http://mapp.rcinz.com/static/css/main.css" type="text/css" rel="STYLESHEET" />
-  <link href="http://mapp.rcinz.com/static/css/tab.css" type="text/css" rel="STYLESHEET" />  
+    <link href="http://erpapi.rcinz.com/static/css/main.css" type="text/css" rel="STYLESHEET" />
+  <link href="http://erpapi.rcinz.com/static/css/tab.css" type="text/css" rel="STYLESHEET" />  
 </head>
 
 <body style="background-color:White;">
@@ -15,7 +15,7 @@
         </tr>
         <tr>
             {% if db.compLogo %}
-    <td><img src="http://mapp.rcinz.com{{db.compLogo}}" width="100%" height="70" alt="" /></td>
+    <td><img src="http://erpapi.rcinz.com{{db.compLogo}}" width="100%" height="70" alt="" /></td>
     {% endif %}
         </tr>
     </table>
@@ -46,7 +46,7 @@
                                 <tr>
                                     <td>
                                         {% if db.sqrcode %} 
-                                            <img src="http://mapp.rcinz.com/get-qr/?data={{db.sqrcode}}" width="250" height="250" />                  
+                                            <img src="http://erpapi.rcinz.com/get-qr/?data={{db.sqrcode}}" width="250" height="250" />                  
                                         {% endif %}
                                     </td>
                                 </tr>

@@ -122,7 +122,7 @@ def register_2fa_device(request):
 @api_view(['POST'])
 def send_verification_email(request):
     try:
-        usr = User.objects.get(email=request.data['email'])
+        usr = User.objects.filter(email=request.data['email']).first()
 
         if usr is None:
             UNSUCCESSFUL_REQUEST['message'] = 'No User found by email: ' + request.data['email']
@@ -133,7 +133,7 @@ def send_verification_email(request):
         send_mail(
         subject='Email Verification',
         message=f'Please note the verification Token : {token}',
-        from_email='heroup534@gmail.com',
+        from_email='info.sst@sapswiss.in',
         recipient_list=[usr.email],
         fail_silently=False,
         )

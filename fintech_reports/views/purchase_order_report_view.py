@@ -46,13 +46,13 @@ def purchaseOrderInvoice(request, orderId,cid):
         return render(request, "po_order.html", context)
     
 def convertToPdf(request, orderId, cid):
-    url = 'http://mapp.rcinz.com/purchase-order-invoice/'+orderId + "/" +cid
+    url = 'http://erpapi.rcinz.com/purchase-order-invoice/'+orderId + "/" +cid
     redirectTO = 'PRO'+orderId+'.pdf'
     filename = File_Path + "\\" +redirectTO
     
     config = pdfkit.configuration(wkhtmltopdf=path_wkhtmltopdf)
     pdfkit.from_url(url,filename, configuration=config)
-    return redirect('http://mapp.rcinz.com/media/docs/'+redirectTO)
+    return redirect('http://erpapi.rcinz.com/media/docs/'+redirectTO)
 
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])

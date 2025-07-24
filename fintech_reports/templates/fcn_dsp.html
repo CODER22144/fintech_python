@@ -1,0 +1,92 @@
+﻿<html xmlns="http://www.w3.org/1999/xhtml">
+  <head id="Head1" runat="server">
+  <title>FINANCIAL CREDIT NOTE</title>
+  <link href="http://erpapi.rcinz.com/static/css/main.css" type="text/css" rel="STYLESHEET" />
+  <link href="http://erpapi.rcinz.com/static/css/tab.css" type="text/css" rel="STYLESHEET" />      
+  </head>
+<body style="background-color:White;">
+<!--Loop Begin--> 
+<table cellpadding="0" cellspacing="0" border="0" width="900px">
+<tr>
+<td style="text-align:center; font-family:Verdana; font-size:14pt; font-weight:bold;">CREDIT NOTE</td>
+</tr>
+    {% if fiac.compLogo %}
+	<tr><td><img src="http://erpapi.rcinz.com{{fiac.compLogo}}" alt="image"></td></tr>
+	{% endif %}
+</table>
+<table cellpadding="0" cellspacing="2" border="0" width="900px" style="border:solid 1px black; margin-top:5px;">
+    <tr>
+        <td>
+            <table cellspacing="0" cellpadding="0" border="0" width="100%">
+                <tr>
+	                <td valign="top" style="padding-left:2px;">
+		            <table class="Arial10" cellspacing="0" cellpadding="0" border="0" width="100%">		                
+                        <tr><td class="Arial10Bold">SNO. : {{fiac.fcnsno}}</td></tr>
+                        <tr><td class="Arial10Bold">DATE OF ISSUE : {{fiac.dtDate}}</td></tr>
+                        <tr><td class="Arial10Bold" style="border-top:solid 1px black;">Billed To</td></tr>		            
+		                <tr><td class="Arial10Bold">{{fiac.bpName}}</td></tr>
+		                <tr><td class="Arial10">{{fiac.bpAdd}}</td></tr>
+		                <tr><td class="Arial10">{% if fiac.bpAdd1 %} {{fiac.bpadd1}} {% endif %}</td></tr>
+		                <tr><td class="Arial10">{{fiac.bpCity}}</td></tr>
+                        <tr><td class="Arial10">{{fiac.stateName}}&nbsp;&nbsp;&nbsp;PIN : {{fiac.bpZipCode}}</td></tr>
+                        <tr><td class="Arial10Bold">{% if fiac.bpGSTIN %}GSTN No. : {{fiac.bpGSTIN}} {% endif %}</td></tr>
+                        
+		            </table>
+	                </td>
+	            </tr>
+	         </table> 	    
+        </td>
+    </tr>
+    <tr>
+    <td>
+        <table class="Arial10" cellspacing="0" cellpadding="0" width="100%">
+            <tr>
+                <td class="Arial10Bold" valign="top" style="border-bottom:solid 2px black;border-top:solid 1px black;">DESCRIPTION</td>                	            
+	            <td class="Arial10Bold" valign="top" style="border-bottom:solid 2px black;border-top:solid 1px black; border-left:solid 1px black; text-align:center;">QUALIFIED<br />VALUE</td>
+                <td class="Arial10Bold" valign="top" style="border-bottom:solid 2px black;border-top:solid 1px black; border-left:solid 1px black; text-align:center;">RATE</td>
+                <td class="Arial10Bold" valign="top" style="border-bottom:solid 2px black;border-top:solid 1px black; border-left:solid 1px black; text-align:center;">AMOUNT</td>            
+            </tr>
+            <tr>
+                <td class="Arial10">{{fiac.naration}}</td> 
+                <td class="Arial10" style="border-left:solid 1px black;" align="right">{{fiac.amount|floatformat:2}}</td>
+                <td class="Arial10" style="border-left:solid 1px black;" align="right">{{fiac.rtod|floatformat:2}}</td>
+                <td class="Arial10"style="border-left:solid 1px black;" align="right">{{fiac.tamount|floatformat:2}}</td>
+            </tr> 
+
+            {% for i in empty %}
+            <tr>
+                <td class="Arial10">&nbsp;</td> 
+                <td class="Arial10" style="border-left:solid 1px black;" align="right">&nbsp;</td>
+                <td class="Arial10" style="border-left:solid 1px black;" align="right">&nbsp;</td>
+                <td class="Arial10"style="border-left:solid 1px black;" align="right">&nbsp;</td>
+            </tr> 
+            {% endfor %}
+
+            <tr class="Arial10Bold">
+                <td valign="top" colspan="3" style="border-bottom:solid 1px black;border-top:solid 1px black;">TOTAL</td>
+                <td valign="top" align="right" style="border-bottom:solid 1px black;border-top:solid 1px black; border-left:solid 1px black;">{{fiac.tamount|floatformat:2}}</td>
+            </tr>
+            <tr class="Arial10Bold">
+                <td valign="top" colspan="4" style="border-bottom:solid 1px black;">{{fiac.wtamount}} Only.</td>
+            </tr>
+        </table> 
+    </td> 
+    </tr>
+    <tr>
+    <td>
+	    <table class="Arial10" cellspacing="0" cellpadding="0" border="0" width="100%">
+	    <tr>
+	    <td class="Arial8" style="width:500px;" valign="middle">E. & O. E.<br />- All disputes subject to Delhi Court's Jurisdiction.<br />- No Complaint shall be entertained after seven days of receipt of goods/credit note.<br /></td>
+        <td class="Arial10Bold" style="width:280px; text-align:right; padding-right:10px;" valign="middle">For {{fiac.legalName}}</td>
+	    </tr>
+	    <tr>
+        <td class="Arial8" style="width:500px; height:50px;" valign="bottom">&nbsp;</td>
+	    <td style="width:280px; height:50px; text-align:right; padding-right:10px;" valign="bottom"><br/>{% if fiac.signImage %}<img src="http://erpapi.rcinz.com{{fiac.signImage}}" alt="">{% endif %}<br/>Authorised Signatory</td>
+	    </tr>
+	    </table>
+    </td>
+    </tr> 
+</table>
+<!-- Loop End-->
+</body> 
+</html>

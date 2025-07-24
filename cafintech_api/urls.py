@@ -84,6 +84,7 @@ from .views import business_partner_processing_view as bppv
 
 from .views import material_tech_details_view as mtv
 from .views import color_view as colorv
+from .views import export_order_view as eov
 
 
 urlpatterns = [
@@ -140,6 +141,7 @@ urlpatterns = [
     re_path(r"^add-ledger-codes/$", lc.addLedgerCodes),
     re_path(r"^update-ledger-codes/$", lc.updateLedgerCodes),
     re_path(r"^get-ledger-codes/$", lc.getLedgerCode),
+    re_path(r"^get-gst-regen-type/$", lc.getGstRegenType),
     re_path(r"^get-ledger-code/(?P<lCode>[\w\-\.]+)/$", lc.getByIdLedgerCode),
     re_path(r"^get-ledger-code-supply/(?P<lCode>[\w\-\.]+)/$", lc.getLedgerCodeSupply),
 
@@ -169,6 +171,7 @@ urlpatterns = [
     re_path(r"^update-material-source/$", mts.updateMaterialSource),
     re_path(r"^get-material-source-details/$", mts.getMaterialSourceDetails),
     re_path(r"^edit-material-source-bulk/$", mts.editMaterialSourceBulk),
+    re_path(r"^delete-material-source/$", mts.deleteMaterialSource),
 
     # Business Partner Pay and Tax Info
     re_path(r"^add-business-partner-tax-info/$", bpt.createBusinessPartnerTaxInfo),
@@ -260,6 +263,9 @@ urlpatterns = [
     re_path(r"^get-tod-rate/$", fcv.getTodRate),
     re_path(r"^get-crn-type/$", fcv.getCreditNoteType),
     re_path(r"^create-financial-crnote/$", fcv.createFinancialCreditNote),
+    re_path(r"^fiac-crnote-rep/$", fcv.getFinancialCrNoteReport),
+    re_path(r"^get-fcsno/(?P<inv>\d+)/(?P<cid>\w+)/$", fcv.getFcsno),
+    re_path(r"^get-fcsno-pdf/(?P<fcns>\d+)/(?P<cid>\w+)/$", fcv.getFcsnoPdf),
 
     # Receipt VOucher
     re_path(r"^create-receipt-voucher/$", rvv.createReceiptVoucher),
@@ -669,6 +675,14 @@ urlpatterns = [
     re_path(r'^delete-color/$', colorv.deleteColourCode),
     re_path(r'^get-color/$', colorv.getColourCodeById),
     re_path(r'^color-report/$', colorv.getColorReport),
+
+    # EXPORT ORDER
+    re_path(r'^add-export-order/$', eov.addExpOrder),
+    re_path(r'^update-export-order/$', eov.updateExpOrder),
+    re_path(r'^delete-export-order/$', eov.deleteExpOrder),
+    re_path(r'^get-export-order/$', eov.getExpOrderById),
+    re_path(r'^get-currency/$', eov.getCurrency),
+    re_path(r'^get-ports/$', eov.getPorts),
 
 
 

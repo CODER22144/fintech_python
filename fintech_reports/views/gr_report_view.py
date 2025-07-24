@@ -55,13 +55,13 @@ def srvFormat(request, grno, cid):
         return render(request, "srvformat.html", context)
     
 def srvFormatPdf(request, grno, cid):
-    url = 'http://mapp.rcinz.com/srv/'+grno + "/" +cid
-    redirectTO = 'SRV'+grno+'.pdf'
+    url = 'http://erpapi.rcinz.com/srv/'+grno + "/" +cid
+    redirectTO = 'SRV'+grno+'_'+cid+'.pdf'
     filename = File_Path + "\\" +redirectTO
     
     config = pdfkit.configuration(wkhtmltopdf=path_wkhtmltopdf)
     pdfkit.from_url(url,filename, configuration=config)
-    return redirect('http://mapp.rcinz.com/media/docs/'+redirectTO)
+    return redirect('http://erpapi.rcinz.com/media/docs/'+redirectTO)
 
 
 @api_view(['POST'])

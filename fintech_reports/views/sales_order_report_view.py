@@ -61,13 +61,13 @@ def getSaleOrderByOrderId(request, orderId, cid):
         return Response(generate_error_message(e), status=500, exception=e)
     
 def convertSaleOrderToPdf(request, orderId, cid):
-    url = 'http://mapp.rcinz.com/get-sales-order/'+orderId + "/" + cid
+    url = 'http://erpapi.rcinz.com/get-sales-order/'+orderId + "/" + cid
     redirectTO = 'SO_'+orderId+'.pdf'
     filename = File_Path + "\\" +redirectTO
     
     config = pdfkit.configuration(wkhtmltopdf=path_wkhtmltopdf)
     pdfkit.from_url(url,filename, configuration=config)
-    return redirect('http://mapp.rcinz.com/media/docs/'+redirectTO)
+    return redirect('http://erpapi.rcinz.com/media/docs/'+redirectTO)
 
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])

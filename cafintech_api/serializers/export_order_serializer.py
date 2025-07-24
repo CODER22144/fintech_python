@@ -1,0 +1,20 @@
+from rest_framework import serializers
+
+class ExportOrderSerializer(serializers.Serializer):
+    orderId = serializers.CharField(max_length=20)
+    curCode = serializers.CharField(max_length=7, allow_null=True, required=False)
+    conRate = serializers.DecimalField(max_digits=6, decimal_places=2)
+    goodsDescription = serializers.CharField(max_length=100, allow_null=True, required=False)
+    termOfDelivery = serializers.CharField(max_length=200, allow_null=True, required=False)
+    lutno = serializers.CharField(max_length=30, allow_null=True, required=False)
+    preCarriageMode = serializers.CharField(max_length=100, allow_null=True, required=False)
+    placeOfReceipt = serializers.CharField(max_length=100, allow_null=True, required=False)
+    portOfLoading = serializers.CharField(max_length=100, allow_null=True, required=False)
+    portOfDischarge = serializers.CharField(max_length=100, allow_null=True, required=False)
+    finalDestination = serializers.CharField(max_length=100, allow_null=True, required=False)
+    cost = serializers.DecimalField(max_digits=12, decimal_places=2)
+    insurance = serializers.DecimalField(max_digits=12, decimal_places=2)
+    freight = serializers.DecimalField(max_digits=12, decimal_places=2)
+    pkt = serializers.IntegerField()
+    gwt = serializers.DecimalField(max_digits=12, decimal_places=3)
+    nwt = serializers.DecimalField(max_digits=12, decimal_places=3)
