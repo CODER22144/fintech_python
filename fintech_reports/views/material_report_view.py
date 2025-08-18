@@ -19,7 +19,7 @@ def getMaterialReport(request):
         serializer = MatReportSerializer(data=request.data)
         if(serializer.is_valid()):
             cursor = connections[request.user.cid.cid].cursor()
-            cursor.execute(f"EXEC [purchase].[uspGetMaterialReport] %s",(json.dumps(serializer.data),))
+            cursor.execute(f"EXEC [purchase].[uspGetMaterialRep] %s",(json.dumps(serializer.data),))
             json_data = ConvertToJson(cursor)
             cursor.close()
             return JsonResponse(json_data, safe=False)

@@ -63,7 +63,7 @@ def getAllStates(request):
 def getAllCountries(request):
     try:
         cursor = connections[request.user.cid.cid].cursor()
-        cursor.execute(f"select cid,c_name from [mastcode].[Countries]")
+        cursor.execute(f"exec [mastcode].[uspGetCountries]")
         json_data = ConvertToJson(cursor)
         return JsonResponse(json_data, safe=False)
     except Exception as e:
@@ -74,7 +74,7 @@ def getAllCountries(request):
 def getYesNo(request):
     try:
         cursor = connections[request.user.cid.cid].cursor()
-        cursor.execute(f"select * from [mastcode].[YesNo]")
+        cursor.execute(f"exec [mastcode].[uspGetYesNo]")
         json_data = ConvertToJson(cursor)
         return JsonResponse(json_data, safe=False)
     except Exception as e:
@@ -118,7 +118,7 @@ def getBusinessRelationType(request):
 def getDiscountType(request):
     try:
         cursor = connections[request.user.cid.cid].cursor()
-        cursor.execute(f"select * from [mastcode].[DiscountType]")
+        cursor.execute(f"exec [mastcode].[uspGetSaleDiscountType]")
         json_data = ConvertToJson(cursor)
         return JsonResponse(json_data, safe=False)
     except Exception as e:
@@ -129,7 +129,7 @@ def getDiscountType(request):
 def getModeOfPayment(request):
     try:
         cursor = connections[request.user.cid.cid].cursor()
-        cursor.execute(f"select * from [mastcode].[ModeOfPayment]")
+        cursor.execute(f"exec [mastcode].[uspGetModeOfPayment]")
         json_data = ConvertToJson(cursor)
         return JsonResponse(json_data, safe=False)
     except Exception as e:

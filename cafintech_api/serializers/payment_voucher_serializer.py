@@ -1,13 +1,16 @@
 from rest_framework import serializers
 
 class PaymentVoucherSerializer(serializers.Serializer):
-    pvno = serializers.IntegerField()
-    tDate = serializers.CharField(max_length=20)
+    No = serializers.CharField(max_length=16, allow_null=True, required=False)
+    Dt = serializers.CharField(max_length=20)
     lcode = serializers.CharField(max_length=10)
-    slId = serializers.CharField(max_length=2)
     naration = serializers.CharField(max_length=100)
-    hsnCode = serializers.CharField(max_length=100)
-    amount = serializers.DecimalField(max_digits=12, decimal_places=2, default=0)
-    rgst = serializers.DecimalField(max_digits=12, decimal_places=2, default=0)
-    gstAmount = serializers.DecimalField(max_digits=12, decimal_places=2, default=0)
-    
+    hsnCode = serializers.CharField(max_length=10, allow_null=True, required=False)
+    AssAmt = serializers.DecimalField(max_digits=15, decimal_places=3)
+    GstRt = serializers.DecimalField(max_digits=5, decimal_places=2)
+    gstAmount = serializers.DecimalField(max_digits=15, decimal_places=3)
+    # IgstAmt = serializers.DecimalField(max_digits=15, decimal_places=3)
+    # CgstAmt = serializers.DecimalField(max_digits=15, decimal_places=3)
+    # SgstAmt = serializers.DecimalField(max_digits=15, decimal_places=3)
+    mop = serializers.CharField(max_length=20, allow_null=True, required=False)
+    payRefno = serializers.CharField(max_length=20, allow_null=True, required=False)

@@ -42,7 +42,7 @@ def getLedgerTitle(request):
 def getLedgerStatus(request):
     try:
         cursor = connections[request.user.cid.cid].cursor()
-        cursor.execute(f"select * from [mastcode].[LedgerStatus]")
+        cursor.execute(f"exec [mastcode].[uspGetLedgerStatus]")
         json_data = ConvertToJson(cursor)
         return JsonResponse(json_data, safe=False)
     except Exception as e:
@@ -53,7 +53,7 @@ def getLedgerStatus(request):
 def getSupplyType(request):
     try:
         cursor = connections[request.user.cid.cid].cursor()
-        cursor.execute(f"select slId,slDescription from [mastcode].[SupplyType]")
+        cursor.execute(f"exec [mastcode].[uspGetGstSupplyType]")
         json_data = ConvertToJson(cursor)
         return JsonResponse(json_data, safe=False)
     except Exception as e:
@@ -64,7 +64,7 @@ def getSupplyType(request):
 def getLedgerType(request):
     try:
         cursor = connections[request.user.cid.cid].cursor()
-        cursor.execute(f"select * from [mastcode].[LedgerType]")
+        cursor.execute(f"exec [mastcode].[uspGetLedgerType]")
         json_data = ConvertToJson(cursor)
         return JsonResponse(json_data, safe=False)
     except Exception as e:
@@ -75,7 +75,7 @@ def getLedgerType(request):
 def getAccountGroups(request):
     try:
         cursor = connections[request.user.cid.cid].cursor()
-        cursor.execute(f"select agCode,agDescription from [mastcode].[AcGroups]")
+        cursor.execute(f"exec [mastcode].[uspGetAcGroups]")
         json_data = ConvertToJson(cursor)
         return JsonResponse(json_data, safe=False)
     except Exception as e:
@@ -97,7 +97,7 @@ def getLedgerCode(request):
 def getByIdLedgerCode(request, lCode):
     try:
         cursor = connections[request.user.cid.cid].cursor()
-        cursor.execute(f"exec [mastcode].[uspGetByIdLedgerCodes] %s",(lCode,))
+        cursor.execute(f"exec [mastcode].[uspGetLedgerCodesById] %s",(lCode,))
         json_data = ConvertToJson(cursor)
         cursor.close()
         return JsonResponse(json_data, safe=False)
@@ -139,5 +139,16 @@ def getGstRegenType(request):
         cursor.execute(f"exec [mastcode].[uspGetGSTRegnType]")
         json_data = ConvertToJson(cursor)
         return JsonResponse(json_data, safe=False)
+    except Exception as e:
+        return Response(data=generate_error_message(e), status=500, exception=e)
+    
+@api_view(["POST"])
+@permission_classes([IsAuthenticated])
+def deleteLedgerCodes(request):
+    try:
+        cursor = connections[request.user.cid.cid].cursor()
+        cursor.execute(f"exec [mastcode].[uspDeleteLedgerCodes] %s", (request.data['lcode'], ))
+        cursor.close()
+        return Response(data={"status" : "OK"}, status=204)
     except Exception as e:
         return Response(data=generate_error_message(e), status=500, exception=e)

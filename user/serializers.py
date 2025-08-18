@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from user.models import User
+from user.models import FlutterForm, User
 from user.models import ErrorLog
 
 class user_serializer(serializers.ModelSerializer):
@@ -15,3 +15,9 @@ class error_log_serializer(serializers.ModelSerializer):
         model = ErrorLog
         fields = '__all__'
         read_only_fields = ['id', 'created_at']
+
+class flutter_form_serializer(serializers.ModelSerializer):
+    class Meta:
+        model = FlutterForm
+        fields = '__all__'
+        read_only_fields = ['id']

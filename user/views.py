@@ -2,8 +2,9 @@ from django.db.models.functions import Concat
 from django.db.models import Value
 from CaFinTech.errors import AUTHORIZATION_ERROR, UNSUCCESSFUL_REQUEST
 from CaFinTech.utility import generate_error_message
+from user.forms import FlutterFormUpdateForm
 from user.serializers import error_log_serializer, user_serializer
-from .models import User
+from .models import FlutterForm, User
 from rest_framework.response import Response
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
@@ -177,3 +178,22 @@ def log_error(request):
 
 # note: To decode the token, you can use the following code:
 # fernet.decrypt(token.encode()).decode()
+
+def updateFlutterForm(request, form_id):
+    try:
+        flutter_form = FlutterForm.objects.get(form_id=form_id)
+        serializer = FlutterFormUpdateForm(flutter_form, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    except FlutterForm.DoesNotExist:
+        return Response({"error": "Flutter form not found"}, status=status.HTTP_404_NOT_FOUND)
+    
+@api_view(['POST'])
+def getFlutterForm(request):
+    try:
+        flutter_form = FlutterForm.objects.get(form_id=request.data['form_id'])
+        return Response(flutter_form.toJson(), status=status.HTTP_200_OK)
+    except FlutterForm.DoesNotExist:
+        return Response({"error": "Flutter form not found"}, status=status.HTTP_404_NOT_FOUND)

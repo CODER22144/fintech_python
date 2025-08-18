@@ -33,7 +33,7 @@ def addMaterial(request):
 def getHSNCode(request):
     try:
         cursor = connections[request.user.cid.cid].cursor()
-        cursor.execute(f"select hsnCode, hsnShortDescription from [mastcode].[HSN]")
+        cursor.execute(f"exec [mastcode].[uspGetHsn]")
         json_data = ConvertToJson(cursor)
         return JsonResponse(json_data, safe=False)
     except Exception as e:
@@ -99,7 +99,7 @@ def getMaterial(request):
 def getMaterialStatus(request):
     try:
         cursor = connections[request.user.cid.cid].cursor()
-        cursor.execute(f"select * from [mastcode].[MaterialStatus]")
+        cursor.execute(f"exec [mastcode].[uspGetMaterialStatus]")
         json_data = ConvertToJson(cursor)
         return JsonResponse(json_data, safe=False)
     except Exception as e:
@@ -160,9 +160,24 @@ def updateMaterial(request):
 def getByIdMaterial(request, matno):
     try:
         cursor = connections[request.user.cid.cid].cursor()
-        cursor.execute(f"exec [purchase].[uspGetByIdMaterial] %s",(matno,))
+        cursor.execute(f"exec [purchase].[uspGetMaterialById] %s",(matno,))
         json_data = ConvertToJson(cursor)
-        return JsonResponse(json_data, safe=False)
+        if(len(json_data) > 0):
+            return JsonResponse(json_data, safe=False)
+        return Response(data={"message": "No data found for the given material number."}, status=400)
+    except Exception as e:
+        return Response(data=generate_error_message(e), status=500, exception=e)
+
+@api_view(["POST"])
+@permission_classes([IsAuthenticated])
+def getMaterialAmount(request):
+    try:
+        cursor = connections[request.user.cid.cid].cursor()
+        cursor.execute(f"SELECT matno,igstOnIntra,saleDescription,qty,unit,hsnCode,gstTaxRate,mrp,rate,amount,gstAmount,tAmount FROM [sales].[ufGetMaterialAmount] (%s,%s,%s)",(request.data['lcode'],request.data['matno'],request.data['qty']))
+        json_data = ConvertToJson(cursor)
+        if(len(json_data) > 0):
+            return JsonResponse(json_data, safe=False)
+        return Response(data={"message": "No data found for the given material number."}, status=400)
     except Exception as e:
         return Response(data=generate_error_message(e), status=500, exception=e)
     
@@ -191,3 +206,14 @@ def editMaterialBulk(request):
         return Response(UNSUCCESSFUL_REQUEST, status=400)
     except Exception as e:
         return Response(generate_error_message(e), status=500, exception=e)
+    
+@api_view(["POST"])
+@permission_classes([IsAuthenticated])
+def deleteMaterial(request):
+    try:
+        cursor = connections[request.user.cid.cid].cursor()
+        cursor.execute(f"exec [purchase].[uspDeleteMaterial] %s", (request.data['matno'], ))
+        cursor.close()
+        return Response(data={"status" : "OK"}, status=204)
+    except Exception as e:
+        return Response(data=generate_error_message(e), status=500, exception=e)

@@ -7,11 +7,11 @@ from rest_framework.views import APIView
 from rest_framework.parsers import MultiPartParser, FormParser
 import json
 from CaFinTech.utility import generate_error_message
-from cafintech_api.models.upload import FileUpload
+from cafintech_api.models.upload import BillReceiptUpload, FileUpload
 from rest_framework.permissions import IsAuthenticated
 
-from cafintech_api.serializers.file_upload_serializer import UploadedFileSerializer
-from rest_framework.decorators import api_view
+from cafintech_api.serializers.file_upload_serializer import UploadedBrSerializer, UploadedFileSerializer
+from rest_framework.decorators import api_view, permission_classes
 
 class fileUploadView(APIView):
     parser_classes = (MultiPartParser, FormParser)
@@ -112,4 +112,15 @@ def uploadFiles(request):
         return Response(file_serializer.data, status=status.HTTP_201_CREATED)
     else:
         return Response(file_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-        
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def uploadBillReceipt(request):
+    file_serializer = UploadedBrSerializer(data=request.data)
+    if file_serializer.is_valid():
+        br_file = BillReceiptUpload(file=file_serializer.validated_data['file'])
+        br_file.save(using=request.user.cid.cid)
+        return Response(data={'file' : '/media/' + str(br_file.file)}, status=status.HTTP_201_CREATED)
+    else:
+        return Response(file_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    

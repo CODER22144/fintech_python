@@ -49,10 +49,10 @@ def getSaleByInvNo(request, inv, cid):
         return Response(generate_error_message(e), status=500, exception=e)
     
 def convertSaleInvToPdf(request, inv, cid):
-    url = 'http://erpapi.rcinz.com/get-sale-invc/'+inv + "/" + cid
+    url = 'http://remoteapi.rcinz.com/get-sale-invc/'+inv + "/" + cid
     redirectTO = 'INV_'+inv+'.pdf'
     filename = File_Path + "\\" +redirectTO
     
     config = pdfkit.configuration(wkhtmltopdf=path_wkhtmltopdf)
     pdfkit.from_url(url,filename, configuration=config)
-    return redirect('http://erpapi.rcinz.com/media/docs/'+redirectTO)
+    return redirect('http://remoteapi.rcinz.com/media/docs/'+redirectTO)

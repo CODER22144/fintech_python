@@ -14,6 +14,26 @@ from cafintech_api.views.bill_receipt_view import ConvertToJson
 
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
+def addInward(request):
+    try:
+        inwardSerializer = InwardSerializer(data=request.data)
+        if(inwardSerializer.is_valid()):
+            cursor = connections[request.user.cid.cid].cursor()
+            cursor.execute(f"EXEC [fiac].[uspAddInward] %s",(json.dumps(request.data),))
+            cursor.close()
+            return Response(inwardSerializer.data)
+        errors = {}
+        if not inwardSerializer.is_valid():
+            errors["Inward"] = inwardSerializer.errors
+
+        UNSUCCESSFUL_REQUEST['message'] = errors
+        return Response(UNSUCCESSFUL_REQUEST, status=400)
+    except Exception as e:
+        return Response(data=generate_error_message(e), status=500, exception=e)
+
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
 def addInwardDetails(request):
     try:
         inwardSerializer = InwardSerializer(data=request.data)
@@ -39,7 +59,7 @@ def addInwardDetails(request):
 def getTdsCode(request):
     try:
         cursor = connections[request.user.cid.cid].cursor()
-        cursor.execute(f"select TdsCode, NofPayment from [mastcode].[TdsType]")
+        cursor.execute(f"exec [mastcode].[uspGetTdsType]")
         json_data = ConvertToJson(cursor)
         return JsonResponse(json_data, safe=False)
     except Exception as e:
@@ -68,4 +88,14 @@ def getTdsRate(request, tdsCode):
         return JsonResponse(json_data, safe=False)
     except Exception as e:
         return Response(data=generate_error_message(e), status=500, exception=e)
-    
+
+@api_view(["POST"])
+@permission_classes([IsAuthenticated])
+def deleteInward(request):
+    try:
+        cursor = connections[request.user.cid.cid].cursor()
+        cursor.execute(f"exec [fiac].[uspDeleteInward] %s", (request.data['transId'], ))
+        cursor.close()
+        return Response(data={"status" : "OK"}, status=204)
+    except Exception as e:
+        return Response(data=generate_error_message(e), status=500, exception=e)

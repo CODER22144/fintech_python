@@ -5,4 +5,4 @@ class HsnSerializer(serializers.Serializer):
     hsnShortDescription = serializers.CharField(max_length=50)
     hsnDescription = serializers.CharField(max_length=500)
     isService = serializers.CharField(max_length=1)
-    gstTaxRate = serializers.DecimalField(max_digits=5, decimal_places=2)
+    gstTaxRate = serializers.DecimalField(max_digits=5, decimal_places=3)

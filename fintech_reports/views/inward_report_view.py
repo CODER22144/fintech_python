@@ -19,7 +19,7 @@ def getInwardReport(request):
         serializer = InwardBillReportSeralizer(data=request.data)
         if(serializer.is_valid()):
             cursor = connections[request.user.cid.cid].cursor()
-            cursor.execute(f"EXEC [fiac].[InwardBillReport] %s",(json.dumps(serializer.data),))
+            cursor.execute(f"EXEC [fiac].[uspGetInwardRep] %s",(json.dumps(serializer.data),))
             json_data = ConvertToJson(cursor)
             cursor.close()
             return JsonResponse(json_data, safe=False)

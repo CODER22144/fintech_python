@@ -150,8 +150,8 @@ DATABASES = {
     },
     'OW': {
         'ENGINE': 'mssql',
-        'NAME': 'PurchaseMdb',
-        'HOST': '103.205.67.16,15333',
+        'NAME': 'RemoteDb',
+        'HOST': '103.205.67.238,25333',
         'USER': 'sa',
         'PASSWORD': 'Tstsql@1234',
         'OPTIONS': {

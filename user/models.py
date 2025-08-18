@@ -113,3 +113,21 @@ class ErrorLog(models.Model):
 
     def __str__(self):
         return f"Error {self.error_code} by {self.user_id} at {self.error_time}"
+    
+
+class FlutterForm(models.Model):
+    id = models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID', default=None)
+    form_id = models.CharField(max_length=50, unique=True)
+    form_description = models.CharField(max_length=200)
+    form_fields = models.TextField()  # JSON AS STRING
+
+    def __str__(self):
+        return f"Form {self.form_id} - {self.form_description}"
+    
+    def toJson(self):
+        return {
+            "id": self.id,
+            "form_id": self.form_id,
+            "form_description": self.form_description,
+            "form_fields": self.form_fields
+        }

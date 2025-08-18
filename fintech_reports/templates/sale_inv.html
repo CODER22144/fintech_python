@@ -2,8 +2,8 @@
 
 <head id="Head1" runat="server">
     <title>TAX INVOICE</title>
-    <link href="http://erpapi.rcinz.com/static/css/main.css" type="text/css" rel="STYLESHEET" />
-    <link href="http://erpapi.rcinz.com/static/css/tab.css" type="text/css" rel="STYLESHEET" />
+    <link href="http://remoteapi.rcinz.com/static/css/main.css" type="text/css" rel="STYLESHEET" />
+    <link href="http://remoteapi.rcinz.com/static/css/tab.css" type="text/css" rel="STYLESHEET" />
     <style>
         .page-break {
             page-break-before: always;
@@ -19,7 +19,7 @@
                     style="font-size:8pt;font-weight:bold;color:#000000;">(u/s.31 read with rule 7)</span> </td>
         </tr>
         <tr>
-            <td>{% if sale.compLogo %}<img src="http://erpapi.rcinz.com{{sale.compLogo}}" width="910" height="70"
+            <td>{% if sale.compLogo %}<img src="http://remoteapi.rcinz.com{{sale.compLogo}}" width="910" height="70"
                     alt="" /> {% endif %}</td>
         </tr>
         <tr>
@@ -99,7 +99,7 @@
                                 {% if sale.sqrcode %}
                                 <tr>
                                     <td>
-                                        <img src="http://erpapi.rcinz.com/get-qr/?data={{sale.sqrcode}}" width="250"
+                                        <img src="http://remoteapi.rcinz.com/get-qr/?data={{sale.sqrcode}}" width="250"
                                             height="250" />
 
                                     </td>
@@ -332,7 +332,7 @@
                                     </td>
                                     <td colspan="5"
                                         style="border-top:1px solid black; text-align:right; font-weight: bold;">FOR
-                                        {{sale.legalName}}<br /><img src="http://erpapi.rcinz.com{{sale.signImage}}"
+                                        {{sale.legalName}}<br /><img src="http://remoteapi.rcinz.com{{sale.signImage}}"
                                             alt=""><br />AUTHORISED SIGNATORY</td>
                                 </tr>
 

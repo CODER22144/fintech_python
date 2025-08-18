@@ -70,7 +70,7 @@ def getGstTaxRate(request, hsnCode):
 def getHsnById(request, hsnCode):
     try:
         cursor = connections[request.user.cid.cid].cursor()
-        cursor.execute(f"exec [mastcode].[uspGetByIdHsn] %s", (hsnCode, ))
+        cursor.execute(f"exec [mastcode].[uspGetHsnById] %s", (hsnCode, ))
         json_data = ConvertToJson(cursor)
         return JsonResponse(json_data, safe=False)
     except Exception as e:
@@ -81,7 +81,7 @@ def getHsnById(request, hsnCode):
 def getGstTaxRateDrop(request):
     try:
         cursor = connections[request.user.cid.cid].cursor()
-        cursor.execute(f"exec [mastcode].[uspGetGstTaxRate]")
+        cursor.execute(f"exec [mastcode].[uspGetGstRate]")
         json_data = ConvertToJson(cursor)
         return JsonResponse(json_data, safe=False)
     except Exception as e:

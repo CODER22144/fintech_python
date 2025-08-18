@@ -49,13 +49,13 @@ def getExpOrder(request, inv, cid):
         return Response(generate_error_message(e), status=500, exception=e)
     
 def getExpOrderPdf(request, inv, cid):
-    url = 'http://erpapi.rcinz.com/get-exp-order/'+inv + "/" + cid
+    url = 'http://remoteapi.rcinz.com/get-exp-order/'+inv + "/" + cid
     redirectTO = 'EXP_'+inv+'_'+cid+'.pdf'
     filename = File_Path + "\\" +redirectTO
     
     config = pdfkit.configuration(wkhtmltopdf=path_wkhtmltopdf)
     pdfkit.from_url(url,filename, configuration=config)
-    return redirect('http://erpapi.rcinz.com/media/docs/'+redirectTO)
+    return redirect('http://remoteapi.rcinz.com/media/docs/'+redirectTO)
 
 
 def getExpInvoice(request, inv, cid):
@@ -79,11 +79,11 @@ def getExpInvoice(request, inv, cid):
         return Response(generate_error_message(e), status=500, exception=e)
     
 def getExpInvoicePdf(request, inv, cid):
-    url = 'http://erpapi.rcinz.com/get-exp-inv/'+inv + "/" + cid
+    url = 'http://remoteapi.rcinz.com/get-exp-inv/'+inv + "/" + cid
     redirectTO = 'EXPINV_'+inv+'_'+cid+'.pdf'
     filename = File_Path + "\\" +redirectTO
     
     config = pdfkit.configuration(wkhtmltopdf=path_wkhtmltopdf)
     pdfkit.from_url(url,filename, configuration=config)
-    return redirect('http://erpapi.rcinz.com/media/docs/'+redirectTO)
+    return redirect('http://remoteapi.rcinz.com/media/docs/'+redirectTO)
 

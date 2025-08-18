@@ -33,6 +33,21 @@ def createBillReceipt(request):
     except Exception as e:
         return Response(generate_error_message(e), status=500, exception=e)
     
+@api_view(["POST"])
+@permission_classes([IsAuthenticated])
+def updateBr(request):
+    try:
+        serializer = BillReceiptSerializer(data=request.data)
+        if(serializer.is_valid()):
+            cursor = connections[request.user.cid.cid].cursor()
+            cursor.execute(f"EXEC [docen].[uspUpdateBr] %s",(json.dumps(serializer.data),))
+            cursor.close()
+            return Response(serializer.data)
+        UNSUCCESSFUL_REQUEST['message'] = serializer.errors
+        return Response(UNSUCCESSFUL_REQUEST, status=400)
+    except Exception as e:
+        return Response(generate_error_message(e), status=500, exception=e)
+    
 
 @api_view(["GET"])
 @permission_classes([IsAuthenticated])
@@ -106,7 +121,7 @@ def deleteBillReceipt(request, brid):
 def getBrById(request, brid):
     try:
         cursor = connections[request.user.cid.cid].cursor()
-        cursor.execute(f"exec [docen].[uspGetByIdBr] %s", (brid, ))
+        cursor.execute(f"exec [docen].[uspGetBrById] %s", (brid, ))
         json_data = ConvertToJson(cursor)
         cursor.close()
         if len(json_data) == 1:
@@ -136,7 +151,7 @@ def getBrReport(request):
         serializer = ReportSerializer(data=request.data)
         if(serializer.is_valid()):
             cursor = connections[request.user.cid.cid].cursor()
-            cursor.execute(f"EXEC [docen].[uspGetBrReport] %s",(json.dumps(serializer.data),))
+            cursor.execute(f"EXEC [docen].[uspGetBrRep] %s",(json.dumps(serializer.data),))
             json_data = ConvertToJson(cursor)
             cursor.close()
             return JsonResponse(json_data, safe=False)

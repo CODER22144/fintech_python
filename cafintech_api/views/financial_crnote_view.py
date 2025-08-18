@@ -87,10 +87,10 @@ def getFcsno(request, inv, cid):
         return Response(generate_error_message(e), status=500, exception=e)
     
 def getFcsnoPdf(request, fcns, cid):
-    url = 'http://erpapi.rcinz.com/get-fcsno/'+fcns + "/" + cid
+    url = 'http://remoteapi.rcinz.com/get-fcsno/'+fcns + "/" + cid
     redirectTO = 'FCNS_'+fcns+'_'+cid+'.pdf'
     filename = File_Path + "\\" +redirectTO
     
     config = pdfkit.configuration(wkhtmltopdf=path_wkhtmltopdf)
     pdfkit.from_url(url,filename, configuration=config)
-    return redirect('http://erpapi.rcinz.com/media/docs/'+redirectTO)
+    return redirect('http://remoteapi.rcinz.com/media/docs/'+redirectTO)

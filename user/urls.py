@@ -21,4 +21,8 @@ urlpatterns = [
     # ERROR LOGS
     re_path(r'^error-logs/$', views.log_error),
 
+    # FLUTTER FORMS
+    re_path(r'^update-flutter-forms/(?P<form_id>[\w-]+)/$', views.updateFlutterForm),
+    # re_path(r'^get-flutter-form/$', views.getFlutterForm),
+
 ]

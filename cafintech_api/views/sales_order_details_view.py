@@ -18,19 +18,17 @@ def addSaleOrderDetails(request):
     try:
         request.data['userId'] = request.user.userId
         orderSerializer = SalesOrderSerializer(data=request.data)
-        orderDetailsSerializer = SaleOrderDetailSerializer(data=request.data['orderdetails'], many=True)
+        orderDetailsSerializer = SaleOrderDetailSerializer(data=request.data['SaleItemDetails'], many=True)
         if(orderSerializer.is_valid() and orderDetailsSerializer.is_valid()):
             cursor = connections[request.user.cid.cid].cursor()
-            cursor.execute(f"EXEC [sales].[uspAddOrder] %s",(json.dumps(request.data),))
+            cursor.execute(f"EXEC [sales].[uspAddSales] %s",(json.dumps(request.data),))
             cursor.close()
             return Response(orderSerializer.data)
-            #UNSUCCESSFUL_REQUEST['message'] = orderSerializer.errors
-            #UNSUCCESSFUL_REQUEST['message'] = orderDetailsSerializer.errors
         errors = {}
         if not orderSerializer.is_valid():
-            errors["Order"] = orderSerializer.errors
+            errors["Sale"] = orderSerializer.errors
         if not orderDetailsSerializer.is_valid():
-            errors["Order_details"] = orderDetailsSerializer.errors
+            errors["Sale_Details"] = orderDetailsSerializer.errors
 
         UNSUCCESSFUL_REQUEST['message'] = errors
         return Response(UNSUCCESSFUL_REQUEST, status=400)

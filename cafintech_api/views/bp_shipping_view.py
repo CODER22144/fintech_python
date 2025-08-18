@@ -18,7 +18,7 @@ def addBPShipping(request):
         serializer = BpShippingSerializer(data=request.data, many=True)
         if(serializer.is_valid()):
             cursor = connections[request.user.cid.cid].cursor()
-            cursor.execute(f"EXEC [mastcode].[uspAddBPShipping] %s",(json.dumps(serializer.data),))
+            cursor.execute(f"EXEC [mastcode].[uspAddCustomerShipping] %s",(json.dumps(serializer.data),))
             cursor.close()
             return Response(serializer.data)
         UNSUCCESSFUL_REQUEST['message'] = serializer.errors
@@ -33,7 +33,7 @@ def updateShipping(request):
         serializer = BpShippingSerializer(data=request.data, many=True)
         if(serializer.is_valid()):
             cursor = connections[request.user.cid.cid].cursor()
-            cursor.execute(f"EXEC [mastcode].[uspUpdateBpShipping] %s",(json.dumps(serializer.data),))
+            cursor.execute(f"EXEC [mastcode].[uspUpdateCustomerShipping] %s",(json.dumps(serializer.data),))
             cursor.close()
             return Response(serializer.data)
         UNSUCCESSFUL_REQUEST['message'] = serializer.errors
@@ -46,7 +46,7 @@ def updateShipping(request):
 def getByIdBPShipping(request, shipCode):
     try:
         cursor = connections[request.user.cid.cid].cursor()
-        cursor.execute(f"exec [mastcode].[uspGetByIdBPShipping] %s", (shipCode,))
+        cursor.execute(f"exec [mastcode].[uspGetCustomerShippingById] %s", (shipCode,))
         json_data = ConvertToJson(cursor)
         cursor.close()
         return JsonResponse(json_data, safe=False)
@@ -55,11 +55,23 @@ def getByIdBPShipping(request, shipCode):
     
 @api_view(["POST"])
 @permission_classes([IsAuthenticated])
-def deleteBPShipping(request, shipCode):
+def deleteBPShipping(request):
     try:
         cursor = connections[request.user.cid.cid].cursor()
-        cursor.execute(f"exec [mastcode].[uspDeleteBPShipping] %s", (shipCode, ))
+        cursor.execute(f"exec [mastcode].[uspDeleteCustomerShipping] %s", (request.data['shipCode'], ))
         cursor.close()
         return Response(data={"status" : "OK"}, status=204)
+    except Exception as e:
+        return Response(data=generate_error_message(e), status=500, exception=e)
+
+@api_view(["POST"])
+@permission_classes([IsAuthenticated])
+def getCustomerShippingReport(request):
+    try:
+        cursor = connections[request.user.cid.cid].cursor()
+        cursor.execute(f"exec [mastcode].[uspGetCustomerShippingBylcode] %s", (request.data['lcode'],))
+        json_data = ConvertToJson(cursor)
+        cursor.close()
+        return JsonResponse(json_data, safe=False)
     except Exception as e:
         return Response(data=generate_error_message(e), status=500, exception=e)

@@ -1,6 +1,6 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
-from .models import User
+from .models import FlutterForm, User
 
 ROLE = (
     ('','--Select--'),
@@ -33,3 +33,9 @@ class SignupForm(UserCreationForm):
     class Meta:
         model = User
         fields = ['first_name', 'last_name', 'email', 'roles', 'cid', 'companyName', 'password1', 'password2']
+
+
+class FlutterFormUpdateForm(forms.ModelForm):
+    class Meta:
+        model = FlutterForm
+        fields = ['form_id', 'form_description', 'form_fields']

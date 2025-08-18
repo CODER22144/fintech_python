@@ -109,6 +109,7 @@ urlpatterns = [
     re_path(r"^get-carrier-type/$", br.getCarrierType),
     re_path(r"^get-trans-mode/$", br.getTransMode),
     re_path(r"^create-br/$", br.createBillReceipt),
+    re_path(r"^update-br/$", br.updateBr),
     re_path(r"^get-br/$", br.getAllBillReceipt),
     re_path(r"^delete-br/(?P<brid>\d+)/$", br.deleteBillReceipt),
     re_path(r"^get-br/(?P<brid>\d+)/$", br.getBrById),
@@ -142,6 +143,7 @@ urlpatterns = [
     re_path(r"^update-ledger-codes/$", lc.updateLedgerCodes),
     re_path(r"^get-ledger-codes/$", lc.getLedgerCode),
     re_path(r"^get-gst-regen-type/$", lc.getGstRegenType),
+    re_path(r"^delete-ledger-codes/$", lc.deleteLedgerCodes),
     re_path(r"^get-ledger-code/(?P<lCode>[\w\-\.]+)/$", lc.getByIdLedgerCode),
     re_path(r"^get-ledger-code-supply/(?P<lCode>[\w\-\.]+)/$", lc.getLedgerCodeSupply),
 
@@ -149,6 +151,7 @@ urlpatterns = [
     re_path(r"^add-material/$", mt.addMaterial),
     re_path(r"^update-material/$", mt.updateMaterial),
     re_path(r"^get-material/(?P<matno>[\w\-.]+)/$", mt.getByIdMaterial),
+    re_path(r"^get-mat-amt/$", mt.getMaterialAmount),
     re_path(r"^get-hsn/$", mt.getHSNCode),
     re_path(r"^get-material-unit/$", mt.getMaterialUnit),
     re_path(r"^get-material-type/$", mt.getMaterialType),
@@ -161,10 +164,12 @@ urlpatterns = [
     re_path(r"^get-mat-details/(?P<matno>[\w\-.]+)/$", mt.getMaterialDetails),
     re_path(r"^get-ac-groups/$", mt.getAcGroups),
     re_path(r"^edit-material-bulk/$", mt.editMaterialBulk),
+    re_path(r"^delete-material/$", mt.deleteMaterial),
     
     # File Upload
     re_path(r"^upload/$", upload_view.fileUploadView.as_view()),
     re_path(r"^upload-file/$", upload_view.uploadFiles),
+    re_path(r"^upload-br/$", upload_view.uploadBillReceipt),
 
     # Material Source
     re_path(r"^add-material-source/$", mts.addMaterialSource),
@@ -254,6 +259,8 @@ urlpatterns = [
     re_path(r"^last-attendance/$", atv.getLastAttendance),
 
     # Inward Details
+    re_path(r"^add-inward/$", iv.addInward),
+    re_path(r"^delete-inward/$", iv.deleteInward),
     re_path(r"^add-inward-details/$", iv.addInwardDetails),
     re_path(r"^get-tds/$", iv.getTdsCode),
     re_path(r"^get-supplier-type/$", iv.getSupplierType),
@@ -272,6 +279,10 @@ urlpatterns = [
     
     # Payment Voucher
     re_path(r"^create-payment-voucher/$", pvv.createPaymentVoucher),
+    re_path(r"^update-payment-voucher/$", pvv.updatePaymentVoucher),
+    re_path(r"^get-payment-voucher/$", pvv.getPaymentVoucherById),
+    re_path(r"^payment-voucher-rep/$", pvv.getPaymentVoucherReport),
+    re_path(r"^delete-payment-voucher/$", pvv.deletePaymentVoucher),
     
     # DbNote Details
     re_path(r"^add-dbnote/$", dbv.addDbNoteDetails),
@@ -303,8 +314,9 @@ urlpatterns = [
     # BP Shipping
     re_path(r"^add-bp-shipping/$", bpsv.addBPShipping),
     re_path(r"^update-bp-shipping/$", bpsv.updateShipping),
+    re_path(r"^customer-shipping-rep/$", bpsv.getCustomerShippingReport),
     re_path(r"^get-bp-shipping/(?P<shipCode>[\w\-]+)/$", bpsv.getByIdBPShipping),
-    re_path(r"^delete-bp-shipping/(?P<shipCode>[\w\-]+)/$", bpsv.deleteBPShipping),
+    re_path(r"^delete-bp-shipping/$", bpsv.deleteBPShipping),
 
     # Carrier
     re_path(r"^add-carrier/$", carv.addCarrier),
