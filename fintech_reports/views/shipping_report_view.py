@@ -5,7 +5,7 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from CaFinTech.errors import UNSUCCESSFUL_REQUEST
-from CaFinTech.utility import generate_error_message
+from CaFinTech.utility import generate_error_message, getDbCursor
 import json
 
 from cafintech_api.views.bill_receipt_view import ConvertToJson
@@ -17,8 +17,8 @@ def getShippingReport(request):
     try:
         serializer = ShippingReportSerializer(data=request.data)
         if(serializer.is_valid()):
-            cursor = connections[request.user.cid.cid].cursor()
-            cursor.execute(f"EXEC [mastcode].[uspGetBPShippingByBpCode] %s",(request.data['bpCode'],))
+            cursor = getDbCursor(request.user)
+            cursor.execute(f"EXEC [mastcode].[uspGetBPShippingByBpCode] ?",(request.data['bpCode'],))
             json_data = ConvertToJson(cursor)
             cursor.close()
             return JsonResponse(json_data, safe=False)
@@ -32,8 +32,8 @@ def getShippingReport(request):
 @permission_classes([IsAuthenticated])
 def getShippingByBpCode(request, bpCode):
     try:
-        cursor = connections[request.user.cid.cid].cursor()
-        cursor.execute(f"EXEC [mastcode].[uspGetBPShippingByBpCode] %s",(bpCode,))
+        cursor = getDbCursor(request.user)
+        cursor.execute(f"EXEC [mastcode].[uspGetBPShippingByBpCode] ?",(bpCode,))
         json_data = ConvertToJson(cursor)
         cursor.close()
         return JsonResponse(json_data, safe=False)        

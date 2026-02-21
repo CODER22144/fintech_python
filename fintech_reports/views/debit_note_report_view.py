@@ -5,7 +5,7 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from CaFinTech.errors import UNSUCCESSFUL_REQUEST
-from CaFinTech.utility import generate_error_message
+from CaFinTech.utility import generate_error_message, getDbCursor
 import json
 
 from cafintech_api.views.bill_receipt_view import ConvertToJson
@@ -17,8 +17,8 @@ def getDbNoteReport(request):
     try:
         serializer = DebitNoteReportSerializer(data=request.data)
         if(serializer.is_valid()):
-            cursor = connections[request.user.cid.cid].cursor()
-            cursor.execute(f"EXEC [fiac].[DbNoteReport] %s",(json.dumps(serializer.data),))
+            cursor = getDbCursor(request.user)
+            cursor.execute(f"EXEC [fiac].[uspGetDbnote] ?",(json.dumps(serializer.data),))
             json_data = ConvertToJson(cursor)
             cursor.close()
             return JsonResponse(json_data, safe=False)
@@ -33,8 +33,8 @@ def getCrNoteReport(request):
     try:
         serializer = DebitNoteReportSerializer(data=request.data)
         if(serializer.is_valid()):
-            cursor = connections[request.user.cid.cid].cursor()
-            cursor.execute(f"EXEC [fiac].[CrNoteReport] %s",(json.dumps(serializer.data),))
+            cursor = getDbCursor(request.user)
+            cursor.execute(f"EXEC [fiac].[uspGetSaleCrnote] ?",(json.dumps(serializer.data),))
             json_data = ConvertToJson(cursor)
             cursor.close()
             return JsonResponse(json_data, safe=False)
@@ -49,8 +49,8 @@ def getSaleDbNoteReport(request):
     try:
         serializer = DebitNoteReportSerializer(data=request.data)
         if(serializer.is_valid()):
-            cursor = connections[request.user.cid.cid].cursor()
-            cursor.execute(f"EXEC [fiac].[SaleDbNoteReport] %s",(json.dumps(serializer.data),))
+            cursor = getDbCursor(request.user)
+            cursor.execute(f"EXEC [fiac].[uspGetSaleDbnote] ?",(json.dumps(serializer.data),))
             json_data = ConvertToJson(cursor)
             cursor.close()
             return JsonResponse(json_data, safe=False)
@@ -65,8 +65,8 @@ def getPrTaxInvoiceReport(request):
     try:
         serializer = DebitNoteReportSerializer(data=request.data)
         if(serializer.is_valid()):
-            cursor = connections[request.user.cid.cid].cursor()
-            cursor.execute(f"EXEC [fiac].[PRTaxInvoiceReport] %s",(json.dumps(serializer.data),))
+            cursor = getDbCursor(request.user)
+            cursor.execute(f"EXEC [fiac].[PRTaxInvoiceReport] ?",(json.dumps(serializer.data),))
             json_data = ConvertToJson(cursor)
             cursor.close()
             return JsonResponse(json_data, safe=False)

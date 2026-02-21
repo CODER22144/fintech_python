@@ -5,7 +5,7 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from CaFinTech.errors import UNSUCCESSFUL_REQUEST
-from CaFinTech.utility import generate_error_message
+from CaFinTech.utility import generate_error_message, getDbCursor
 import json
 
 from cafintech_api.serializers.bill_receivable_serializer import BillReceivableSerializer
@@ -17,8 +17,8 @@ def addBillReceivable(request):
     try:
         serializer = BillReceivableSerializer(data=request.data, many=True)
         if(serializer.is_valid()):
-            cursor = connections[request.user.cid.cid].cursor()
-            cursor.execute(f"EXEC [fiac].[uspAddBillReceivable] %s",(json.dumps(serializer.data),))
+            cursor = getDbCursor(request.user)
+            cursor.execute(f"EXEC [fiac].[uspAddBillReceivable] ?",(json.dumps(serializer.data),))
             cursor.close()
             return Response(serializer.data)
         UNSUCCESSFUL_REQUEST['message'] = serializer.errors
@@ -31,8 +31,8 @@ def addBillReceivable(request):
 @permission_classes([IsAuthenticated])
 def deleteBillReceivable(request, transId):
     try:
-        cursor = connections[request.user.cid.cid].cursor()
-        cursor.execute(f"exec [fiac].[uspDeleteBillReceivable] %s", (transId, ))
+        cursor = getDbCursor(request.user)
+        cursor.execute(f"exec [fiac].[uspDeleteBillReceivable] ?", (transId, ))
         cursor.close()
         return Response(data={"status" : "OK"}, status=204)
     except Exception as e:

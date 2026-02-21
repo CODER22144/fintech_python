@@ -5,7 +5,7 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from CaFinTech.errors import UNSUCCESSFUL_REQUEST
-from CaFinTech.utility import generate_error_message
+from CaFinTech.utility import generate_error_message, getDbCursor
 import json
 
 from cafintech_api.serializers.gr_iqs_rep_serializer import GrIqsRepSerializer
@@ -17,8 +17,8 @@ def addGrIqsRep(request):
     try:
         serializer = GrIqsRepSerializer(data=request.data)
         if(serializer.is_valid()):
-            cursor = connections[request.user.cid.cid].cursor()
-            cursor.execute(f"EXEC [purchase].[uspAddgrIQSRep] %s",(json.dumps(serializer.data),))
+            cursor = getDbCursor(request.user)
+            cursor.execute(f"EXEC [purchase].[uspAddgrIQSRep] ?",(json.dumps(serializer.data),))
             cursor.close()
             return Response(serializer.data)
         UNSUCCESSFUL_REQUEST['message'] = serializer.errors
@@ -30,7 +30,7 @@ def addGrIqsRep(request):
 @permission_classes([IsAuthenticated])
 def getRateDifferencePending(request):
     try:
-        cursor = connections[request.user.cid.cid].cursor()
+        cursor = getDbCursor(request.user)
         cursor.execute(f"exec [purchase].[uspGrRateDifferencePending]")
         json_data = ConvertToJson(cursor)
         return JsonResponse(json_data, safe=False)
@@ -41,9 +41,9 @@ def getRateDifferencePending(request):
 @permission_classes([IsAuthenticated])
 def addGrRateApproval(request):
     try:
-        cursor = connections[request.user.cid.cid].cursor()
+        cursor = getDbCursor(request.user)
         json_data = json.dumps({"grdId" : request.data['grdId'], "apRate":request.data['apRate']})
-        cursor.execute(f"exec [purchase].[uspAddGrRateApproval] %s",(json_data,))
+        cursor.execute(f"exec [purchase].[uspAddGrRateApproval] ?",(json_data,))
         return Response(request.data)
     except Exception as e:
         return Response(data=generate_error_message(e), status=500, exception=e)

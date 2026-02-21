@@ -6,7 +6,7 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from CaFinTech.errors import UNSUCCESSFUL_REQUEST
-from CaFinTech.utility import generate_error_message
+from CaFinTech.utility import generate_error_message, getDbCursor
 import json
 
 
@@ -23,8 +23,8 @@ def getGrRep(request):
     try:
         serializer = GrReportSerializer(data=request.data)
         if(serializer.is_valid()):
-            cursor = connections[request.user.cid.cid].cursor()
-            cursor.execute(f"EXEC [purchase].[GRRep] %s",(json.dumps(serializer.data),))
+            cursor = getDbCursor(request.user)
+            cursor.execute(f"EXEC [purchase].[GRRep] ?",(json.dumps(serializer.data),))
             json_data = [data[0] for data in cursor.fetchall()]
             json_data = "".join(json_data)
             cursor.close()
@@ -38,7 +38,7 @@ def srvFormat(request, grno, cid):
     cursor = connections[cid].cursor()
     serializer = GrReportSerializer(data={"grno" : grno})
     if(serializer.is_valid()):
-        cursor.execute(f"EXEC [purchase].[GRRep] %s",(json.dumps(serializer.data),))
+        cursor.execute(f"EXEC [purchase].[GRRep] ?",(json.dumps(serializer.data),))
         json_data = [data[0] for data in cursor.fetchall()]
         json_data = "".join(json_data)
 
@@ -68,8 +68,8 @@ def srvFormatPdf(request, grno, cid):
 @permission_classes([IsAuthenticated])
 def getGrDetailsById(request):
     try:        
-        cursor = connections[request.user.cid.cid].cursor()
-        cursor.execute(f"EXEC [purchase].[uspGetGrDetailsById] %s",(request.data['grdId'],))
+        cursor = getDbCursor(request.user)
+        cursor.execute(f"EXEC [purchase].[uspGetGrDetailsById] ?",(request.data['grdId'],))
         json_data = ConvertToJson(cursor)
         cursor.close()
         return JsonResponse(json_data, safe=False)
@@ -80,8 +80,8 @@ def getGrDetailsById(request):
 @permission_classes([IsAuthenticated])
 def updateGrDetails(request):
     try:        
-        cursor = connections[request.user.cid.cid].cursor()
-        cursor.execute(f"EXEC [purchase].[uspUpdateGrDetails] %s",(json.dumps(request.data),))
+        cursor = getDbCursor(request.user)
+        cursor.execute(f"EXEC [purchase].[uspUpdateGrDetails] ?",(json.dumps(request.data),))
         return Response({"message": "Updated Successfully"}, status=200)
     except Exception as e:
         return Response(generate_error_message(e), status=500, exception=e)
@@ -92,8 +92,8 @@ def getGrItemReport(request):
     try:
         serializer = GrItemReportSerializer(data=request.data)
         if(serializer.is_valid()):
-            cursor = connections[request.user.cid.cid].cursor()
-            cursor.execute(f"EXEC [purchase].[GRItemRep] %s",(json.dumps(serializer.data),))
+            cursor = getDbCursor(request.user)
+            cursor.execute(f"EXEC [purchase].[GRItemRep] ?",(json.dumps(serializer.data),))
             json_data = [data[0] for data in cursor.fetchall()]
             json_data = "".join(json_data)
             cursor.close()
@@ -109,8 +109,8 @@ def getSaleItemReport(request):
     try:
         serializer = GrItemReportSerializer(data=request.data)
         if(serializer.is_valid()):
-            cursor = connections[request.user.cid.cid].cursor()
-            cursor.execute(f"EXEC [sales].[SaleItemRep] %s",(json.dumps(serializer.data),))
+            cursor = getDbCursor(request.user)
+            cursor.execute(f"EXEC [sales].[SaleItemRep] ?",(json.dumps(serializer.data),))
             json_data = [data[0] for data in cursor.fetchall()]
             json_data = "".join(json_data)
             cursor.close()

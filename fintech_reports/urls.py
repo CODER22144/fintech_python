@@ -42,9 +42,18 @@ from .views import tod_report_view as todv
 from .views import reverse_charge_view as rcview
 from .views import exp_order_report_view as exporv
 from .views import menu_view
+from .views import sql_query_view as sqlqv
+from .views import form_components_view as fccv
 
 urlpatterns = [
+    re_path(r"^get-form-comp/$", fccv.getFormByFormName),
+    re_path(r"^add-bank-test/$", fccv.addBankTest),
 
+
+
+    re_path(r"^execute-sql-query/$", sqlqv.executeSqlQuery),
+    re_path(r"^columns/$", sqlqv.getColumns),
+    re_path(r"^columns-drp/$", sqlqv.getColumnsDropdown),
     re_path(r"^menu/$", menu_view.getMenu),
     
 
@@ -125,7 +134,10 @@ urlpatterns = [
     re_path(r"^get-dl-challan-pdf/(?P<docno>\d+)/(?P<cid>\w+)/$", dlcrv.getDlChallanFormatPdf),
 
     # LEDGER CODE REPORT
-    re_path(r"^get-ledger-report/$", lcrv.getLedgerReport),
+    re_path(r"^get-ledger-codes-report/$", lcrv.getLedgerCodeReport),
+    re_path(r"^get-ledger-report/$", lcrv.getLedgersReport),
+    re_path(r"^get-ledger-report-html/$", lcrv.getLedgerReportPDF),
+    re_path(r"^get-ledger-report-pdf/$", lcrv.convertToPdf),
 
     # Business Partner Sale Discount
     re_path(r"^get-bp-sale-discount/$", bpsdv.getBpSaleDiscountReport),
@@ -192,7 +204,9 @@ urlpatterns = [
 
     # Ledger
     re_path(r"^ledger/$", lrv.getLedgerReport),
+    re_path(r"^ledger-rep/$", lrv.getLedgerRep),
     re_path(r"^trial/$", lrv.getTrail),
+    re_path(r"^trial-balance-rep/$", lrv.getTrialBalanceReport),
 
     # PRODUCTION PLAN REPORT
     re_path(r"^production-plan-report/$", pprv.productionPlanReport),

@@ -4,7 +4,7 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from CaFinTech.errors import UNSUCCESSFUL_REQUEST
-from CaFinTech.utility import generate_error_message
+from CaFinTech.utility import generate_error_message, getDbCursor
 import json
 
 from cafintech_api.serializers.payment_inward_clear_serializer import PaymentInwardClearSerializer
@@ -17,8 +17,8 @@ def addPaymentInwardClear(request):
     try:
         serializer = PaymentInwardClearSerializer(data=request.data, many=True)
         if(serializer.is_valid()):
-            cursor = connections[request.user.cid.cid].cursor()
-            cursor.execute(f"EXEC [fiac].[uspUnadjustedPaymentInwardClear] %s",(json.dumps(serializer.data),))
+            cursor = getDbCursor(request.user)
+            cursor.execute(f"EXEC [fiac].[uspUnadjustedPaymentInwardClear] ?",(json.dumps(serializer.data),))
             cursor.close()
             return Response(serializer.data)
         UNSUCCESSFUL_REQUEST['message'] = serializer.errors
@@ -32,8 +32,8 @@ def addUnadjustedPaymentInwardClear(request):
     try:
         serializer = UnadjustedPaymentInwardClearSerializer(data=request.data)
         if(serializer.is_valid()):
-            cursor = connections[request.user.cid.cid].cursor()
-            cursor.execute(f"EXEC [fiac].[uspAddUnAdjustedPaymentInwardClear] %s",(json.dumps(serializer.data),))
+            cursor = getDbCursor(request.user)
+            cursor.execute(f"EXEC [fiac].[uspAddUnAdjustedPaymentInwardClear] ?",(json.dumps(serializer.data),))
             cursor.close()
             return Response(serializer.data)
         UNSUCCESSFUL_REQUEST['message'] = serializer.errors
@@ -47,8 +47,8 @@ def addUnAdjustedPaymentClear(request):
     try:
         serializer = UnadjustedPaymentInwardClearSerializer(data=request.data)
         if(serializer.is_valid()):
-            cursor = connections[request.user.cid.cid].cursor()
-            cursor.execute(f"EXEC [fiac].[uspAddUnAdjustedPaymentClear] %s",(json.dumps(serializer.data),))
+            cursor = getDbCursor(request.user)
+            cursor.execute(f"EXEC [fiac].[uspAddUnAdjustedPaymentClear] ?",(json.dumps(serializer.data),))
             cursor.close()
             return Response(serializer.data)
         UNSUCCESSFUL_REQUEST['message'] = serializer.errors

@@ -14,6 +14,10 @@ urlpatterns = [
     re_path(r'^verification/$', views.send_verification_email),
     re_path(r'^update-password/$', views.updatePassword),
 
+    # COMPANY AND COMPANY GROUP
+    re_path(r'^get-all-org-company/$', views.getAllCompanies),
+    re_path(r'^update-cid/$', views.updateUserCid),
+
     # LOGIN VIEW
     re_path(r'^login/$', auth_views.LoginView.as_view(template_name="user/login.html"), name='login'),
     re_path(r'^logout/$', auth_views.LogoutView.as_view(template_name="user/logout.html"), name='logout'),

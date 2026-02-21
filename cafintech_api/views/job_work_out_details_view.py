@@ -5,7 +5,7 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from CaFinTech.errors import UNSUCCESSFUL_REQUEST
-from CaFinTech.utility import generate_error_message
+from CaFinTech.utility import generate_error_message, getDbCursor
 import json
 
 from cafintech_api.serializers.job_work_out_details_serializer import JobWorkOutDetailSerializer
@@ -19,8 +19,8 @@ def createJobWorkOutDetails(request):
         orderSerializer = JobWorkOutSerializer(data=request.data)
         orderDetailsSerializer = JobWorkOutDetailSerializer(data=request.data['JobWorkOutDetails'], many=True)
         if(orderSerializer.is_valid() and orderDetailsSerializer.is_valid()):
-            cursor = connections[request.user.cid.cid].cursor()
-            cursor.execute(f"EXEC [inven].[uspAddJobWorkOut] %s",(json.dumps(request.data),))
+            cursor = getDbCursor(request.user)
+            cursor.execute(f"EXEC [inven].[uspAddJobWorkOut] ?",(json.dumps(request.data),))
             cursor.close()
             return Response(orderSerializer.data)
         errors = {}
@@ -40,8 +40,8 @@ def addJobWOrkOutAuto(request):
     try:
         orderSerializer = JobWorkOutSerializer(data=request.data)
         if(orderSerializer.is_valid()):
-            cursor = connections[request.user.cid.cid].cursor()
-            cursor.execute(f"EXEC [inven].[uspAddJobWorkOutAuto] %s",(json.dumps(request.data),))
+            cursor = getDbCursor(request.user)
+            cursor.execute(f"EXEC [inven].[uspAddJobWorkOutAuto] ?",(json.dumps(request.data),))
             cursor.close()
             return Response(orderSerializer.data)
         UNSUCCESSFUL_REQUEST['message'] = orderSerializer.errors
@@ -53,7 +53,7 @@ def addJobWOrkOutAuto(request):
 @permission_classes([IsAuthenticated])
 def getJobProcess(request):
     try:
-        cursor = connections[request.user.cid.cid].cursor()
+        cursor = getDbCursor(request.user)
         cursor.execute(f"exec [inven].[uspGetJobProcess]")
         json_data = ConvertToJson(cursor)
         return JsonResponse(json_data, safe=False)
@@ -64,7 +64,7 @@ def getJobProcess(request):
 @permission_classes([IsAuthenticated])
 def getGoodsType(request):
     try:
-        cursor = connections[request.user.cid.cid].cursor()
+        cursor = getDbCursor(request.user)
         cursor.execute(f"exec [inven].[uspGetJwGoodsType]")
         json_data = ConvertToJson(cursor)
         return JsonResponse(json_data, safe=False)
@@ -75,7 +75,7 @@ def getGoodsType(request):
 @permission_classes([IsAuthenticated])
 def getReqJobWorkOutPending(request):
     try:
-        cursor = connections[request.user.cid.cid].cursor()
+        cursor = getDbCursor(request.user)
         cursor.execute(f"exec [inven].[uspGetReqJobWorkPending]")
         json_data = ConvertToJson(cursor)
         return JsonResponse(json_data, safe=False)
@@ -86,8 +86,8 @@ def getReqJobWorkOutPending(request):
 @permission_classes([IsAuthenticated])
 def getByIdReq(request):
     try:
-        cursor = connections[request.user.cid.cid].cursor()
-        cursor.execute(f"exec [inven].[uspGetByIdReq] %s", (request.data['reqId'], ))
+        cursor = getDbCursor(request.user)
+        cursor.execute(f"exec [inven].[uspGetByIdReq] ?", (request.data['reqId'], ))
         json_data = ConvertToJson(cursor)
         return JsonResponse(json_data, safe=False)
     except Exception as e:

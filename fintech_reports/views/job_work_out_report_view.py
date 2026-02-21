@@ -6,7 +6,7 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from CaFinTech.errors import UNSUCCESSFUL_REQUEST
-from CaFinTech.utility import generate_error_message
+from CaFinTech.utility import generate_error_message, getDbCursor
 import json
 from CaFinTech.settings import File_Path, path_wkhtmltopdf
 import pdfkit
@@ -21,8 +21,8 @@ def getJobWorkoutReport(request):
     try:
         serializer = JobWorkoutReportSerializer(data=request.data)
         if(serializer.is_valid()):
-            cursor = connections[request.user.cid.cid].cursor()
-            cursor.execute(f"EXEC [inven].[JobWorkOutReport] %s",(json.dumps(serializer.data),))
+            cursor = getDbCursor(request.user)
+            cursor.execute(f"EXEC [inven].[JobWorkOutReport] ?",(json.dumps(serializer.data),))
             json_data = ConvertToJson(cursor)
             cursor.close()
             return JsonResponse(json_data, safe=False)
@@ -34,7 +34,7 @@ def getJobWorkoutReport(request):
 def getJobworkoutformat(request, docno, cid):
     try:
         cursor = connections[cid].cursor()
-        cursor.execute(f"EXEC [inven].[uspGetJobWorkOutByDocno] %s",(docno,))
+        cursor.execute(f"EXEC [inven].[uspGetJobWorkOutByDocno] ?",(docno,))
         json_data = [data[0] for data in cursor.fetchall()]
         json_data = "".join(json_data)
         json_data = json.loads(json_data)[0]

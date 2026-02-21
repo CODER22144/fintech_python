@@ -6,7 +6,7 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from CaFinTech.errors import UNSUCCESSFUL_REQUEST
-from CaFinTech.utility import generate_error_message
+from CaFinTech.utility import generate_error_message, getDbCursor
 
 from cafintech_api.views.bill_receipt_view import ConvertToJson
 from fintech_reports.serializers.order_balance_serializer import OrderBalanceSerializer
@@ -17,8 +17,8 @@ def getOrderBalanceReport(request):
     try:
         serializer = OrderBalanceSerializer(data=request.data)
         if(serializer.is_valid()):
-            cursor = connections[request.user.cid.cid].cursor()
-            cursor.execute(f"EXEC [sales].[OrderBalance] %s",(json.dumps(serializer.data),))
+            cursor = getDbCursor(request.user)
+            cursor.execute(f"EXEC [sales].[OrderBalance] ?",(json.dumps(serializer.data),))
             json_data = ConvertToJson(cursor)
             cursor.close()
             return JsonResponse(json_data, safe=False)

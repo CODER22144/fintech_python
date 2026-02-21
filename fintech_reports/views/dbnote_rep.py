@@ -7,7 +7,7 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from CaFinTech.errors import UNSUCCESSFUL_REQUEST
-from CaFinTech.utility import generate_error_message
+from CaFinTech.utility import generate_error_message, getDbCursor
 import json
 
 from CaFinTech.settings import File_Path, path_wkhtmltopdf
@@ -20,7 +20,7 @@ from fintech_reports.serializers.cr_note_invoice_serializer import CrNoteInvoice
 def getDbSalesnoteSaleFormat(request, docno, cid):
     try:
         cursor = connections[cid].cursor()
-        cursor.execute(f"EXEC [fiac].[uspGetSaleDbNoteBydocno] %s",(docno,))
+        cursor.execute(f"EXEC [fiac].[uspGetSaleDbNoteBydocno] ?",(docno,))
         json_data = [data[0] for data in cursor.fetchall()]
         json_data = "".join(json_data)
 
@@ -44,7 +44,7 @@ def getDbSalesnoteSaleFormat(request, docno, cid):
 def getDebitNoteFormat(request, docno, cid):
     try:
         cursor = connections[cid].cursor()
-        cursor.execute(f"EXEC [fiac].[uspGetDbNoteBydocno] %s",(docno,))
+        cursor.execute(f"EXEC [fiac].[uspGetDbNoteBydocno] ?",(docno,))
         json_data = [data[0] for data in cursor.fetchall()]
         json_data = "".join(json_data)
 
@@ -67,7 +67,7 @@ def getDebitNoteFormat(request, docno, cid):
 def getPRTaxInvoiceFormat(request, docno, cid):
     try:
         cursor = connections[cid].cursor()
-        cursor.execute(f"EXEC [fiac].[uspGetPRTaxInvoiceBydocno] %s",(docno,))
+        cursor.execute(f"EXEC [fiac].[uspGetPRTaxInvoiceBydocno] ?",(docno,))
         json_data = [data[0] for data in cursor.fetchall()]
         json_data = "".join(json_data)
 
@@ -91,8 +91,8 @@ def getPRTaxInvoiceFormat(request, docno, cid):
 @permission_classes([IsAuthenticated])
 def getEDbNote(request):
     try:
-        cursor = connections[request.user.cid.cid].cursor()
-        cursor.execute(f"exec [fiac].[uspGetEDbNote] %s",(request.data['docno'],))
+        cursor = getDbCursor(request.user)
+        cursor.execute(f"exec [fiac].[uspGetEDbNote] ?",(request.data['docno'],))
         json_data = [data[0] for data in cursor.fetchall()]
         json_data = "".join(json_data)
         json_data = json.loads(json_data)
@@ -105,8 +105,8 @@ def getEDbNote(request):
 @permission_classes([IsAuthenticated])
 def getEDbSaleNote(request):
     try:
-        cursor = connections[request.user.cid.cid].cursor()
-        cursor.execute(f"exec [fiac].[uspGetESaleDbNote] %s",(request.data['docno'],))
+        cursor = getDbCursor(request.user)
+        cursor.execute(f"exec [fiac].[uspGetESaleDbNote] ?",(request.data['docno'],))
         json_data = [data[0] for data in cursor.fetchall()]
         json_data = "".join(json_data)
         json_data = json.loads(json_data)
@@ -119,8 +119,8 @@ def getEDbSaleNote(request):
 @permission_classes([IsAuthenticated])
 def getEPRTaxInvoice(request):
     try:
-        cursor = connections[request.user.cid.cid].cursor()
-        cursor.execute(f"exec [fiac].[uspGetEPRTaxInvoice] %s",(request.data['docno'],))
+        cursor = getDbCursor(request.user)
+        cursor.execute(f"exec [fiac].[uspGetEPRTaxInvoice] ?",(request.data['docno'],))
         json_data = [data[0] for data in cursor.fetchall()]
         json_data = "".join(json_data)
         json_data = json.loads(json_data)

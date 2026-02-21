@@ -85,14 +85,54 @@ from .views import business_partner_processing_view as bppv
 from .views import material_tech_details_view as mtv
 from .views import color_view as colorv
 from .views import export_order_view as eov
+from .views import financial_year_view as fyv
+from .views import payment_outward as powv
+from .views import account_group_view as agv
+from .views import json_form_view as jfv
+
 
 
 urlpatterns = [
+
+    # FORM JSON
+    re_path(r"^save-json/$", jfv.save_json),
+    re_path(r"^update-json/$", jfv.update_json),
+    re_path(r"^get-all-json/$", jfv.getAllJson),
+    re_path(r"^get-byid-form-json/$", jfv.getByIdFormJson),
+
+
+
+    re_path(r"^add-agGroup/$", agv.addAccountGroup),
+    re_path(r"^update-agGroup/$", agv.updateAccountGroup),
+    re_path(r"^get-agGroup-id/$", agv.getByIdAccountGroup),
+    re_path(r"^get-agGroup/$", agv.getAllAccountGroup),
+    re_path(r"^delete-agGroup/$", agv.deleteAccountGroup),
+
+    # LATEST TO BE USED
+    re_path(r"^add-payment-outward/$", powv.addPaymentOutward),
+    re_path(r"^update-payment-outward/$", powv.updatePaymentOutward),
+    re_path(r"^get-payment-outward-report/$", powv.getPaymentOutwardReport),
+    re_path(r"^delete-payment-outward/$", powv.deletePaymentOutward),
+    re_path(r"^get-payment-outward/$", powv.getByIdPaymentOutward),
+
+    # PAYMENT IN
+    re_path(r"^add-payment-in/$", powv.addPaymentIn),
+    re_path(r"^update-payment-in/$", powv.updatePaymentIn),
+    re_path(r"^delete-payment-in/$", powv.deletePaymentIn),
+    re_path(r"^get-payment-in/$", powv.getByIdPaymentIn),
+    re_path(r"^get-payment-in-report/$", powv.getPaymentInReport),
+
+
+
 # Home
     re_path(r"^$", company_view.apiOverview),
 
     # Company
     re_path(r"^create-company/$", company_view.createCompany),
+    re_path(r"^update-company/$", company_view.updateCompany),
+    re_path(r"^get-company/$", company_view.getAllCompanies),
+    re_path(r"^get-company-id/$", company_view.getByIdCompanies),
+    re_path(r"^delete-company/$", company_view.deleteCompany),
 
     # HSN
     re_path(r"^get-hsn/(?P<hsnCode>\d+)/$", hsn.getGstTaxRate),
@@ -147,7 +187,12 @@ urlpatterns = [
     re_path(r"^get-ledger-code/(?P<lCode>[\w\-\.]+)/$", lc.getByIdLedgerCode),
     re_path(r"^get-ledger-code-supply/(?P<lCode>[\w\-\.]+)/$", lc.getLedgerCodeSupply),
 
+    # IMPORT LEDGER CODES
+    re_path(r"^import-ledger-codes/$", lc.importLedgerCodes),
+
+
     # Material
+    re_path(r"^import-materials/$", mt.importMaterial),
     re_path(r"^add-material/$", mt.addMaterial),
     re_path(r"^update-material/$", mt.updateMaterial),
     re_path(r"^get-material/(?P<matno>[\w\-.]+)/$", mt.getByIdMaterial),
@@ -170,6 +215,8 @@ urlpatterns = [
     re_path(r"^upload/$", upload_view.fileUploadView.as_view()),
     re_path(r"^upload-file/$", upload_view.uploadFiles),
     re_path(r"^upload-br/$", upload_view.uploadBillReceipt),
+    re_path(r"^upload-jvoucher/$", upload_view.uploadJVoucher),
+    re_path(r"^upload-company/$", upload_view.uploadCompanyMedia),
 
     # Material Source
     re_path(r"^add-material-source/$", mts.addMaterialSource),
@@ -222,13 +269,13 @@ urlpatterns = [
     re_path(r"^delete-material-iqs/(?P<miqsId>[\w\-]+)/$", miq.deleteMaterialIQS),
 
     # OBalance
-    re_path(r"^add-obalance/$", obv.addOBalance),
-    re_path(r"^update-obalance/$", obv.updateObalance),
-    re_path(r"^get-obId/$", obv.getObId),
-    re_path(r"^get-obalance-type/$", obv.getBalanceType),
-    re_path(r"^get-obalance/(?P<obId>[\w\-]+)/$", obv.getByIdOBalance),
-    re_path(r"^delete-obalance/(?P<obId>[\w\-]+)/$", obv.deleteOBlance),
-    re_path(r"^obalance-report/$", obv.getOBalanceReport),
+    re_path(r"^add-opening/$", obv.addOBalance),
+    re_path(r"^update-opening/$", obv.updateObalance),
+    # re_path(r"^get-obId/$", obv.getObId),
+    # re_path(r"^get-obalance-type/$", obv.getBalanceType),
+    re_path(r"^get-opening/$", obv.getByIdOBalance),
+    re_path(r"^delete-opening/$", obv.deleteOBlance),
+    re_path(r"^opening-report/$", obv.getOBalanceReport),
 
     # Bill Payable
     re_path(r"^add-bill-payable/$", bpv.addBillPayable),
@@ -241,6 +288,7 @@ urlpatterns = [
 
     # Inward Voucher
     re_path(r"^create-inward-voucher/$", ivv.createInwardVoucher),
+    re_path(r"^import-inward-voucher/$", ivv.importInwardVoucherSingle),
     re_path(r"^get-discper-type/$", ivv.getDiscountPercentageType),
 
     # Visit Info
@@ -261,6 +309,7 @@ urlpatterns = [
     # Inward Details
     re_path(r"^add-inward/$", iv.addInward),
     re_path(r"^delete-inward/$", iv.deleteInward),
+    re_path(r"^delete-inward-voucher/$", iv.deleteInwardVoucher),
     re_path(r"^add-inward-details/$", iv.addInwardDetails),
     re_path(r"^get-tds/$", iv.getTdsCode),
     re_path(r"^get-supplier-type/$", iv.getSupplierType),
@@ -269,13 +318,22 @@ urlpatterns = [
     # Financial Credit Note
     re_path(r"^get-tod-rate/$", fcv.getTodRate),
     re_path(r"^get-crn-type/$", fcv.getCreditNoteType),
+    
     re_path(r"^create-financial-crnote/$", fcv.createFinancialCreditNote),
+    re_path(r"^get-fcn/$", fcv.getFinancialCreditNoteById),
+    re_path(r"^delete-fcn/$", fcv.deleteFinancialCrnote),
+    re_path(r"^update-financial-crnote/$", fcv.updateFinancialCreditNote),
+    
     re_path(r"^fiac-crnote-rep/$", fcv.getFinancialCrNoteReport),
     re_path(r"^get-fcsno/(?P<inv>\d+)/(?P<cid>\w+)/$", fcv.getFcsno),
     re_path(r"^get-fcsno-pdf/(?P<fcns>\d+)/(?P<cid>\w+)/$", fcv.getFcsnoPdf),
 
     # Receipt VOucher
     re_path(r"^create-receipt-voucher/$", rvv.createReceiptVoucher),
+    re_path(r"^update-receipt-voucher/$", rvv.updateReceiptVoucher),
+    re_path(r"^delete-receipt-voucher/$", rvv.deleteReceiptVoucher),
+    re_path(r"^get-receipt-voucher/$", rvv.getReceiptVoucherById),
+    re_path(r"^receipt-voucher-rep/$", rvv.getReceiptVoucherReport),
     
     # Payment Voucher
     re_path(r"^create-payment-voucher/$", pvv.createPaymentVoucher),
@@ -322,8 +380,8 @@ urlpatterns = [
     re_path(r"^add-carrier/$", carv.addCarrier),
     re_path(r"^update-carrier/$", carv.updateCarrier),
     re_path(r"^get-carrier/$", carv.getAllCarrier),
-    re_path(r"^get-carrier/(?P<carId>[\w\-]+)/$", carv.getByIdCarrier),
-    re_path(r"^delete-carrier/(?P<carId>[\w\-]+)/$", carv.deleteCarrier),
+    re_path(r"^get-carrier-id/$", carv.getByIdCarrier),
+    re_path(r"^delete-carrier/$", carv.deleteCarrier),
 
     # Sales Order
     re_path(r"^add-sales-order/$", sodv.addSaleOrderDetails),
@@ -415,8 +473,26 @@ urlpatterns = [
     re_path(r"^get-pay-type/$", payv.getPayType),
     re_path(r"^add-payment/$", payv.addPayment),
     re_path(r"^add-payment-clear/$", payv.addPaymentClear),
-    re_path(r"^add-dbnote-clear/$", payv.addDbNoteClear),
-    re_path(r"^add-crnote-clear/$", payv.addCrNoteClear),
+    # re_path(r"^add-dbnote-clear/$", payv.addDbNoteClear),
+    # re_path(r"^add-crnote-clear/$", payv.addCrNoteClear),
+    
+    re_path(r"^get-pay-out-advance/$", payv.getPaymentOutAdvance),
+    re_path(r"^add-pay-outward-clear/$", payv.addPaymentOutwardAdvClear),
+
+    re_path(r"^get-dbnote-pending/$", payv.getDebitNotePending),
+    re_path(r"^add-dbnote-clear/$", payv.addDebitNoteClear),
+
+    re_path(r"^get-crnote-pending/$", payv.getCreditNotePending),
+    re_path(r"^add-crnote-clear/$", payv.addCreditNoteClear),
+
+    re_path(r"^get-fiac-crnote-pending/$", payv.getFinancialCreditNotePending),
+    re_path(r"^add-fiac-crnote-clear/$", payv.addFinancialCreditNoteClear),
+
+
+    # PAYMENT IN ADVANCE PENDING CLEARENCE
+    re_path(r"^get-pay-inw-advance/$", payv.getPaymentInAdvance),
+    re_path(r"^add-pay-inw-clear/$", payv.addPaymentInAdvClear),
+
     re_path(r"^add-prtax-invoice-clear/$", payv.addPrTaxInvoiceClear),
     re_path(r"^delete-payment-clear/(?P<id>\d+)/$", payv.deletePaymentClear),
     re_path(r"^get-bill-pending-by-transId/(?P<transId>\w+)/$", payv.getByTransIdBillPending),
@@ -430,8 +506,12 @@ urlpatterns = [
     # Bank Details
     re_path(r"^upload-bank-details/$", buv.uploadBankDetails),
     re_path(r"^update-bank-statement/$", buv.updateBankStatement),
+    re_path(r"^claim-payment/$", buv.claimPayment),
     re_path(r"^upload-hdfc/$", buv.uploadHdfc),
     re_path(r"^upload-kotak/$", buv.uploadKotak),
+    re_path(r"^unclaimed-payments/$", buv.uncliamedPayments),
+    re_path(r"^claimed-payments/$", buv.claimedPayments),
+    re_path(r"^post-claimed-payments/$", buv.postBankStatementPendings),
     
 
     # Part Assembly
@@ -483,7 +563,9 @@ urlpatterns = [
 
     # Journal Voucher
     re_path(r"^add-jvoucher/$", jvv.addJournalVoucher),
-    re_path(r"^get-jvoucher/$", jvv.getAllJVoucher),
+    re_path(r"^update-jvoucher/$", jvv.updateJournalVoucher),
+    re_path(r"^jvoucher-rep/$", jvv.getAllJVoucher),
+    re_path(r"^get-jvoucher/$", jvv.getByIdJVoucher),
     re_path(r"^delete-jvoucher/$", jvv.deleteJVoucher),
 
     # Sale Purchase Transfer
@@ -601,7 +683,11 @@ urlpatterns = [
     re_path(r'^create-balance-order/$', rovmv.createBalanceOrder),
 
     # REVERSE CHARGES
-    re_path(r'^add-reverse-charge/$', rcv.addReverseCharges),
+    re_path(r'^add-rcm/$', rcv.addReverseCharges),
+    re_path(r'^update-rcm/$', rcv.updateReverseCharges),
+    re_path(r'^rcm-rep/$', rcv.getReverseChargeRep),
+    re_path(r'^delete-rcm/$', rcv.deleteRcm),
+    re_path(r'^get-rcm/$', rcv.getRcm),
 
     # OB MATERIAL
     re_path(r'^add-ob-material/$', obmv.addObMaterial),
@@ -695,6 +781,17 @@ urlpatterns = [
     re_path(r'^get-export-order/$', eov.getExpOrderById),
     re_path(r'^get-currency/$', eov.getCurrency),
     re_path(r'^get-ports/$', eov.getPorts),
+
+    # FINANCIAL YEAR
+    re_path(r'^add-financial-year/$', fyv.addFinancialYear),
+    re_path(r'^update-financial-year/$', fyv.updateFinancialYear),
+    re_path(r'^delete-fy/$', fyv.deleteFy),
+    re_path(r'^get-fy/$', fyv.getAllYears),
+    re_path(r'^get-fy-id/$', fyv.getByIdYears),
+    re_path(r'^get-current-fy/$', fyv.getActiveFinancialYear),
+
+
+    re_path(r'^edit-bp-ob-material-bulk/$', bpobmv.UpdateBulkBusinessPartnerObMaterial),
 
 
 

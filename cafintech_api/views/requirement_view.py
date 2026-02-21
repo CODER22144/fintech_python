@@ -5,7 +5,7 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from CaFinTech.errors import UNSUCCESSFUL_REQUEST
-from CaFinTech.utility import generate_error_message
+from CaFinTech.utility import generate_error_message, getDbCursor
 import json
 
 from cafintech_api.serializers.requirement_serializer import RequirementSerializer
@@ -18,8 +18,8 @@ def addReq(request):
     try:
         serializer = RequirementSerializer(data=request.data)
         if(serializer.is_valid()):
-            cursor = connections[request.user.cid.cid].cursor()
-            cursor.execute(f"EXEC [inven].[uspAddReq] %s",(json.dumps(request.data),))
+            cursor = getDbCursor(request.user)
+            cursor.execute(f"EXEC [inven].[uspAddReq] ?",(json.dumps(request.data),))
             cursor.close()
             return Response(serializer.data)
         UNSUCCESSFUL_REQUEST['message'] = serializer.errors
@@ -34,8 +34,8 @@ def addReqDetails(request):
         serializer = RequirementSerializer(data=request.data)
         serializerDetails = RequirementDetailSerializer(data=request.data['ReqDetails'], many=True)
         if(serializerDetails.is_valid() and serializer.is_valid()):
-            cursor = connections[request.user.cid.cid].cursor()
-            cursor.execute(f"EXEC [inven].[uspAddReqManual] %s",(json.dumps(request.data),))
+            cursor = getDbCursor(request.user)
+            cursor.execute(f"EXEC [inven].[uspAddReqManual] ?",(json.dumps(request.data),))
             cursor.close()
             return Response(serializerDetails.data)
         errors = {}
@@ -53,7 +53,7 @@ def addReqDetails(request):
 @permission_classes([IsAuthenticated])
 def getReqMode(request):
     try:
-        cursor = connections[request.user.cid.cid].cursor()
+        cursor = getDbCursor(request.user)
         cursor.execute(f"exec [inven].[uspGetReqMode]")
         json_data = ConvertToJson(cursor)
         return JsonResponse(json_data, safe=False)
@@ -64,7 +64,7 @@ def getReqMode(request):
 @permission_classes([IsAuthenticated])
 def getReqType(request):
     try:
-        cursor = connections[request.user.cid.cid].cursor()
+        cursor = getDbCursor(request.user)
         cursor.execute(f"exec [inven].[uspGetReqType]")
         json_data = ConvertToJson(cursor)
         return JsonResponse(json_data, safe=False)
@@ -75,7 +75,7 @@ def getReqType(request):
 @permission_classes([IsAuthenticated])
 def getDepartment(request):
     try:
-        cursor = connections[request.user.cid.cid].cursor()
+        cursor = getDbCursor(request.user)
         cursor.execute(f"exec [inven].[uspGetDepartment]")
         json_data = ConvertToJson(cursor)
         return JsonResponse(json_data, safe=False)

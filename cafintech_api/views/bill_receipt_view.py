@@ -6,7 +6,7 @@ from rest_framework.response import Response
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
 from CaFinTech.errors import UNSUCCESSFUL_REQUEST
-from CaFinTech.utility import generate_error_message
+from CaFinTech.utility import generate_error_message, getDbCursor
 from cafintech_api.serializers.bill_receipt_serializer import BillReceiptSerializer
 from fintech_reports.serializers.report_serializer import ReportSerializer
 
@@ -24,8 +24,8 @@ def createBillReceipt(request):
     try:
         serializer = BillReceiptSerializer(data=request.data, many = True)
         if(serializer.is_valid()):
-            cursor = connections[request.user.cid.cid].cursor()
-            cursor.execute(f"EXEC [docen].[uspAddBr] %s",(json.dumps(serializer.data),))
+            cursor = getDbCursor(request.user)
+            cursor.execute(f"EXEC [docen].[uspAddBr] ?",(json.dumps(serializer.data),))
             cursor.close()
             return Response(serializer.data)
         UNSUCCESSFUL_REQUEST['message'] = serializer.errors
@@ -39,8 +39,8 @@ def updateBr(request):
     try:
         serializer = BillReceiptSerializer(data=request.data)
         if(serializer.is_valid()):
-            cursor = connections[request.user.cid.cid].cursor()
-            cursor.execute(f"EXEC [docen].[uspUpdateBr] %s",(json.dumps(serializer.data),))
+            cursor = getDbCursor(request.user)
+            cursor.execute(f"EXEC [docen].[uspUpdateBr] ?",(json.dumps(serializer.data),))
             cursor.close()
             return Response(serializer.data)
         UNSUCCESSFUL_REQUEST['message'] = serializer.errors
@@ -53,7 +53,7 @@ def updateBr(request):
 @permission_classes([IsAuthenticated])
 def getBillType(request):
     try:
-        cursor = connections[request.user.cid.cid].cursor()
+        cursor = getDbCursor(request.user)
         cursor.execute(f"select * from mastcode.BillType")
         json_data = ConvertToJson(cursor)
         return JsonResponse(json_data, safe=False)
@@ -65,7 +65,7 @@ def getBillType(request):
 @permission_classes([IsAuthenticated])
 def getBusinessPartner(request):
     try:
-        cursor = connections[request.user.cid.cid].cursor()
+        cursor = getDbCursor(request.user)
         cursor.execute(f"exec [mastcode].[uspGetBusinessPartnerDropDown]")
         json_data = ConvertToJson(cursor)
         return JsonResponse(json_data, safe=False)
@@ -76,7 +76,7 @@ def getBusinessPartner(request):
 @permission_classes([IsAuthenticated])
 def getCarrierType(request):
     try:
-        cursor = connections[request.user.cid.cid].cursor()
+        cursor = getDbCursor(request.user)
         cursor.execute(f"select * from [mastcode].[CarrierType]")
         json_data = ConvertToJson(cursor)
         return JsonResponse(json_data, safe=False)
@@ -87,7 +87,7 @@ def getCarrierType(request):
 @permission_classes([IsAuthenticated])
 def getTransMode(request):
     try:
-        cursor = connections[request.user.cid.cid].cursor()
+        cursor = getDbCursor(request.user)
         cursor.execute(f"select * from [mastcode].[TransportMode]")
         json_data = ConvertToJson(cursor)
         return JsonResponse(json_data, safe=False)
@@ -98,7 +98,7 @@ def getTransMode(request):
 @permission_classes([IsAuthenticated])
 def getAllBillReceipt(request):
     try:
-        cursor = connections[request.user.cid.cid].cursor()
+        cursor = getDbCursor(request.user)
         cursor.execute(f"exec [docen].[uspGetAllBr]")
         json_data = ConvertToJson(cursor)
         return JsonResponse(json_data, safe=False)
@@ -109,8 +109,8 @@ def getAllBillReceipt(request):
 @permission_classes([IsAuthenticated])
 def deleteBillReceipt(request, brid):
     try:
-        cursor = connections[request.user.cid.cid].cursor()
-        cursor.execute(f"exec [docen].[uspDeleteBr] %s", (brid, ))
+        cursor = getDbCursor(request.user)
+        cursor.execute(f"exec [docen].[uspDeleteBr] ?", (brid, ))
         cursor.close()
         return Response(data={"status" : "OK"}, status=204)
     except Exception as e:
@@ -120,8 +120,8 @@ def deleteBillReceipt(request, brid):
 @permission_classes([IsAuthenticated])
 def getBrById(request, brid):
     try:
-        cursor = connections[request.user.cid.cid].cursor()
-        cursor.execute(f"exec [docen].[uspGetBrById] %s", (brid, ))
+        cursor = getDbCursor(request.user)
+        cursor.execute(f"exec [docen].[uspGetBr] ?", (json.dumps({"brid" : brid, "repType" : "R"}), ))
         json_data = ConvertToJson(cursor)
         cursor.close()
         if len(json_data) == 1:
@@ -134,10 +134,10 @@ def getBrById(request, brid):
 @permission_classes([IsAuthenticated])
 def getBybtBr(request, bt):
     try:
-        cursor = connections[request.user.cid.cid].cursor()
+        cursor = getDbCursor(request.user)
         if bt == 'null':
             bt=None
-        cursor.execute(f"exec [docen].[uspGetBybtBr] %s", (bt, ))
+        cursor.execute(f"exec [docen].[uspGetBybtBr] ?", (bt, ))
         json_data = ConvertToJson(cursor)
         cursor.close()
         return JsonResponse(json_data, safe=False)
@@ -150,8 +150,8 @@ def getBrReport(request):
     try:
         serializer = ReportSerializer(data=request.data)
         if(serializer.is_valid()):
-            cursor = connections[request.user.cid.cid].cursor()
-            cursor.execute(f"EXEC [docen].[uspGetBrRep] %s",(json.dumps(serializer.data),))
+            cursor = getDbCursor(request.user)
+            cursor.execute(f"EXEC [docen].[uspGetBr] ?",(json.dumps(serializer.data),))
             json_data = ConvertToJson(cursor)
             cursor.close()
             return JsonResponse(json_data, safe=False)

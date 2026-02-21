@@ -5,7 +5,7 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from CaFinTech.errors import UNSUCCESSFUL_REQUEST
-from CaFinTech.utility import generate_error_message
+from CaFinTech.utility import generate_error_message, getDbCursor
 import json
 
 from cafintech_api.views.bill_receipt_view import ConvertToJson
@@ -15,8 +15,8 @@ from fintech_reports.serializers.material_stock_serializer import MaterialStockS
 @permission_classes([IsAuthenticated])
 def getMenu(request):
     try:
-        cursor = connections[request.user.cid.cid].cursor()
-        cursor.execute(f"exec [mastcode].[uspGetMenu]")
+        cursor = connections['default'].cursor()
+        cursor.execute(f"exec [dbo].[uspGetMenu]")
         json_data = [data[0] for data in cursor.fetchall()]
         json_data = "".join(json_data)
         cursor.close()

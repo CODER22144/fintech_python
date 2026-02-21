@@ -5,7 +5,7 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from CaFinTech.errors import UNSUCCESSFUL_REQUEST
-from CaFinTech.utility import generate_error_message
+from CaFinTech.utility import generate_error_message, getDbCursor
 import json
 
 from cafintech_api.serializers.order_packaging_serializer import OrderPackagingSerializer
@@ -17,9 +17,9 @@ def addOrderPackaging(request):
     try:
         serializer = OrderPackagingSerializer(data=request.data)
         if(serializer.is_valid()):
-            cursor = connections[request.user.cid.cid].cursor()
-            cursor.execute(f"EXEC [sales].[uspAddOrderPacking] %s",(json.dumps(serializer.data),))
-            cursor.execute(f"EXEC [sales].[uspGetByIdOrderPacking] %s",(serializer.data['orderId'],))
+            cursor = getDbCursor(request.user)
+            cursor.execute(f"EXEC [sales].[uspAddOrderPacking] ?",(json.dumps(serializer.data),))
+            cursor.execute(f"EXEC [sales].[uspGetByIdOrderPacking] ?",(serializer.data['orderId'],))
             json_data = ConvertToJson(cursor)
             return JsonResponse(json_data, safe=False)
         UNSUCCESSFUL_REQUEST['message'] = serializer.errors
@@ -31,8 +31,8 @@ def addOrderPackaging(request):
 @permission_classes([IsAuthenticated])
 def getOrderPackingPending(request):
     try:
-        cursor = connections[request.user.cid.cid].cursor()
-        cursor.execute(f"exec [sales].[uspGetOrderPackingPending] %s,%s",(request.user.userId, request.user.roles.role_id))
+        cursor = getDbCursor(request.user)
+        cursor.execute(f"exec [sales].[uspGetOrderPackingPending] ?,?",(request.user.userId, request.user.roles.role_id))
         json_data = ConvertToJson(cursor)
         return JsonResponse(json_data, safe=False)
     except Exception as e:
@@ -42,8 +42,8 @@ def getOrderPackingPending(request):
 @permission_classes([IsAuthenticated])
 def getPackedInfoByOrderId(request, orderId):
     try:
-        cursor = connections[request.user.cid.cid].cursor()
-        cursor.execute(f"EXEC [sales].[uspGetByIdOrderPacking] %s",(orderId,))
+        cursor = getDbCursor(request.user)
+        cursor.execute(f"EXEC [sales].[uspGetByIdOrderPacking] ?",(orderId,))
         json_data = ConvertToJson(cursor)
         return JsonResponse(json_data, safe=False)
     except Exception as e:

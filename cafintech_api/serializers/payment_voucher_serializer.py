@@ -9,8 +9,5 @@ class PaymentVoucherSerializer(serializers.Serializer):
     AssAmt = serializers.DecimalField(max_digits=15, decimal_places=3)
     GstRt = serializers.DecimalField(max_digits=5, decimal_places=2)
     gstAmount = serializers.DecimalField(max_digits=15, decimal_places=3)
-    # IgstAmt = serializers.DecimalField(max_digits=15, decimal_places=3)
-    # CgstAmt = serializers.DecimalField(max_digits=15, decimal_places=3)
-    # SgstAmt = serializers.DecimalField(max_digits=15, decimal_places=3)
     mop = serializers.CharField(max_length=20, allow_null=True, required=False)
     payRefno = serializers.CharField(max_length=20, allow_null=True, required=False)

@@ -8,7 +8,7 @@ from rest_framework.permissions import IsAuthenticated
 from CaFinTech.errors import UNSUCCESSFUL_REQUEST
 from CaFinTech.settings import File_Path, path_wkhtmltopdf
 import pdfkit
-from CaFinTech.utility import generate_error_message
+from CaFinTech.utility import generate_error_message, getDbCursor
 import json
 
 from cafintech_api.serializers.financial_crnote_serializer import FinacialCreditNoteSerializer
@@ -21,8 +21,23 @@ def createFinancialCreditNote(request):
     try:
         serializer = FinacialCreditNoteSerializer(data=request.data, many=True)
         if(serializer.is_valid()):
-            cursor = connections[request.user.cid.cid].cursor()
-            cursor.execute(f"EXEC [fiac].[uspAddFinancialCrnote] %s",(json.dumps(serializer.data),))
+            cursor = getDbCursor(request.user)
+            cursor.execute(f"EXEC [fiac].[uspAddFinancialCrnote] ?",(json.dumps(serializer.data),))
+            cursor.close()
+            return Response(serializer.data)
+        UNSUCCESSFUL_REQUEST['message'] = serializer.errors
+        return Response(UNSUCCESSFUL_REQUEST, status=400)
+    except Exception as e:
+        return Response(generate_error_message(e), status=500, exception=e)
+    
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def updateFinancialCreditNote(request):
+    try:
+        serializer = FinacialCreditNoteSerializer(data=request.data)
+        if(serializer.is_valid()):
+            cursor = getDbCursor(request.user)
+            cursor.execute(f"EXEC [fiac].[uspUpdateFinancialCrnote] ?",(json.dumps(serializer.data),))
             cursor.close()
             return Response(serializer.data)
         UNSUCCESSFUL_REQUEST['message'] = serializer.errors
@@ -34,9 +49,21 @@ def createFinancialCreditNote(request):
 @permission_classes([IsAuthenticated])
 def getTodRate(request):
     try:
-        cursor = connections[request.user.cid.cid].cursor()
+        cursor = getDbCursor(request.user)
         cursor.execute(f"select * from mastcode.RateTod")
         json_data = ConvertToJson(cursor)
+        return JsonResponse(json_data, safe=False)
+    except Exception as e:
+        return Response(data=generate_error_message(e), status=500, exception=e)
+    
+@api_view(["POST"])
+@permission_classes([IsAuthenticated])
+def getFinancialCreditNoteById(request):
+    try:
+        cursor = getDbCursor(request.user)
+        cursor.execute(f"exec [fiac].[uspGetFinancialCrnote] ?", (json.dumps(request.data), ))
+        json_data = ConvertToJson(cursor)
+        cursor.close()
         return JsonResponse(json_data, safe=False)
     except Exception as e:
         return Response(data=generate_error_message(e), status=500, exception=e)
@@ -45,7 +72,7 @@ def getTodRate(request):
 @permission_classes([IsAuthenticated])
 def getCreditNoteType(request):
     try:
-        cursor = connections[request.user.cid.cid].cursor()
+        cursor = getDbCursor(request.user)
         cursor.execute(f"exec [mastcode].[uspGetFcnType]")
         json_data = ConvertToJson(cursor)
         return JsonResponse(json_data, safe=False)
@@ -59,8 +86,8 @@ def getFinancialCrNoteReport(request):
     try:
         serializer = PaymentReportSerializer(data=request.data)
         if(serializer.is_valid()):
-            cursor = connections[request.user.cid.cid].cursor()
-            cursor.execute(f"exec [fiac].[uspGetFinancialCrnoteReport] %s",(json.dumps(serializer.data),))
+            cursor = getDbCursor(request.user)
+            cursor.execute(f"exec [fiac].[uspGetFinancialCrnote] ?",(json.dumps(serializer.data),))
             json_data = ConvertToJson(cursor)
             cursor.close()
             return JsonResponse(json_data, safe=False)
@@ -72,7 +99,7 @@ def getFinancialCrNoteReport(request):
 def getFcsno(request, inv, cid):
     try:
         cursor = connections[cid].cursor()
-        cursor.execute(f"exec [fiac].[uspGetFinancialById] %s",(inv,))
+        cursor.execute(f"exec [fiac].[uspGetFinancialById] ?",(inv,))
         json_data = ConvertToJson(cursor)
 
         empty = [x for x in range(0, 30)]
@@ -94,3 +121,14 @@ def getFcsnoPdf(request, fcns, cid):
     config = pdfkit.configuration(wkhtmltopdf=path_wkhtmltopdf)
     pdfkit.from_url(url,filename, configuration=config)
     return redirect('http://remoteapi.rcinz.com/media/docs/'+redirectTO)
+
+@api_view(["POST"])
+@permission_classes([IsAuthenticated])
+def deleteFinancialCrnote(request):
+    try:
+        cursor = getDbCursor(request.user)
+        cursor.execute(f"exec [fiac].[uspDeleteFinancialCrnote] ?", (json.dumps(request.data), ))
+        cursor.close()
+        return Response(data={"status" : "OK"}, status=204)
+    except Exception as e:
+        return Response(data=generate_error_message(e), status=500, exception=e)

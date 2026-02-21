@@ -6,11 +6,11 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.parsers import MultiPartParser, FormParser
 import json
-from CaFinTech.utility import generate_error_message
-from cafintech_api.models.upload import BillReceiptUpload, FileUpload
+from CaFinTech.utility import generate_error_message, getDbCursor
+from cafintech_api.models.upload import BillReceiptUpload, CompanyUpload, FileUpload, JvoucherUpload
 from rest_framework.permissions import IsAuthenticated
 
-from cafintech_api.serializers.file_upload_serializer import UploadedBrSerializer, UploadedFileSerializer
+from cafintech_api.serializers.file_upload_serializer import UPloadCompanySerializer, UploadedBrSerializer, UploadedFileSerializer, UploadedJvoucherSerializer
 from rest_framework.decorators import api_view, permission_classes
 
 class fileUploadView(APIView):
@@ -96,8 +96,8 @@ class fileUploadView(APIView):
                 "balanceSheet" : "/media/" + balanceSheetFile.file.name if balanceSheetFile != None else None,
             }
 
-            cursor = connections[request.user.cid.cid].cursor()
-            cursor.execute(f"EXEC [mastcode].[uspAddbpDocument] %s",(json.dumps(documentBody).replace("'", "\""),))
+            cursor = getDbCursor(request.user)
+            cursor.execute(f"EXEC [mastcode].[uspAddbpDocument] ?",(json.dumps(documentBody).replace("'", "\""),))
             cursor.close()
 
             return Response(documentBody, status=status.HTTP_201_CREATED)
@@ -124,3 +124,24 @@ def uploadBillReceipt(request):
     else:
         return Response(file_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def uploadJVoucher(request):
+    file_serializer = UploadedJvoucherSerializer(data=request.data)
+    if file_serializer.is_valid():
+        jfile = JvoucherUpload(file=file_serializer.validated_data['file'])
+        jfile.save(using=request.user.cid.cid)
+        return Response(data={'file' : '/media/' + str(jfile.file)}, status=status.HTTP_201_CREATED)
+    else:
+        return Response(file_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def uploadCompanyMedia(request):
+    file_serializer = UPloadCompanySerializer(data=request.data)
+    if file_serializer.is_valid():
+        jfile = CompanyUpload(file=file_serializer.validated_data['file'])
+        jfile.save(using=request.user.cid.cid)
+        return Response(data={'file' : '/media/' + str(jfile.file)}, status=status.HTTP_201_CREATED)
+    else:
+        return Response(file_serializer.errors, status=status.HTTP_400_BAD_REQUEST)

@@ -6,7 +6,7 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from CaFinTech.errors import UNSUCCESSFUL_REQUEST
-from CaFinTech.utility import generate_error_message
+from CaFinTech.utility import generate_error_message, getDbCursor
 import json
 
 
@@ -25,7 +25,7 @@ def grDetails(request):
         "toDate": toDate
     }
     
-    cursor.execute(f"EXEC [sales].[uspGetGrDetails] %s", (json.dumps(json_input),))
+    cursor.execute(f"EXEC [sales].[uspGetGrDetails] ?", (json.dumps(json_input),))
     json_data = [data[0] for data in cursor.fetchall()]
     json_data = "".join(json_data)
     json_data = json.loads(json_data)

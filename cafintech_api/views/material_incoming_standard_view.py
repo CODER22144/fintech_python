@@ -5,7 +5,7 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from CaFinTech.errors import UNSUCCESSFUL_REQUEST
-from CaFinTech.utility import generate_error_message
+from CaFinTech.utility import generate_error_message, getDbCursor
 import json
 
 from cafintech_api.serializers.ledger_codes_serializer import LedgerCodesSerializer
@@ -18,8 +18,8 @@ def addMaterialIncomingStandard(request):
     try:
         serializer = MaterialIncomingStandardSerializer(data=request.data, many=True)
         if(serializer.is_valid()):
-            cursor = connections[request.user.cid.cid].cursor()
-            cursor.execute(f"EXEC [cost].[uspAddMaterialIncomingStandard] %s",(json.dumps(serializer.data),))
+            cursor = getDbCursor(request.user)
+            cursor.execute(f"EXEC [cost].[uspAddMaterialIncomingStandard] ?",(json.dumps(serializer.data),))
             cursor.close()
             return Response(serializer.data)
         UNSUCCESSFUL_REQUEST['message'] = serializer.errors
@@ -31,7 +31,7 @@ def addMaterialIncomingStandard(request):
 @permission_classes([IsAuthenticated])
 def getAllMaterialIncomingStandard(request):
     try:
-        cursor = connections[request.user.cid.cid].cursor()
+        cursor = getDbCursor(request.user)
         cursor.execute(f"exec [cost].[uspGetMaterialIncomingStandard]")
         json_data = ConvertToJson(cursor)
         return JsonResponse(json_data, safe=False)
@@ -42,8 +42,8 @@ def getAllMaterialIncomingStandard(request):
 @permission_classes([IsAuthenticated])
 def deleteMaterialIncomingStandard(request):
     try:
-        cursor = connections[request.user.cid.cid].cursor()
-        cursor.execute(f"exec [cost].[uspDeleteMaterialIncomingStandard] %s", (request.data['misId'], ))
+        cursor = getDbCursor(request.user)
+        cursor.execute(f"exec [cost].[uspDeleteMaterialIncomingStandard] ?", (request.data['misId'], ))
         cursor.close()
         return Response(data={"status" : "OK"}, status=204)
     except Exception as e:
@@ -53,7 +53,7 @@ def deleteMaterialIncomingStandard(request):
 @permission_classes([IsAuthenticated])
 def getTestType(request):
     try:
-        cursor = connections[request.user.cid.cid].cursor()
+        cursor = getDbCursor(request.user)
         cursor.execute(f"select testName, testName as [name] from [mastcode].[TestType]")
         json_data = ConvertToJson(cursor)
         return JsonResponse(json_data, safe=False)

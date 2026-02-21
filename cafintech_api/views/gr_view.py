@@ -5,7 +5,7 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from CaFinTech.errors import UNSUCCESSFUL_REQUEST
-from CaFinTech.utility import generate_error_message
+from CaFinTech.utility import generate_error_message, getDbCursor
 import json
 
 from cafintech_api.serializers.gr_details_serailizer import GrDetailSerializer
@@ -21,8 +21,8 @@ def addGrDetails(request):
         if(grSerializer.is_valid() and grDetailsSerializer.is_valid()):
             param = grSerializer.data
             param['GrDetails'] = grDetailsSerializer.data
-            cursor = connections[request.user.cid.cid].cursor()
-            cursor.execute(f"EXEC [purchase].[uspAddGr] %s",(json.dumps(param),))
+            cursor = getDbCursor(request.user)
+            cursor.execute(f"EXEC [purchase].[uspAddGr] ?",(json.dumps(param),))
             cursor.close()
             return Response(grSerializer.data)
         errors = {}
@@ -40,8 +40,8 @@ def addGrDetails(request):
 @permission_classes([IsAuthenticated])
 def validPurchaseOrder(request, bpCode):
     try:
-        cursor = connections[request.user.cid.cid].cursor()
-        cursor.execute(f"exec [purchase].[uspGetValidPurchaseOrderBybpCode] %s",(bpCode,))
+        cursor = getDbCursor(request.user)
+        cursor.execute(f"exec [purchase].[uspGetValidPurchaseOrderBybpCode] ?",(bpCode,))
         json_data = ConvertToJson(cursor)
         return JsonResponse(json_data, safe=False)
     except Exception as e:
@@ -51,7 +51,7 @@ def validPurchaseOrder(request, bpCode):
 @permission_classes([IsAuthenticated])
 def getPendingGr(request):
     try:
-        cursor = connections[request.user.cid.cid].cursor()
+        cursor = getDbCursor(request.user)
         cursor.execute(f"exec [purchase].[uspGetPendingGr]")
         json_data = [data[0] for data in cursor.fetchall()]
         json_data = "".join(json_data)
@@ -65,8 +65,8 @@ def getPendingGr(request):
 @permission_classes([IsAuthenticated])
 def getGrByGrno(request, grno):
     try:
-        cursor = connections[request.user.cid.cid].cursor()
-        cursor.execute(f"exec [purchase].[uspGetGrByGrNo] %s", (grno,))
+        cursor = getDbCursor(request.user)
+        cursor.execute(f"exec [purchase].[uspGetGrByGrNo] ?", (grno,))
         json_data = [data[0] for data in cursor.fetchall()]
         json_data = "".join(json_data)
         cursor.close()
@@ -78,8 +78,8 @@ def getGrByGrno(request, grno):
 @permission_classes([IsAuthenticated])
 def deleteGr(request):
     try:
-        cursor = connections[request.user.cid.cid].cursor()
-        cursor.execute(f"exec [docen].[uspDeleteGr] %s,%s", (request.data['grno'], request.user.roles.role_id))
+        cursor = getDbCursor(request.user)
+        cursor.execute(f"exec [docen].[uspDeleteGr] ?,?", (request.data['grno'], request.user.roles.role_id))
         cursor.close()
         return Response(data={"status" : "OK"}, status=204)
     except Exception as e:
@@ -89,7 +89,7 @@ def deleteGr(request):
 @permission_classes([IsAuthenticated])
 def getGrShortage(request):
     try:
-        cursor = connections[request.user.cid.cid].cursor()
+        cursor = getDbCursor(request.user)
         cursor.execute(f"exec [purchase].[uspGrShortagePending]")
         json_data = ConvertToJson(cursor)
         return JsonResponse(json_data, safe=False)
@@ -100,7 +100,7 @@ def getGrShortage(request):
 @permission_classes([IsAuthenticated])
 def getGrRejection(request):
     try:
-        cursor = connections[request.user.cid.cid].cursor()
+        cursor = getDbCursor(request.user)
         cursor.execute(f"exec [purchase].[uspGrRejectionPending]")
         json_data = ConvertToJson(cursor)
         return JsonResponse(json_data, safe=False)
@@ -111,7 +111,7 @@ def getGrRejection(request):
 @permission_classes([IsAuthenticated])
 def getGrRateApprovalPending(request):
     try:
-        cursor = connections[request.user.cid.cid].cursor()
+        cursor = getDbCursor(request.user)
         cursor.execute(f"exec [purchase].[uspGetGrRateApprovalPending]")
         json_data = ConvertToJson(cursor)
         return JsonResponse(json_data, safe=False)
@@ -122,8 +122,8 @@ def getGrRateApprovalPending(request):
 @permission_classes([IsAuthenticated])
 def debitNoteRateDifference(request):
     try:
-        cursor = connections[request.user.cid.cid].cursor()
-        cursor.execute(f"exec [fiac].[DbNoteRateDifference] %s", (request.data['grno'], ))
+        cursor = getDbCursor(request.user)
+        cursor.execute(f"exec [fiac].[DbNoteRateDifference] ?", (request.data['grno'], ))
         return JsonResponse({"status" : "OK"}, safe=False)
     except Exception as e:
         return Response(data=generate_error_message(e), status=500, exception=e)
@@ -132,8 +132,8 @@ def debitNoteRateDifference(request):
 @permission_classes([IsAuthenticated])
 def debitNoteShortage(request):
     try:
-        cursor = connections[request.user.cid.cid].cursor()
-        cursor.execute(f"exec [fiac].[DbNoteShortage] %s", (request.data['grno'], ))
+        cursor = getDbCursor(request.user)
+        cursor.execute(f"exec [fiac].[DbNoteShortage] ?", (request.data['grno'], ))
         return JsonResponse({"status" : "OK"}, safe=False)
     except Exception as e:
         return Response(data=generate_error_message(e), status=500, exception=e)
@@ -142,8 +142,8 @@ def debitNoteShortage(request):
 @permission_classes([IsAuthenticated])
 def debitNoteRejection(request):
     try:
-        cursor = connections[request.user.cid.cid].cursor()
-        cursor.execute(f"exec [fiac].[DbNoteRejection] %s", (request.data['grno'], ))
+        cursor = getDbCursor(request.user)
+        cursor.execute(f"exec [fiac].[DbNoteRejection] ?", (request.data['grno'], ))
         return JsonResponse({"status" : "OK"}, safe=False)
     except Exception as e:
         return Response(data=generate_error_message(e), status=500, exception=e)
@@ -152,8 +152,8 @@ def debitNoteRejection(request):
 @permission_classes([IsAuthenticated])
 def getExportDataForGr(request):
     try:
-        cursor = connections[request.user.cid.cid].cursor()
-        cursor.execute(f"exec [sales].[uspGetSaleDetailsGrData] %s", (request.data['docno'], ))
+        cursor = getDbCursor(request.user)
+        cursor.execute(f"exec [sales].[uspGetSaleDetailsGrData] ?", (request.data['docno'], ))
         json_data = ConvertToJson(cursor)
         return JsonResponse(json_data, safe=False)
     except Exception as e:

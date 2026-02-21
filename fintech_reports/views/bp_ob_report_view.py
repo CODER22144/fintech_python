@@ -6,7 +6,7 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from CaFinTech.errors import UNSUCCESSFUL_REQUEST
-from CaFinTech.utility import generate_error_message
+from CaFinTech.utility import generate_error_message, getDbCursor
 
 from cafintech_api.views.bill_receipt_view import ConvertToJson
 from fintech_reports.serializers.bp_ob_material_report_serializer import BPObMaterialReportSerializer
@@ -18,8 +18,8 @@ def getBusinessPartnerObMaterialReport(request):
     try:
         serializer = BPObMaterialReportSerializer(data=request.data)
         if(serializer.is_valid()):
-            cursor = connections[request.user.cid.cid].cursor()
-            cursor.execute(f"EXEC [purchase].[uspBusinessPartnerObMaterialReport] %s",(json.dumps(serializer.data),))
+            cursor = getDbCursor(request.user)
+            cursor.execute(f"EXEC [purchase].[uspBusinessPartnerObMaterialReport] ?",(json.dumps(serializer.data),))
             json_data = ConvertToJson(cursor)
             cursor.close()
             return JsonResponse(json_data, safe=False)

@@ -5,7 +5,7 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from CaFinTech.errors import UNSUCCESSFUL_REQUEST
-from CaFinTech.utility import generate_error_message
+from CaFinTech.utility import generate_error_message, getDbCursor
 import json
 
 from cafintech_api.serializers.business_partner_onboard_serializer import BusinessPartnerOnboardSerializer
@@ -18,8 +18,8 @@ def addBusinessPartnerOnBoard(request):
     try:
         serializer = BusinessPartnerOnboardSerializer(data=request.data)     # CAN HAVE IMPORT HERE
         if(serializer.is_valid()):
-            cursor = connections[request.user.cid.cid].cursor()
-            cursor.execute(f"EXEC [cost].[uspAddBusinessPartnerOnBoard] %s",(json.dumps(serializer.data),))
+            cursor = getDbCursor(request.user)
+            cursor.execute(f"EXEC [cost].[uspAddBusinessPartnerOnBoard] ?",(json.dumps(serializer.data),))
             cursor.close()
             return Response(serializer.data)
         UNSUCCESSFUL_REQUEST['message'] = serializer.errors
@@ -33,8 +33,8 @@ def UpdateBusinessPartnerOnBoard(request):
     try:
         serializer = BusinessPartnerOnboardSerializer(data=request.data)
         if(serializer.is_valid()):
-            cursor = connections[request.user.cid.cid].cursor()
-            cursor.execute(f"EXEC [cost].[uspUpdateBusinessPartnerOnBoard] %s",(json.dumps(serializer.data),))
+            cursor = getDbCursor(request.user)
+            cursor.execute(f"EXEC [cost].[uspUpdateBusinessPartnerOnBoard] ?",(json.dumps(serializer.data),))
             cursor.close()
             return Response(serializer.data)
         UNSUCCESSFUL_REQUEST['message'] = serializer.errors
@@ -46,8 +46,8 @@ def UpdateBusinessPartnerOnBoard(request):
 @permission_classes([IsAuthenticated])
 def getBusinessPartnerOnBoardByMatno(request):
     try:        
-        cursor = connections[request.user.cid.cid].cursor()
-        cursor.execute(f"EXEC [cost].[uspGetBusinessPartnerOnBoardById] %s",(request.data['bpCode'],))
+        cursor = getDbCursor(request.user)
+        cursor.execute(f"EXEC [cost].[uspGetBusinessPartnerOnBoardById] ?",(request.data['bpCode'],))
         json_data = ConvertToJson(cursor)
         cursor.close()
         return JsonResponse(json_data, safe=False)  
@@ -58,8 +58,8 @@ def getBusinessPartnerOnBoardByMatno(request):
 @permission_classes([IsAuthenticated])
 def deleteBusinessPartnerOnBoard(request):
     try:        
-        cursor = connections[request.user.cid.cid].cursor()
-        cursor.execute(f"EXEC [cost].[uspDeleteBusinessPartnerOnBoard] %s",(request.data['bpCode'],))
+        cursor = getDbCursor(request.user)
+        cursor.execute(f"EXEC [cost].[uspDeleteBusinessPartnerOnBoard] ?",(request.data['bpCode'],))
         cursor.close()
         return Response({'message': 'Deleted successfully'})
     except Exception as e:
@@ -69,11 +69,11 @@ def deleteBusinessPartnerOnBoard(request):
 @permission_classes([IsAuthenticated])
 def getBpOnBoardReport(request):
     try:        
-        cursor = connections[request.user.cid.cid].cursor()
+        cursor = getDbCursor(request.user)
 
         json_data = {"bpName" : request.data['bpName'], "bpState" : request.data['bpState']}
 
-        cursor.execute(f"EXEC [cost].[BusinessPartnerOnBoardRep] %s",(json.dumps(json_data),))
+        cursor.execute(f"EXEC [cost].[BusinessPartnerOnBoardRep] ?",(json.dumps(json_data),))
         json_data = ConvertToJson(cursor)
         cursor.close()
         return JsonResponse(json_data, safe=False)  

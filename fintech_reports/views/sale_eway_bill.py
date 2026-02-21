@@ -6,7 +6,7 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from CaFinTech.errors import UNSUCCESSFUL_REQUEST
-from CaFinTech.utility import generate_error_message
+from CaFinTech.utility import generate_error_message, getDbCursor
 import json
 
 from CaFinTech.settings import File_Path, path_wkhtmltopdf
@@ -17,7 +17,7 @@ from collections import defaultdict
 def getSaleByInvNo(request, inv, cid):
     try:
         cursor = connections[cid].cursor()
-        cursor.execute(f"EXEC [sales].[uspGetSaleByinvNo] %s",(inv,))
+        cursor.execute(f"EXEC [sales].[uspGetSaleByinvNo] ?",(inv,))
         json_data = [data[0] for data in cursor.fetchall()]
         json_data = "".join(json_data)
         json_data = json.loads(json_data)

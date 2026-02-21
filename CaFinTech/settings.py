@@ -100,144 +100,74 @@ WSGI_APPLICATION = 'CaFinTech.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'mssql',
-        'NAME': 'masterDb',
-        'HOST': '103.205.67.4,35353',
-        'USER': 'usrerp',
-        'PASSWORD': 'Lrig2#;qw941Tb*y',
-        'OPTIONS': {
-            'driver': 'ODBC Driver 17 for SQL Server',
-       }
-    },
-    'SA': {
-        'ENGINE': 'mssql',
-        'NAME': 'SARemoteMDb',
-        'HOST': '103.205.67.4,35353',
-        'USER': 'usrerp',
-        'PASSWORD': 'Lrig2#;qw941Tb*y',
-        'OPTIONS': {
-            'driver': 'ODBC Driver 17 for SQL Server',
-       }
-    },
-    'SE': {
-        'ENGINE': 'mssql',
-        'NAME': 'SERemoteMDb',
-        'HOST': '103.205.67.4,35353',
-        'USER': 'usrerp',
-        'PASSWORD': 'Lrig2#;qw941Tb*y',
-        'OPTIONS': {
-            'driver': 'ODBC Driver 17 for SQL Server',
-       }
-    },
-    'SU': {
-        'ENGINE': 'mssql',
-        'NAME': 'SLRemoteMDb',
-        'HOST': '103.205.67.4,35353',
-        'USER': 'usrerp',
-        'PASSWORD': 'Lrig2#;qw941Tb*y',
-        'OPTIONS': {
-            'driver': 'ODBC Driver 17 for SQL Server',
-       }
-    },
-    'SR': {
-        'ENGINE': 'mssql',
-        'NAME': 'STRemoteMDb',
-        'HOST': '103.205.67.4,35353',
-        'USER': 'usrerp',
-        'PASSWORD': 'Lrig2#;qw941Tb*y',
-        'OPTIONS': {
-            'driver': 'ODBC Driver 17 for SQL Server',
-       }
-    },
-    'OW': {
-        'ENGINE': 'mssql',
-        'NAME': 'RemoteDb',
-        'HOST': '103.205.67.238,25333',
+        'NAME': 'centralDB',
+        'HOST': '192.168.231.9',
         'USER': 'sa',
         'PASSWORD': 'Tstsql@1234',
         'OPTIONS': {
             'driver': 'ODBC Driver 17 for SQL Server',
        }
-    },
-    'SW': {
-        'ENGINE': 'mssql',
-        'NAME': 'SWLiveDb',
-        'HOST': '103.205.67.4,35353',
-        'USER': 'usrerp',
-        'PASSWORD': 'Lrig2#;qw941Tb*y',
-        'OPTIONS': {
-            'driver': 'ODBC Driver 17 for SQL Server',
-       }
-    },
-    'EM': {
-        'ENGINE': 'mssql',
-        'NAME': 'EMLiveDb',
-        'HOST': '103.205.67.4,35353',
-        'USER': 'usrerp',
-        'PASSWORD': 'Lrig2#;qw941Tb*y',
-        'OPTIONS': {
-            'driver': 'ODBC Driver 17 for SQL Server',
-       }
-    },
-    'EL': {
-        'ENGINE': 'mssql',
-        'NAME': 'ELLiveDb',
-        'HOST': '103.205.67.4,35353',
-        'USER': 'usrerp',
-        'PASSWORD': 'Lrig2#;qw941Tb*y',
-        'OPTIONS': {
-            'driver': 'ODBC Driver 17 for SQL Server',
-       }
-    },
-    'ST': {
-        'ENGINE': 'mssql',
-        'NAME': 'STLiveDb',
-        'HOST': '103.205.67.4,35353',
-        'USER': 'usrerp',
-        'PASSWORD': 'Lrig2#;qw941Tb*y',
-        'OPTIONS': {
-            'driver': 'ODBC Driver 17 for SQL Server',
-       }
-    },
-    'SS': {
-        'ENGINE': 'mssql',
-        'NAME': 'SSLiveDb',
-        'HOST': '103.205.67.4,35353',
-        'USER': 'usrerp',
-        'PASSWORD': 'Lrig2#;qw941Tb*y',
-        'OPTIONS': {
-            'driver': 'ODBC Driver 17 for SQL Server',
-       }
-    },
-    'SL': {
-        'ENGINE': 'mssql',
-        'NAME': 'SLLiveDb',
-        'HOST': '103.205.67.4,35353',
-        'USER': 'usrerp',
-        'PASSWORD': 'Lrig2#;qw941Tb*y',
-        'OPTIONS': {
-            'driver': 'ODBC Driver 17 for SQL Server',
-       }
-    },
-    'SI': {
-        'ENGINE': 'mssql',
-        'NAME': 'SILiveDb',
-        'HOST': '103.205.67.4,35353',
-        'USER': 'usrerp',
-        'PASSWORD': 'Lrig2#;qw941Tb*y',
-        'OPTIONS': {
-            'driver': 'ODBC Driver 17 for SQL Server',
-       }
-    },
-    'ED': {
-        'ENGINE': 'mssql',
-        'NAME': 'EMDLiveDb',
-        'HOST': '103.205.67.4,35353',
-        'USER': 'usrerp',
-        'PASSWORD': 'Lrig2#;qw941Tb*y',
-        'OPTIONS': {
-            'driver': 'ODBC Driver 17 for SQL Server',
-       }
     }
+    # 'OW': {
+    #     'ENGINE': 'mssql',
+    #     'NAME': 'RemoteDb',
+    #     'HOST': '192.168.231.9',
+    #     'USER': 'sa',
+    #     'PASSWORD': 'Tstsql@1234',
+    #     'OPTIONS': {
+    #         'driver': 'ODBC Driver 17 for SQL Server',
+    #    }
+    # },
+    # 'C1': {
+    #     'ENGINE': 'mssql',
+    #     'NAME': 'rofusr1Db',
+    #     'HOST': '192.168.231.9',
+    #     'USER': 'sa',
+    #     'PASSWORD': 'Tstsql@1234',
+    #     'OPTIONS': {
+    #         'driver': 'ODBC Driver 17 for SQL Server',
+    #    }
+    # },
+    # 'C2': {
+    #     'ENGINE': 'mssql',
+    #     'NAME': 'rofusr2Db',
+    #     'HOST': '192.168.231.9',
+    #     'USER': 'sa',
+    #     'PASSWORD': 'Tstsql@1234',
+    #     'OPTIONS': {
+    #         'driver': 'ODBC Driver 17 for SQL Server',
+    #    }
+    # },
+    # 'C3': {
+    #     'ENGINE': 'mssql',
+    #     'NAME': 'rofusr3Db',
+    #     'HOST': '192.168.231.9',
+    #     'USER': 'sa',
+    #     'PASSWORD': 'Tstsql@1234',
+    #     'OPTIONS': {
+    #         'driver': 'ODBC Driver 17 for SQL Server',
+    #    }
+    # },
+    # 'C4': {
+    #     'ENGINE': 'mssql',
+    #     'NAME': 'rofusr4Db',
+    #     'HOST': '192.168.231.9',
+    #     'USER': 'sa',
+    #     'PASSWORD': 'Tstsql@1234',
+    #     'OPTIONS': {
+    #         'driver': 'ODBC Driver 17 for SQL Server',
+    #    }
+    # },
+    # 'C5': {
+    #     'ENGINE': 'mssql',
+    #     'NAME': 'rofusr5Db',
+    #     'HOST': '192.168.231.9',
+    #     'USER': 'sa',
+    #     'PASSWORD': 'Tstsql@1234',
+    #     'OPTIONS': {
+    #         'driver': 'ODBC Driver 17 for SQL Server',
+    #    }
+    # }
 }
 
 

@@ -2,7 +2,7 @@ from django.db import connections
 
 from django.shortcuts import render
 from rest_framework.response import Response
-from CaFinTech.utility import generate_error_message
+from CaFinTech.utility import generate_error_message, getDbCursor
 import json
 
 from cafintech_api.views.bill_receipt_view import ConvertToJson
@@ -10,7 +10,7 @@ from cafintech_api.views.bill_receipt_view import ConvertToJson
 def getTransporterSlip(request, inv, cid):
     try:
         cursor = connections[cid].cursor()
-        cursor.execute(f"EXEC [sales].[uspGetTransporterSlip] %s",(inv,))
+        cursor.execute(f"EXEC [sales].[uspGetTransporterSlip] ?",(inv,))
         json_data = ConvertToJson(cursor)
 
         # if(len(json_data['itemList']) <= 35):
@@ -28,7 +28,7 @@ def getTransporterSlip(request, inv, cid):
 def getAckSlip(request, inv, cid):
     try:
         cursor = connections[cid].cursor()
-        cursor.execute(f"EXEC [sales].[uspGetSaleAcknowledgment] %s",(inv,))
+        cursor.execute(f"EXEC [sales].[uspGetSaleAcknowledgment] ?",(inv,))
         json_data = ConvertToJson(cursor)
 
         # if(len(json_data['itemList']) <= 35):

@@ -5,7 +5,7 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from CaFinTech.errors import UNSUCCESSFUL_REQUEST
-from CaFinTech.utility import generate_error_message
+from CaFinTech.utility import generate_error_message, getDbCursor
 import json
 
 from cafintech_api.serializers.ob_material_serializer import OBMaterialSerializer
@@ -18,8 +18,8 @@ def addObMaterial(request):
     try:
         serializer = OBMaterialSerializer(data=request.data, many=True)
         if(serializer.is_valid()):
-            cursor = connections[request.user.cid.cid].cursor()
-            cursor.execute(f"EXEC [cost].[uspAddObMaterial] %s",(json.dumps(serializer.data),))
+            cursor = getDbCursor(request.user)
+            cursor.execute(f"EXEC [cost].[uspAddObMaterial] ?",(json.dumps(serializer.data),))
             cursor.close()
             return Response(serializer.data)
         UNSUCCESSFUL_REQUEST['message'] = serializer.errors
@@ -33,8 +33,8 @@ def UpdateObMaterial(request):
     try:
         serializer = OBMaterialSerializer(data=request.data)
         if(serializer.is_valid()):
-            cursor = connections[request.user.cid.cid].cursor()
-            cursor.execute(f"EXEC [cost].[uspUpdateObMaterial] %s",(json.dumps(serializer.data),))
+            cursor = getDbCursor(request.user)
+            cursor.execute(f"EXEC [cost].[uspUpdateObMaterial] ?",(json.dumps(serializer.data),))
             cursor.close()
             return Response(serializer.data)
         UNSUCCESSFUL_REQUEST['message'] = serializer.errors
@@ -46,8 +46,8 @@ def UpdateObMaterial(request):
 @permission_classes([IsAuthenticated])
 def getObMaterialByMatno(request):
     try:        
-        cursor = connections[request.user.cid.cid].cursor()
-        cursor.execute(f"EXEC [cost].[uspGetObMaterialById] %s",(request.data['matno'],))
+        cursor = getDbCursor(request.user)
+        cursor.execute(f"EXEC [cost].[uspGetObMaterialById] ?",(request.data['matno'],))
         json_data = ConvertToJson(cursor)
         cursor.close()
         return JsonResponse(json_data, safe=False)  
@@ -58,8 +58,8 @@ def getObMaterialByMatno(request):
 @permission_classes([IsAuthenticated])
 def deleteObMaterial(request):
     try:        
-        cursor = connections[request.user.cid.cid].cursor()
-        cursor.execute(f"EXEC [cost].[uspDeleteObMaterial] %s",(request.data['matno'],))
+        cursor = getDbCursor(request.user)
+        cursor.execute(f"EXEC [cost].[uspDeleteObMaterial] ?",(request.data['matno'],))
         cursor.close()
         return Response({'message': 'Material deleted successfully'})
     except Exception as e:

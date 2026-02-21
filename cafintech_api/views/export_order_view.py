@@ -4,7 +4,7 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from CaFinTech.errors import UNSUCCESSFUL_REQUEST
-from CaFinTech.utility import generate_error_message
+from CaFinTech.utility import generate_error_message, getDbCursor
 from cafintech_api.serializers.export_order_serializer import ExportOrderSerializer
 from cafintech_api.views.bill_receipt_view import ConvertToJson
 
@@ -16,8 +16,8 @@ def addExpOrder(request):
     try:
         serializer = ExportOrderSerializer(data=request.data)
         if(serializer.is_valid()):
-            cursor = connections[request.user.cid.cid].cursor()
-            cursor.execute(f"EXEC sales.uspAddExpOrder %s",(json.dumps(serializer.data),))
+            cursor = getDbCursor(request.user)
+            cursor.execute(f"EXEC sales.uspAddExpOrder ?",(json.dumps(serializer.data),))
             cursor.close()
             return Response(serializer.data)
         UNSUCCESSFUL_REQUEST['message'] = serializer.errors
@@ -31,8 +31,8 @@ def updateExpOrder(request):
     try:
         serializer = ExportOrderSerializer(data=request.data)
         if(serializer.is_valid()):
-            cursor = connections[request.user.cid.cid].cursor()
-            cursor.execute(f"EXEC [sales].[uspUpdateExpOrder] %s",(json.dumps(serializer.data),))
+            cursor = getDbCursor(request.user)
+            cursor.execute(f"EXEC [sales].[uspUpdateExpOrder] ?",(json.dumps(serializer.data),))
             cursor.close()
             return Response(serializer.data)
         UNSUCCESSFUL_REQUEST['message'] = serializer.errors
@@ -44,8 +44,8 @@ def updateExpOrder(request):
 @permission_classes([IsAuthenticated])
 def deleteExpOrder(request):
     try:
-        cursor = connections[request.user.cid.cid].cursor()
-        cursor.execute(f"exec [sales].[uspDeleteExpOrder] %s", (request.data['orderId'], ))
+        cursor = getDbCursor(request.user)
+        cursor.execute(f"exec [sales].[uspDeleteExpOrder] ?", (request.data['orderId'], ))
         cursor.close()
         return Response(data={"status" : "OK"}, status=204)
     except Exception as e:
@@ -55,8 +55,8 @@ def deleteExpOrder(request):
 @permission_classes([IsAuthenticated])
 def getExpOrderById(request):
     try:
-        cursor = connections[request.user.cid.cid].cursor()
-        cursor.execute(f"exec [sales].[uspGetExpOrderById] %s", (request.data['orderId'], ))
+        cursor = getDbCursor(request.user)
+        cursor.execute(f"exec [sales].[uspGetExpOrderById] ?", (request.data['orderId'], ))
         json_data = ConvertToJson(cursor)
         return JsonResponse(json_data, safe=False)
     except Exception as e:
@@ -66,7 +66,7 @@ def getExpOrderById(request):
 @permission_classes([IsAuthenticated])
 def getCurrency(request):
     try:
-        cursor = connections[request.user.cid.cid].cursor()
+        cursor = getDbCursor(request.user)
         cursor.execute(f"exec [mastcode].[uspGetCurrency]")
         json_data = ConvertToJson(cursor)
         return JsonResponse(json_data, safe=False)
@@ -77,7 +77,7 @@ def getCurrency(request):
 @permission_classes([IsAuthenticated])
 def getCurrency(request):
     try:
-        cursor = connections[request.user.cid.cid].cursor()
+        cursor = getDbCursor(request.user)
         cursor.execute(f"exec [mastcode].[uspGetCurrency]")
         json_data = ConvertToJson(cursor)
         return JsonResponse(json_data, safe=False)
@@ -88,7 +88,7 @@ def getCurrency(request):
 @permission_classes([IsAuthenticated])
 def getPorts(request):
     try:
-        cursor = connections[request.user.cid.cid].cursor()
+        cursor = getDbCursor(request.user)
         cursor.execute(f"exec [mastcode].[uspGetPort]")
         json_data = ConvertToJson(cursor)
         return JsonResponse(json_data, safe=False)

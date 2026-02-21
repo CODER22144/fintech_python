@@ -6,7 +6,7 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from CaFinTech.errors import UNSUCCESSFUL_REQUEST
-from CaFinTech.utility import generate_error_message
+from CaFinTech.utility import generate_error_message, getDbCursor
 import json
 
 from cafintech_api.serializers.material_assembly_details_serializer import MaterialAssemblyDetailsSerializer
@@ -21,8 +21,8 @@ def addMaterialAssembly(request):
     try:
         serializer = MaterialAssemblySerializer(data=request.data)     # CAN HAVE IMPORT HERE
         if(serializer.is_valid()):
-            cursor = connections[request.user.cid.cid].cursor()
-            cursor.execute(f"EXEC [cost].[uspAddMaterialAssembly] %s",(json.dumps(serializer.data),))
+            cursor = getDbCursor(request.user)
+            cursor.execute(f"EXEC [cost].[uspAddMaterialAssembly] ?",(json.dumps(serializer.data),))
             cursor.close()
             return Response(serializer.data)
         UNSUCCESSFUL_REQUEST['message'] = serializer.errors
@@ -36,8 +36,8 @@ def updateMaterialAssembly(request):
     try:
         serializer = MaterialAssemblySerializer(data=request.data)     # CAN HAVE IMPORT HERE
         if(serializer.is_valid()):
-            cursor = connections[request.user.cid.cid].cursor()
-            cursor.execute(f"EXEC [cost].[uspUpdateMaterialAssembly] %s",(json.dumps(serializer.data),))
+            cursor = getDbCursor(request.user)
+            cursor.execute(f"EXEC [cost].[uspUpdateMaterialAssembly] ?",(json.dumps(serializer.data),))
             cursor.close()
             return Response(serializer.data)
         UNSUCCESSFUL_REQUEST['message'] = serializer.errors
@@ -51,8 +51,8 @@ def addMaterialAssemblyDetails(request):
     try:
         serializer = MaterialAssemblyDetailsSerializer(data=request.data, many=True)
         if(serializer.is_valid()):
-            cursor = connections[request.user.cid.cid].cursor()
-            cursor.execute(f"EXEC [cost].[uspAddMaterialAssemblyDetails] %s",(json.dumps(serializer.data),))
+            cursor = getDbCursor(request.user)
+            cursor.execute(f"EXEC [cost].[uspAddMaterialAssemblyDetails] ?",(json.dumps(serializer.data),))
             cursor.close()
             return Response(serializer.data)
         UNSUCCESSFUL_REQUEST['message'] = serializer.errors
@@ -66,8 +66,8 @@ def addMaterialAssemblyProcessing(request):
     try:
         serializer = MaterialAssemblyProcessingSerializer(data=request.data, many=True)
         if(serializer.is_valid()):
-            cursor = connections[request.user.cid.cid].cursor()
-            cursor.execute(f"EXEC [cost].[uspAddMaterialAssemblyProcessing] %s",(json.dumps(serializer.data),))
+            cursor = getDbCursor(request.user)
+            cursor.execute(f"EXEC [cost].[uspAddMaterialAssemblyProcessing] ?",(json.dumps(serializer.data),))
             cursor.close()
             return Response(serializer.data)
         UNSUCCESSFUL_REQUEST['message'] = serializer.errors
@@ -80,8 +80,8 @@ def addMaterialAssemblyProcessing(request):
 @permission_classes([IsAuthenticated])
 def getMaterialAssemblyByMatno(request):
     try:        
-        cursor = connections[request.user.cid.cid].cursor()
-        cursor.execute(f"EXEC [cost].[uspGetMaterialAssemblyById] %s",(request.data['matno'],))
+        cursor = getDbCursor(request.user)
+        cursor.execute(f"EXEC [cost].[uspGetMaterialAssemblyById] ?",(request.data['matno'],))
         json_data = ConvertToJson(cursor)
         cursor.close()
         return JsonResponse(json_data, safe=False)  
@@ -92,8 +92,8 @@ def getMaterialAssemblyByMatno(request):
 @permission_classes([IsAuthenticated])
 def getMaterialAssemblyDetailsByMatno(request):
     try:        
-        cursor = connections[request.user.cid.cid].cursor()
-        cursor.execute(f"EXEC [cost].[uspGetMaterialAssemblyDetailsBymatno] %s",(request.data['matno'],))
+        cursor = getDbCursor(request.user)
+        cursor.execute(f"EXEC [cost].[uspGetMaterialAssemblyDetailsBymatno] ?",(request.data['matno'],))
         json_data = ConvertToJson(cursor)
         cursor.close()
         return JsonResponse(json_data, safe=False)  
@@ -104,8 +104,8 @@ def getMaterialAssemblyDetailsByMatno(request):
 @permission_classes([IsAuthenticated])
 def getMaterialAssemblyProcessingByMatno(request):
     try:        
-        cursor = connections[request.user.cid.cid].cursor()
-        cursor.execute(f"EXEC [cost].[uspGetMaterialAssemblyProcessingBymatno] %s",(request.data['matno'],))
+        cursor = getDbCursor(request.user)
+        cursor.execute(f"EXEC [cost].[uspGetMaterialAssemblyProcessingBymatno] ?",(request.data['matno'],))
         json_data = ConvertToJson(cursor)
         cursor.close()
         return JsonResponse(json_data, safe=False)  
@@ -116,8 +116,8 @@ def getMaterialAssemblyProcessingByMatno(request):
 @permission_classes([IsAuthenticated])
 def deleteMaterialAssembly(request):
     try:        
-        cursor = connections[request.user.cid.cid].cursor()
-        cursor.execute(f"EXEC [cost].[uspDeleteMaterialAssembly] %s",(request.data['matno'],))
+        cursor = getDbCursor(request.user)
+        cursor.execute(f"EXEC [cost].[uspDeleteMaterialAssembly] ?",(request.data['matno'],))
         cursor.close()
         return Response({'message': 'Material deleted successfully'})
     except Exception as e:
@@ -127,8 +127,8 @@ def deleteMaterialAssembly(request):
 @permission_classes([IsAuthenticated])
 def deleteMaterialAssemblyDetails(request):
     try:        
-        cursor = connections[request.user.cid.cid].cursor()
-        cursor.execute(f"EXEC [cost].[uspDeleteMaterialAssemblyDetails] %s",(request.data['madId'],))
+        cursor = getDbCursor(request.user)
+        cursor.execute(f"EXEC [cost].[uspDeleteMaterialAssemblyDetails] ?",(request.data['madId'],))
         cursor.close()
         return Response({'message': 'Material deleted successfully'})
     except Exception as e:
@@ -138,8 +138,8 @@ def deleteMaterialAssemblyDetails(request):
 @permission_classes([IsAuthenticated])
 def deleteMaterialAssemblyProcessing(request):
     try:        
-        cursor = connections[request.user.cid.cid].cursor()
-        cursor.execute(f"EXEC [cost].[uspDeleteMaterialAssemblyProcessing] %s",(request.data['mapId'],))
+        cursor = getDbCursor(request.user)
+        cursor.execute(f"EXEC [cost].[uspDeleteMaterialAssemblyProcessing] ?",(request.data['mapId'],))
         cursor.close()
         return Response({'message': 'Material deleted successfully'})
     except Exception as e:
@@ -149,7 +149,7 @@ def deleteMaterialAssemblyProcessing(request):
 def getMaterialAssemblyBreakup(request, matno, cid):
     try:
         cursor = connections[cid].cursor()
-        cursor.execute(f"EXEC [cost].[getMaterialAssembly] %s",(matno,))
+        cursor.execute(f"EXEC [cost].[getMaterialAssembly] ?",(matno,))
         json_data = [data[0] for data in cursor.fetchall()]
         json_data = "".join(json_data)
         json_data = json.loads(json_data)
@@ -166,7 +166,7 @@ def getMaterialAssemblyBreakup(request, matno, cid):
 def getProductBreakup(request, matno, cid):
     try:
         cursor = connections[cid].cursor()
-        cursor.execute(f"EXEC [cost].[getProductBreakup] %s",(matno,))
+        cursor.execute(f"EXEC [cost].[getProductBreakup] ?",(matno,))
         json_data = [data[0] for data in cursor.fetchall()]
         json_data = "".join(json_data)
         json_data = json.loads(json_data)
@@ -183,7 +183,7 @@ def getProductBreakup(request, matno, cid):
 def getPartAssembly(request, matno, cid):
     try:
         cursor = connections[cid].cursor()
-        cursor.execute(f"EXEC [cost].[getPartAssembly] %s",(matno,))
+        cursor.execute(f"EXEC [cost].[getPartAssembly] ?",(matno,))
         json_data = [data[0] for data in cursor.fetchall()]
         json_data = "".join(json_data)
         json_data = json.loads(json_data)
@@ -200,7 +200,7 @@ def getPartAssembly(request, matno, cid):
 def getPartSubAssembly(request, matno, cid):
     try:
         cursor = connections[cid].cursor()
-        cursor.execute(f"EXEC [cost].[getPartSubAssembly] %s",(matno,))
+        cursor.execute(f"EXEC [cost].[getPartSubAssembly] ?",(matno,))
         json_data = [data[0] for data in cursor.fetchall()]
         json_data = "".join(json_data)
         json_data = json.loads(json_data)

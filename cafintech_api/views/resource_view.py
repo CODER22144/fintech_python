@@ -5,7 +5,7 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from CaFinTech.errors import UNSUCCESSFUL_REQUEST
-from CaFinTech.utility import generate_error_message
+from CaFinTech.utility import generate_error_message, getDbCursor
 import json
 
 from cafintech_api.serializers.resources_serializer import ResourceSerializer
@@ -17,8 +17,8 @@ def addResources(request):
     try:
         serializer = ResourceSerializer(data=request.data, many=True)
         if(serializer.is_valid()):
-            cursor = connections[request.user.cid.cid].cursor()
-            cursor.execute(f"EXEC [mastcode].[uspAddResources] %s",(json.dumps(serializer.data),))
+            cursor = getDbCursor(request.user)
+            cursor.execute(f"EXEC [mastcode].[uspAddResources] ?",(json.dumps(serializer.data),))
             cursor.close()
             return Response(serializer.data)
         UNSUCCESSFUL_REQUEST['message'] = serializer.errors
@@ -32,8 +32,8 @@ def updateResources(request):
     try:
         serializer = ResourceSerializer(data=request.data, many=True)
         if(serializer.is_valid()):
-            cursor = connections[request.user.cid.cid].cursor()
-            cursor.execute(f"EXEC [mastcode].[uspUpdateResources] %s",(json.dumps(serializer.data),))
+            cursor = getDbCursor(request.user)
+            cursor.execute(f"EXEC [mastcode].[uspUpdateResources] ?",(json.dumps(serializer.data),))
             cursor.close()
             return Response(serializer.data)
         UNSUCCESSFUL_REQUEST['message'] = serializer.errors
@@ -45,8 +45,8 @@ def updateResources(request):
 @permission_classes([IsAuthenticated])
 def getByIdResource(request, resId):
     try:
-        cursor = connections[request.user.cid.cid].cursor()
-        cursor.execute(f"exec [mastcode].[uspGetByIdResources] %s", (resId,))
+        cursor = getDbCursor(request.user)
+        cursor.execute(f"exec [mastcode].[uspGetByIdResources] ?", (resId,))
         json_data = ConvertToJson(cursor)
         cursor.close()
         return JsonResponse(json_data, safe=False)
@@ -57,8 +57,8 @@ def getByIdResource(request, resId):
 @permission_classes([IsAuthenticated])
 def deleteResources(request, resId):
     try:
-        cursor = connections[request.user.cid.cid].cursor()
-        cursor.execute(f"exec [mastcode].[uspDeleteResources] %s", (resId, ))
+        cursor = getDbCursor(request.user)
+        cursor.execute(f"exec [mastcode].[uspDeleteResources] ?", (resId, ))
         cursor.close()
         return Response(data={"status" : "OK"}, status=204)
     except Exception as e:
@@ -68,7 +68,7 @@ def deleteResources(request, resId):
 @permission_classes([IsAuthenticated])
 def getWorkingStatus(request):
     try:
-        cursor = connections[request.user.cid.cid].cursor()
+        cursor = getDbCursor(request.user)
         cursor.execute(f"select * from [mastcode].[WorkStatus]")
         json_data = ConvertToJson(cursor)
         return JsonResponse(json_data, safe=False)
@@ -79,7 +79,7 @@ def getWorkingStatus(request):
 @permission_classes([IsAuthenticated])
 def getAllCostResource(request):
     try:
-        cursor = connections[request.user.cid.cid].cursor()
+        cursor = getDbCursor(request.user)
         cursor.execute(f"exec [cost].[uspGetResource]")
         json_data = ConvertToJson(cursor)
         return JsonResponse(json_data, safe=False)
@@ -90,7 +90,7 @@ def getAllCostResource(request):
 @permission_classes([IsAuthenticated])
 def getAllResourcesMastcode(request):
     try:
-        cursor = connections[request.user.cid.cid].cursor()
+        cursor = getDbCursor(request.user)
         cursor.execute(f"exec [mastcode].[uspGetResources]")
         json_data = ConvertToJson(cursor)
         return JsonResponse(json_data, safe=False)

@@ -7,7 +7,7 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from CaFinTech.errors import UNSUCCESSFUL_REQUEST
-from CaFinTech.utility import generate_error_message
+from CaFinTech.utility import generate_error_message, getDbCursor
 import json
 
 from CaFinTech.settings import File_Path, path_wkhtmltopdf
@@ -20,7 +20,7 @@ from fintech_reports.serializers.cr_note_invoice_serializer import CrNoteInvoice
 def getCrNoteFormat(request, docno, cid):
     try:
         cursor = connections[cid].cursor()
-        cursor.execute(f"EXEC [fiac].[uspGetCrNoteBydocno] %s",(docno,))
+        cursor.execute(f"EXEC [fiac].[uspGetCrNoteBydocno] ?",(docno,))
         json_data = [data[0] for data in cursor.fetchall()]
         json_data = "".join(json_data)
 
@@ -44,8 +44,8 @@ def getCrNoteFormat(request, docno, cid):
 @permission_classes([IsAuthenticated])
 def getECrNote(request):
     try:
-        cursor = connections[request.user.cid.cid].cursor()
-        cursor.execute(f"exec [fiac].[uspGetECrNote] %s",(request.data['docno'],))
+        cursor = getDbCursor(request.user)
+        cursor.execute(f"exec [fiac].[uspGetECrNote] ?",(request.data['docno'],))
         json_data = [data[0] for data in cursor.fetchall()]
         json_data = "".join(json_data)
         json_data = json.loads(json_data)
@@ -60,8 +60,8 @@ def addEinvoiceToCrNote(request):
     try:
         serializer = CrNoteInvoiceSerializer(data=request.data)
         if(serializer.is_valid()):
-            cursor = connections[request.user.cid.cid].cursor()
-            cursor.execute(f"EXEC [fiac].[uspAddCrDrNoteEInvoice] %s",(json.dumps(serializer.data),))
+            cursor = getDbCursor(request.user)
+            cursor.execute(f"EXEC [fiac].[uspAddCrDrNoteEInvoice] ?",(json.dumps(serializer.data),))
             cursor.close()
             return Response(serializer.data)
         UNSUCCESSFUL_REQUEST['message'] = serializer.errors

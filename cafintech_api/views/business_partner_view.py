@@ -5,7 +5,7 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from CaFinTech.errors import UNSUCCESSFUL_REQUEST
-from CaFinTech.utility import generate_error_message
+from CaFinTech.utility import generate_error_message, getDbCursor
 import json
 from cafintech_api.serializers.business_partner_serializer import BusinessPartnerSerializer
 from cafintech_api.views.bill_receipt_view import ConvertToJson
@@ -16,8 +16,8 @@ def addBusinessPartner(request):
     try:
         serializer = BusinessPartnerSerializer(data=request.data, many=True)
         if(serializer.is_valid()):
-            cursor = connections[request.user.cid.cid].cursor()
-            cursor.execute(f"EXEC [mastcode].[uspAddBusinessPartner] %s",(json.dumps(serializer.data),))
+            cursor = getDbCursor(request.user)
+            cursor.execute(f"EXEC [mastcode].[uspAddBusinessPartner] ?",(json.dumps(serializer.data),))
             cursor.close()
             return Response(serializer.data)
         UNSUCCESSFUL_REQUEST['message'] = serializer.errors
@@ -29,7 +29,7 @@ def addBusinessPartner(request):
 @permission_classes([IsAuthenticated])
 def getGSTRegnType(request):
     try:
-        cursor = connections[request.user.cid.cid].cursor()
+        cursor = getDbCursor(request.user)
         cursor.execute(f"select * from [mastcode].[GSTRegnType]")
         json_data = ConvertToJson(cursor)
         return JsonResponse(json_data, safe=False)
@@ -40,7 +40,7 @@ def getGSTRegnType(request):
 @permission_classes([IsAuthenticated])
 def getCompanyType(request):
     try:
-        cursor = connections[request.user.cid.cid].cursor()
+        cursor = getDbCursor(request.user)
         cursor.execute(f"select * from [mastcode].[CompanyType]")
         json_data = ConvertToJson(cursor)
         return JsonResponse(json_data, safe=False)
@@ -51,7 +51,7 @@ def getCompanyType(request):
 @permission_classes([IsAuthenticated])
 def getAllStates(request):
     try:
-        cursor = connections[request.user.cid.cid].cursor()
+        cursor = getDbCursor(request.user)
         cursor.execute(f"EXEC [mastcode].[uspGetStates]")
         json_data = ConvertToJson(cursor)
         return JsonResponse(json_data, safe=False)
@@ -62,7 +62,7 @@ def getAllStates(request):
 @permission_classes([IsAuthenticated])
 def getAllCountries(request):
     try:
-        cursor = connections[request.user.cid.cid].cursor()
+        cursor = getDbCursor(request.user)
         cursor.execute(f"exec [mastcode].[uspGetCountries]")
         json_data = ConvertToJson(cursor)
         return JsonResponse(json_data, safe=False)
@@ -73,7 +73,7 @@ def getAllCountries(request):
 @permission_classes([IsAuthenticated])
 def getYesNo(request):
     try:
-        cursor = connections[request.user.cid.cid].cursor()
+        cursor = getDbCursor(request.user)
         cursor.execute(f"exec [mastcode].[uspGetYesNo]")
         json_data = ConvertToJson(cursor)
         return JsonResponse(json_data, safe=False)
@@ -84,7 +84,7 @@ def getYesNo(request):
 @permission_classes([IsAuthenticated])
 def getModeOfFreight(request):
     try:
-        cursor = connections[request.user.cid.cid].cursor()
+        cursor = getDbCursor(request.user)
         cursor.execute(f"select * from [mastcode].[ModeOfFreight]")
         json_data = ConvertToJson(cursor)
         return JsonResponse(json_data, safe=False)
@@ -95,7 +95,7 @@ def getModeOfFreight(request):
 @permission_classes([IsAuthenticated])
 def getBusinessPartnerType(request):
     try:
-        cursor = connections[request.user.cid.cid].cursor()
+        cursor = getDbCursor(request.user)
         cursor.execute(f"select * from [mastcode].[BusinessPartnerType]")
         json_data = ConvertToJson(cursor)
         return JsonResponse(json_data, safe=False)
@@ -106,7 +106,7 @@ def getBusinessPartnerType(request):
 @permission_classes([IsAuthenticated])
 def getBusinessRelationType(request):
     try:
-        cursor = connections[request.user.cid.cid].cursor()
+        cursor = getDbCursor(request.user)
         cursor.execute(f"select * from [mastcode].[BusinessRelationType]")
         json_data = ConvertToJson(cursor)
         return JsonResponse(json_data, safe=False)
@@ -117,7 +117,7 @@ def getBusinessRelationType(request):
 @permission_classes([IsAuthenticated])
 def getDiscountType(request):
     try:
-        cursor = connections[request.user.cid.cid].cursor()
+        cursor = getDbCursor(request.user)
         cursor.execute(f"exec [mastcode].[uspGetSaleDiscountType]")
         json_data = ConvertToJson(cursor)
         return JsonResponse(json_data, safe=False)
@@ -128,7 +128,7 @@ def getDiscountType(request):
 @permission_classes([IsAuthenticated])
 def getModeOfPayment(request):
     try:
-        cursor = connections[request.user.cid.cid].cursor()
+        cursor = getDbCursor(request.user)
         cursor.execute(f"exec [mastcode].[uspGetModeOfPayment]")
         json_data = ConvertToJson(cursor)
         return JsonResponse(json_data, safe=False)
@@ -139,7 +139,7 @@ def getModeOfPayment(request):
 @permission_classes([IsAuthenticated])
 def getRateType(request):
     try:
-        cursor = connections[request.user.cid.cid].cursor()
+        cursor = getDbCursor(request.user)
         cursor.execute(f"select * from [mastcode].[MaterialRateType]")
         json_data = ConvertToJson(cursor)
         return JsonResponse(json_data, safe=False)
@@ -150,8 +150,8 @@ def getRateType(request):
 @permission_classes([IsAuthenticated])
 def trueFalseOptions(request):
     try:
-        cursor = connections[request.user.cid.cid].cursor()
-        cursor.execute(f"select * from [mastcode].[TrueFalse]")
+        cursor = getDbCursor(request.user)
+        cursor.execute(f"exec [mastcode].[uspGetBitYesNo]")
         json_data = ConvertToJson(cursor)
         return JsonResponse(json_data, safe=False)
     except Exception as e:
@@ -164,8 +164,8 @@ def updateBusinessPartner(request):
     try:
         serializer = BusinessPartnerSerializer(data=request.data, many=True)
         if(serializer.is_valid()):
-            cursor = connections[request.user.cid.cid].cursor()
-            cursor.execute(f"EXEC [mastcode].[uspUpdateBusinessPartner] %s",(json.dumps(serializer.data),))
+            cursor = getDbCursor(request.user)
+            cursor.execute(f"EXEC [mastcode].[uspUpdateBusinessPartner] ?",(json.dumps(serializer.data),))
             cursor.close()
             return Response(serializer.data)
         UNSUCCESSFUL_REQUEST['message'] = serializer.errors
@@ -177,8 +177,8 @@ def updateBusinessPartner(request):
 @permission_classes([IsAuthenticated])
 def getByIdBusinessPartner(request, bpCode):
     try:
-        cursor = connections[request.user.cid.cid].cursor()
-        cursor.execute(f"exec [mastcode].[uspGetByIdBusinessPartner] %s", (bpCode,))
+        cursor = getDbCursor(request.user)
+        cursor.execute(f"exec [mastcode].[uspGetByIdBusinessPartner] ?", (bpCode,))
         json_data = ConvertToJson(cursor)
         cursor.close()
         return JsonResponse(json_data, safe=False)

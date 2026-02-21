@@ -5,7 +5,7 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from CaFinTech.errors import UNSUCCESSFUL_REQUEST
-from CaFinTech.utility import generate_error_message
+from CaFinTech.utility import generate_error_message, getDbCursor
 import json
 
 from cafintech_api.serializers.carrier_serializer import CarrierSerializer
@@ -17,8 +17,8 @@ def addCarrier(request):
     try:
         serializer = CarrierSerializer(data=request.data, many=True)
         if(serializer.is_valid()):
-            cursor = connections[request.user.cid.cid].cursor()
-            cursor.execute(f"EXEC [mastcode].[uspAddCarrier] %s",(json.dumps(serializer.data),))
+            cursor = getDbCursor(request.user)
+            cursor.execute(f"EXEC [mastcode].[uspAddCarrier] ?",(json.dumps(serializer.data),))
             cursor.close()
             return Response(serializer.data)
         UNSUCCESSFUL_REQUEST['message'] = serializer.errors
@@ -32,8 +32,8 @@ def updateCarrier(request):
     try:
         serializer = CarrierSerializer(data=request.data, many=True)
         if(serializer.is_valid()):
-            cursor = connections[request.user.cid.cid].cursor()
-            cursor.execute(f"EXEC [mastcode].[uspUpdateCarrier] %s",(json.dumps(serializer.data),))
+            cursor = getDbCursor(request.user)
+            cursor.execute(f"EXEC [mastcode].[uspUpdateCarrier] ?",(json.dumps(serializer.data),))
             cursor.close()
             return Response(serializer.data)
         UNSUCCESSFUL_REQUEST['message'] = serializer.errors
@@ -41,12 +41,12 @@ def updateCarrier(request):
     except Exception as e:
         return Response(generate_error_message(e), status=500, exception=e)
     
-@api_view(["GET"])
+@api_view(["POST"])
 @permission_classes([IsAuthenticated])
-def getByIdCarrier(request, carId):
+def getByIdCarrier(request):
     try:
-        cursor = connections[request.user.cid.cid].cursor()
-        cursor.execute(f"exec [mastcode].[uspGetByIdCarrier] %s", (carId,))
+        cursor = getDbCursor(request.user)
+        cursor.execute(f"exec [mastcode].[uspGetCarrier] ?", (json.dumps(request.data),))
         json_data = ConvertToJson(cursor)
         cursor.close()
         return JsonResponse(json_data, safe=False)
@@ -55,21 +55,21 @@ def getByIdCarrier(request, carId):
     
 @api_view(["POST"])
 @permission_classes([IsAuthenticated])
-def deleteCarrier(request, carId):
+def deleteCarrier(request):
     try:
-        cursor = connections[request.user.cid.cid].cursor()
-        cursor.execute(f"exec [mastcode].[uspDeleteCarrier] %s", (carId, ))
+        cursor = getDbCursor(request.user)
+        cursor.execute(f"exec [mastcode].[uspDeleteCarrier] ?", (request.data['carId'], ))
         cursor.close()
         return Response(data={"status" : "OK"}, status=204)
     except Exception as e:
         return Response(data=generate_error_message(e), status=500, exception=e)
 
-@api_view(["GET"])
+@api_view(["POST"])
 @permission_classes([IsAuthenticated])
 def getAllCarrier(request):
     try:
-        cursor = connections[request.user.cid.cid].cursor()
-        cursor.execute(f"exec [mastcode].[uspGetCarrier]")
+        cursor = getDbCursor(request.user)
+        cursor.execute(f"exec [mastcode].[uspGetCarrier] ?", (json.dumps(request.data),))
         json_data = ConvertToJson(cursor)
         cursor.close()
         return JsonResponse(json_data, safe=False)

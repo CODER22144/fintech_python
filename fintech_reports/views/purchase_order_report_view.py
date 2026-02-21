@@ -5,7 +5,7 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from CaFinTech.errors import UNSUCCESSFUL_REQUEST
-from CaFinTech.utility import generate_error_message
+from CaFinTech.utility import generate_error_message, getDbCursor
 import json
 
 from CaFinTech.settings import File_Path, path_wkhtmltopdf
@@ -20,8 +20,8 @@ def getPurchaseOrderDetails(request):
     try:
         serializer = PurchaseOrderReportSerializer(data=request.data)
         if(serializer.is_valid()):
-            cursor = connections[request.user.cid.cid].cursor()
-            cursor.execute(f"EXEC [purchase].[PurchaseOrderRep] %s",(json.dumps(serializer.data),))
+            cursor = getDbCursor(request.user)
+            cursor.execute(f"EXEC [purchase].[PurchaseOrderRep] ?",(json.dumps(serializer.data),))
             json_data = [data[0] for data in cursor.fetchall()]
             json_data = "".join(json_data)
             cursor.close()
@@ -36,7 +36,7 @@ def purchaseOrderInvoice(request, orderId,cid):
     cursor = connections[cid].cursor()
     serializer = PurchaseOrderReportSerializer(data={"poId" : orderId})
     if(serializer.is_valid()):
-        cursor.execute(f"EXEC [purchase].[uspGetPurchaseOrderByPoId] %s",(orderId,))
+        cursor.execute(f"EXEC [purchase].[uspGetPurchaseOrderByPoId] ?",(orderId,))
         json_data = [data[0] for data in cursor.fetchall()]
         json_data = "".join(json_data)
         context = {
@@ -60,8 +60,8 @@ def getPurchaseOrderItemReport(request):
     try:
         serializer = PurchaseOrderItemReportSerializer(data=request.data)
         if(serializer.is_valid()):
-            cursor = connections[request.user.cid.cid].cursor()
-            cursor.execute(f"EXEC [purchase].[PurchaseOrderItemRep] %s",(json.dumps(serializer.data),))
+            cursor = getDbCursor(request.user)
+            cursor.execute(f"EXEC [purchase].[PurchaseOrderItemRep] ?",(json.dumps(serializer.data),))
             json_data = [data[0] for data in cursor.fetchall()]
             json_data = "".join(json_data)
             cursor.close()

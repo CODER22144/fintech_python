@@ -5,7 +5,7 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from CaFinTech.errors import UNSUCCESSFUL_REQUEST
-from CaFinTech.utility import generate_error_message
+from CaFinTech.utility import generate_error_message, getDbCursor
 import json
 
 
@@ -19,8 +19,8 @@ def addVisitInfo(request):
         request.data['userId'] = request.user.userId
         serializer = VisitInfoSerializer(data=request.data)
         if(serializer.is_valid()):
-            cursor = connections[request.user.cid.cid].cursor()
-            cursor.execute(f"EXEC [docen].[uspAddVisitInfo] %s",(json.dumps(serializer.data),))
+            cursor = getDbCursor(request.user)
+            cursor.execute(f"EXEC [docen].[uspAddVisitInfo] ?",(json.dumps(serializer.data),))
             cursor.close()
             return Response(serializer.data)
         UNSUCCESSFUL_REQUEST['message'] = serializer.errors
@@ -32,7 +32,7 @@ def addVisitInfo(request):
 @permission_classes([IsAuthenticated])
 def getResources(request):
     try:
-        cursor = connections[request.user.cid.cid].cursor()
+        cursor = getDbCursor(request.user)
         cursor.execute(f"select resId, resName from [mastcode].[Resources]")
         json_data = ConvertToJson(cursor)
         return JsonResponse(json_data, safe=False)
@@ -45,8 +45,8 @@ def updateVisitInfo(request):
     try:
         serializer = VisitInfoSerializer(data=request.data, many=True)
         if(serializer.is_valid()):
-            cursor = connections[request.user.cid.cid].cursor()
-            cursor.execute(f"EXEC [docen].[uspUpdateVisitInfo] %s",(json.dumps(serializer.data),))
+            cursor = getDbCursor(request.user)
+            cursor.execute(f"EXEC [docen].[uspUpdateVisitInfo] ?",(json.dumps(serializer.data),))
             cursor.close()
             return Response(serializer.data)
         UNSUCCESSFUL_REQUEST['message'] = serializer.errors
@@ -58,8 +58,8 @@ def updateVisitInfo(request):
 @permission_classes([IsAuthenticated])
 def getByIdVisitInfo(request, transId):
     try:
-        cursor = connections[request.user.cid.cid].cursor()
-        cursor.execute(f"exec [docen].[uspGetByIdVisitInfo] %s", (transId,))
+        cursor = getDbCursor(request.user)
+        cursor.execute(f"exec [docen].[uspGetByIdVisitInfo] ?", (transId,))
         json_data = ConvertToJson(cursor)
         cursor.close()
         return JsonResponse(json_data, safe=False)

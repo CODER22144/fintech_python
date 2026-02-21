@@ -5,7 +5,7 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from CaFinTech.errors import UNSUCCESSFUL_REQUEST
-from CaFinTech.utility import generate_error_message
+from CaFinTech.utility import generate_error_message, getDbCursor
 import json
 
 
@@ -18,18 +18,16 @@ from cafintech_api.views.bill_receipt_view import ConvertToJson
 @permission_classes([IsAuthenticated])
 def addDbNoteDetails(request):
     try:
-        serializer = DbNoteSerializer(data=request.data)
-        serializerDetails = DbNoteDetailSerializer(data=request.data['DbNoteDetails'], many=True)
-        if(serializer.is_valid() and serializerDetails.is_valid()):
-            cursor = connections[request.user.cid.cid].cursor()
-            cursor.execute(f"EXEC [fiac].[uspAddDbNote] %s",(json.dumps(request.data),))
+        serializer = DbNoteSerializer(data=request.data, many=True)
+        # serializerDetails = DbNoteDetailSerializer(data=request.data['DbnoteItemDetails'], many=True)
+        if(serializer.is_valid()):
+            cursor = getDbCursor(request.user)
+            cursor.execute(f"EXEC [fiac].[uspAddDbnote] ?",(json.dumps(request.data),))
             cursor.close()
             return Response(serializer.data)
         errors = {}
         if not serializer.is_valid():
             errors["DBNote"] = serializer.errors
-        if not serializerDetails.is_valid():
-            errors["DBNoteDetails"] = serializerDetails.errors
 
         UNSUCCESSFUL_REQUEST['message'] = errors
         return Response(UNSUCCESSFUL_REQUEST, status=400)
@@ -40,7 +38,7 @@ def addDbNoteDetails(request):
 @permission_classes([IsAuthenticated])
 def getDocReason(request):
     try:
-        cursor = connections[request.user.cid.cid].cursor()
+        cursor = getDbCursor(request.user)
         cursor.execute(f"select drId,drDescription from [mastcode].[DocReason]")
         json_data = ConvertToJson(cursor)
         return JsonResponse(json_data, safe=False)
@@ -51,7 +49,7 @@ def getDocReason(request):
 @permission_classes([IsAuthenticated])
 def getDocAgainst(request):
     try:
-        cursor = connections[request.user.cid.cid].cursor()
+        cursor = getDbCursor(request.user)
         cursor.execute(f"select * from [mastcode].[DocAgainst]")
         json_data = ConvertToJson(cursor)
         return JsonResponse(json_data, safe=False)
@@ -65,8 +63,8 @@ def addPRTaxInvoice(request):
         serializer = DbNoteSerializer(data=request.data)
         serializerDetails = DbNoteDetailSerializer(data=request.data['PRTaxInvoiceDetails'], many=True)
         if(serializer.is_valid() and serializerDetails.is_valid()): 
-            cursor = connections[request.user.cid.cid].cursor()
-            cursor.execute(f"EXEC [fiac].[uspAddPRTaxInvoice] %s",(json.dumps(request.data),))
+            cursor = getDbCursor(request.user)
+            cursor.execute(f"EXEC [fiac].[uspAddPRTaxInvoice] ?",(json.dumps(request.data),))
             cursor.close()
             return Response(serializer.data)
         errors = {}
@@ -84,18 +82,16 @@ def addPRTaxInvoice(request):
 @permission_classes([IsAuthenticated])
 def addCrNote(request):
     try:
-        serializer = CrNoteSerializer(data=request.data)
-        serializerDetails = DbNoteDetailSerializer(data=request.data['CrNoteDetails'], many=True)
-        if(serializer.is_valid() and serializerDetails.is_valid()): 
-            cursor = connections[request.user.cid.cid].cursor()
-            cursor.execute(f"EXEC [fiac].[uspAddCrNote] %s",(json.dumps(request.data),))
+        serializer = CrNoteSerializer(data=request.data, many=True)
+        # serializerDetails = DbNoteDetailSerializer(data=request.data['SaleCrnoteItemDetails'], many=True)
+        if(serializer.is_valid()): 
+            cursor = getDbCursor(request.user)
+            cursor.execute(f"EXEC [fiac].[uspAddSaleCrnote] ?",(json.dumps(request.data),))
             cursor.close()
             return Response(serializer.data)
         errors = {}
         if not serializer.is_valid():
             errors["CreditNote"] = serializer.errors
-        if not serializerDetails.is_valid():
-            errors["CreditNoteDetails"] = serializerDetails.errors
 
         UNSUCCESSFUL_REQUEST['message'] = errors
         return Response(UNSUCCESSFUL_REQUEST, status=400)
@@ -106,8 +102,8 @@ def addCrNote(request):
 @permission_classes([IsAuthenticated])
 def getCrNoteMaterialDetails(request):
     try:
-        cursor = connections[request.user.cid.cid].cursor()
-        cursor.execute(f"exec [fiac].[uspGetCrNoteMaterialDetails] %s,%s",(request.data['bpCode'], request.data['matno']))
+        cursor = getDbCursor(request.user)
+        cursor.execute(f"exec [fiac].[uspGetCrNoteMaterialDetails] ?,?",(request.data['bpCode'], request.data['matno']))
         json_data = ConvertToJson(cursor)
         return JsonResponse(json_data, safe=False)
     except Exception as e:
@@ -117,8 +113,8 @@ def getCrNoteMaterialDetails(request):
 @permission_classes([IsAuthenticated])
 def getMaterialWhByBpCodeMatno(request):
     try:
-        cursor = connections[request.user.cid.cid].cursor()
-        cursor.execute(f"exec [inven].[uspGetMatWhByBpCodeMatno] %s,%s",(request.data['bpCode'], request.data['matno']))
+        cursor = getDbCursor(request.user)
+        cursor.execute(f"exec [inven].[uspGetMatWhByBpCodeMatno] ?,?",(request.data['bpCode'], request.data['matno']))
         json_data = ConvertToJson(cursor)
         return JsonResponse(json_data, safe=False)
     except Exception as e:

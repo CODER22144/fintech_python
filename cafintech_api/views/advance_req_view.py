@@ -5,7 +5,7 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from CaFinTech.errors import UNSUCCESSFUL_REQUEST
-from CaFinTech.utility import generate_error_message
+from CaFinTech.utility import generate_error_message, getDbCursor
 import json
 
 from cafintech_api.serializers.advance_req_serializer import AdvanceReqSerializer
@@ -17,8 +17,8 @@ def addAdvanceReq(request):
     try:
         serializer = AdvanceReqSerializer(data=request.data, many=True)
         if(serializer.is_valid()):
-            cursor = connections[request.user.cid.cid].cursor()
-            cursor.execute(f"EXEC [inven].[ReqAdvance] %s",(json.dumps(serializer.data),))
+            cursor = getDbCursor(request.user)
+            cursor.execute(f"EXEC [inven].[ReqAdvance] ?",(json.dumps(serializer.data),))
             json_data = ConvertToJson(cursor)
             return JsonResponse(json_data, safe=False)
         UNSUCCESSFUL_REQUEST['message'] = serializer.errors

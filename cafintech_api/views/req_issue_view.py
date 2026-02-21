@@ -5,7 +5,7 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from CaFinTech.errors import UNSUCCESSFUL_REQUEST
-from CaFinTech.utility import generate_error_message
+from CaFinTech.utility import generate_error_message, getDbCursor
 import json
 
 from cafintech_api.serializers.req_issue_pending_serializer import ReqIssuePendingSerializer
@@ -18,8 +18,8 @@ def addReqIssue(request):
     try:
         serializer = ReqIssueSerializer(data=request.data, many=True)
         if(serializer.is_valid()):
-            cursor = connections[request.user.cid.cid].cursor()
-            cursor.execute(f"EXEC [inven].[uspAddReqIssue] %s",(json.dumps(request.data),))
+            cursor = getDbCursor(request.user)
+            cursor.execute(f"EXEC [inven].[uspAddReqIssue] ?",(json.dumps(request.data),))
             cursor.close()
             return Response(serializer.data)
         UNSUCCESSFUL_REQUEST['message'] = serializer.errors
@@ -33,8 +33,8 @@ def getReqIssuePending(request):
     try:
         serializer = ReqIssuePendingSerializer(data=request.data)
         if(serializer.is_valid()):
-            cursor = connections[request.user.cid.cid].cursor()
-            cursor.execute(f"exec [inven].[uspGetReqIssuePending] %s", (json.dumps(request.data), ))
+            cursor = getDbCursor(request.user)
+            cursor.execute(f"exec [inven].[uspGetReqIssuePending] ?", (json.dumps(request.data), ))
             json_data = ConvertToJson(cursor)
             return JsonResponse(json_data, safe=False)
         UNSUCCESSFUL_REQUEST['message'] = serializer.errors
@@ -46,8 +46,8 @@ def getReqIssuePending(request):
 @permission_classes([IsAuthenticated])
 def getReqMaterialPendingByReqId(request):
     try:
-        cursor = connections[request.user.cid.cid].cursor()
-        cursor.execute(f"exec [inven].[uspGetReqMaterialPendingByReqId] %s", (request.data['reqId'],))
+        cursor = getDbCursor(request.user)
+        cursor.execute(f"exec [inven].[uspGetReqMaterialPendingByReqId] ?", (request.data['reqId'],))
         json_data = ConvertToJson(cursor)
         return JsonResponse(json_data, safe=False)
     except Exception as e:
@@ -57,7 +57,7 @@ def getReqMaterialPendingByReqId(request):
 @permission_classes([IsAuthenticated])
 def getDepartment(request):
     try:
-        cursor = connections[request.user.cid.cid].cursor()
+        cursor = getDbCursor(request.user)
         cursor.execute(f"exec [inven].[uspGetDepartment]")
         json_data = ConvertToJson(cursor)
         return JsonResponse(json_data, safe=False)
@@ -68,7 +68,7 @@ def getDepartment(request):
 @permission_classes([IsAuthenticated])
 def getRequirementType(request):
     try:
-        cursor = connections[request.user.cid.cid].cursor()
+        cursor = getDbCursor(request.user)
         cursor.execute(f"exec [inven].[uspGetReqType]")
         json_data = ConvertToJson(cursor)
         return JsonResponse(json_data, safe=False)
@@ -79,7 +79,7 @@ def getRequirementType(request):
 @permission_classes([IsAuthenticated])
 def getReqSummary(request):
     try:
-        cursor = connections[request.user.cid.cid].cursor()
+        cursor = getDbCursor(request.user)
         cursor.execute(f"exec [inven].[uspGetReqPendingSum]")
         json_data = ConvertToJson(cursor)
         return JsonResponse(json_data, safe=False)
@@ -90,8 +90,8 @@ def getReqSummary(request):
 @permission_classes([IsAuthenticated])
 def getReqDetailsById(request):
     try:
-        cursor = connections[request.user.cid.cid].cursor()
-        cursor.execute(f"exec [inven].[uspGetReqDetailsById] %s", (request.data['reqdId'],))
+        cursor = getDbCursor(request.user)
+        cursor.execute(f"exec [inven].[uspGetReqDetailsById] ?", (request.data['reqdId'],))
         json_data = ConvertToJson(cursor)
         return JsonResponse(json_data, safe=False)
     except Exception as e:
@@ -101,8 +101,8 @@ def getReqDetailsById(request):
 @permission_classes([IsAuthenticated])
 def updateReqDetails(request):
     try:
-        cursor = connections[request.user.cid.cid].cursor()
-        cursor.execute(f"exec [inven].[uspUpdateReqDetails] %s", (json.dumps(request.data),))
+        cursor = getDbCursor(request.user)
+        cursor.execute(f"exec [inven].[uspUpdateReqDetails] ?", (json.dumps(request.data),))
         cursor.close()
         return Response({"message": "Requirement details updated successfully"}, status=200)
     except Exception as e:

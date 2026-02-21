@@ -13,7 +13,7 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from CaFinTech.errors import UNSUCCESSFUL_REQUEST
-from CaFinTech.utility import generate_error_message
+from CaFinTech.utility import generate_error_message, getDbCursor
 import json
 
     
@@ -21,8 +21,8 @@ import json
 @permission_classes([IsAuthenticated])
 def getProductBreakupByMatno(request, matno):
     try:
-        cursor = connections[request.user.cid.cid].cursor()
-        cursor.execute(f"exec [cost].[uspGetProductBreakupByMatno] %s", (matno,))
+        cursor = getDbCursor(request.user)
+        cursor.execute(f"exec [cost].[uspGetProductBreakupByMatno] ?", (matno,))
         json_data = ConvertToJson(cursor)
         return JsonResponse(json_data, safe=False)
     except Exception as e:
@@ -32,8 +32,8 @@ def getProductBreakupByMatno(request, matno):
 @permission_classes([IsAuthenticated])
 def getProductBreakupDetailsByMatno(request, matno):
     try:
-        cursor = connections[request.user.cid.cid].cursor()
-        cursor.execute(f"exec [cost].[uspGetProductBreakupDetailsBymatno] %s", (matno,))
+        cursor = getDbCursor(request.user)
+        cursor.execute(f"exec [cost].[uspGetProductBreakupDetailsBymatno] ?", (matno,))
         json_data = ConvertToJson(cursor)
         return JsonResponse(json_data, safe=False)
     except Exception as e:
@@ -43,8 +43,8 @@ def getProductBreakupDetailsByMatno(request, matno):
 @permission_classes([IsAuthenticated])
 def getProductBreakupProcessingByMatno(request, matno):
     try:
-        cursor = connections[request.user.cid.cid].cursor()
-        cursor.execute(f"exec [cost].[uspGetProductBreakupProcessingBymatno] %s", (matno,))
+        cursor = getDbCursor(request.user)
+        cursor.execute(f"exec [cost].[uspGetProductBreakupProcessingBymatno] ?", (matno,))
         json_data = ConvertToJson(cursor)
         return JsonResponse(json_data, safe=False)
     except Exception as e:
@@ -56,8 +56,8 @@ def addProductBreakup(request):
     try:
         serializer = ProductBreakupSerializer(data=request.data)
         if(serializer.is_valid()):
-            cursor = connections[request.user.cid.cid].cursor()
-            cursor.execute(f"EXEC [cost].[uspAddProductBreakup] %s",(json.dumps(serializer.data),))
+            cursor = getDbCursor(request.user)
+            cursor.execute(f"EXEC [cost].[uspAddProductBreakup] ?",(json.dumps(serializer.data),))
             cursor.close()
             return Response(serializer.data)
         UNSUCCESSFUL_REQUEST['message'] = serializer.errors
@@ -71,8 +71,8 @@ def addProductBreakupDetails(request):
     try:
         serializer = ProductBreakupDetailSerializer(data=request.data, many=True)
         if(serializer.is_valid()):
-            cursor = connections[request.user.cid.cid].cursor()
-            cursor.execute(f"EXEC [cost].[uspAddProductBreakupDetails] %s",(json.dumps(serializer.data),))
+            cursor = getDbCursor(request.user)
+            cursor.execute(f"EXEC [cost].[uspAddProductBreakupDetails] ?",(json.dumps(serializer.data),))
             cursor.close()
             return Response(serializer.data)
         UNSUCCESSFUL_REQUEST['message'] = serializer.errors
@@ -86,8 +86,8 @@ def addProductBreakupProcessing(request):
     try:
         serializer = ProductBreakupProcessingSerializer(data=request.data, many=True)
         if(serializer.is_valid()):
-            cursor = connections[request.user.cid.cid].cursor()
-            cursor.execute(f"EXEC [cost].[uspAddProductBreakupProcessing] %s",(json.dumps(serializer.data),))
+            cursor = getDbCursor(request.user)
+            cursor.execute(f"EXEC [cost].[uspAddProductBreakupProcessing] ?",(json.dumps(serializer.data),))
             cursor.close()
             return Response(serializer.data)
         UNSUCCESSFUL_REQUEST['message'] = serializer.errors
@@ -99,8 +99,8 @@ def addProductBreakupProcessing(request):
 @permission_classes([IsAuthenticated])
 def deleteProductBreakup(request, matno):
     try:
-        cursor = connections[request.user.cid.cid].cursor()
-        cursor.execute(f"exec [cost].[uspDeleteProductBreakup] %s", (matno, ))
+        cursor = getDbCursor(request.user)
+        cursor.execute(f"exec [cost].[uspDeleteProductBreakup] ?", (matno, ))
         cursor.close()
         return Response(data={"status" : "OK"}, status=204)
     except Exception as e:
@@ -110,8 +110,8 @@ def deleteProductBreakup(request, matno):
 @permission_classes([IsAuthenticated])
 def deleteProductBreakupDetails(request, padId):
     try:
-        cursor = connections[request.user.cid.cid].cursor()
-        cursor.execute(f"exec [cost].[uspDeleteProductBreakupDetails] %s", (padId, ))
+        cursor = getDbCursor(request.user)
+        cursor.execute(f"exec [cost].[uspDeleteProductBreakupDetails] ?", (padId, ))
         cursor.close()
         return Response(data={"status" : "OK"}, status=204)
     except Exception as e:
@@ -121,8 +121,8 @@ def deleteProductBreakupDetails(request, padId):
 @permission_classes([IsAuthenticated])
 def deleteProductBreakupProcessing(request, papId):
     try:
-        cursor = connections[request.user.cid.cid].cursor()
-        cursor.execute(f"exec [cost].[uspDeleteProductBreakupProcessing] %s", (papId, ))
+        cursor = getDbCursor(request.user)
+        cursor.execute(f"exec [cost].[uspDeleteProductBreakupProcessing] ?", (papId, ))
         cursor.close()
         return Response(data={"status" : "OK"}, status=204)
     except Exception as e:
@@ -134,8 +134,8 @@ def addProductBreakup_TechDetails(request):
     try:
         serializer = ProductBreakupTechDetailSerializer(data=request.data, many=True)
         if(serializer.is_valid()):
-            cursor = connections[request.user.cid.cid].cursor()
-            cursor.execute(f"EXEC [cost].[uspAddProductBreakup_TechDetails] %s",(json.dumps(serializer.data),))
+            cursor = getDbCursor(request.user)
+            cursor.execute(f"EXEC [cost].[uspAddProductBreakup_TechDetails] ?",(json.dumps(serializer.data),))
             cursor.close()
             return Response(serializer.data)
         UNSUCCESSFUL_REQUEST['message'] = serializer.errors
@@ -149,8 +149,8 @@ def addRmInprocessStandard(request):
     try:
         serializer = RmInProcessStandardSerializer(data=request.data, many=True)
         if(serializer.is_valid()):
-            cursor = connections[request.user.cid.cid].cursor()
-            cursor.execute(f"EXEC  %s",(json.dumps(serializer.data),))
+            cursor = getDbCursor(request.user)
+            cursor.execute(f"EXEC  ?",(json.dumps(serializer.data),))
             cursor.close()
             return Response(serializer.data)
         UNSUCCESSFUL_REQUEST['message'] = serializer.errors
@@ -164,8 +164,8 @@ def addProductFinalStandard(request):
     try:
         serializer = ProductFinalStandardSerializer(data=request.data, many=True)
         if(serializer.is_valid()):
-            cursor = connections[request.user.cid.cid].cursor()
-            cursor.execute(f"EXEC [cost].[uspAddProductFinalStandard] %s",(json.dumps(serializer.data),))
+            cursor = getDbCursor(request.user)
+            cursor.execute(f"EXEC [cost].[uspAddProductFinalStandard] ?",(json.dumps(serializer.data),))
             cursor.close()
             return Response(serializer.data)
         UNSUCCESSFUL_REQUEST['message'] = serializer.errors
@@ -177,8 +177,8 @@ def addProductFinalStandard(request):
 @permission_classes([IsAuthenticated])
 def getProductBreakupReport(request):
     try:
-        cursor = connections[request.user.cid.cid].cursor()
-        cursor.execute(f"exec [cost].[ProductBreakupReport] %s", (json.dumps(request.data),))
+        cursor = getDbCursor(request.user)
+        cursor.execute(f"exec [cost].[ProductBreakupReport] ?", (json.dumps(request.data),))
         json_data = [data[0] for data in cursor.fetchall()]
         json_data = "".join(json_data)
         cursor.close()
@@ -192,8 +192,8 @@ def updateProductBreakup(request):
     try:
         serializer = ProductBreakupSerializer(data=request.data)
         if(serializer.is_valid()):
-            cursor = connections[request.user.cid.cid].cursor()
-            cursor.execute(f"EXEC [cost].[uspUpdateProductBreakup] %s",(json.dumps(serializer.data),))
+            cursor = getDbCursor(request.user)
+            cursor.execute(f"EXEC [cost].[uspUpdateProductBreakup] ?",(json.dumps(serializer.data),))
             cursor.close()
             return Response(serializer.data)
         UNSUCCESSFUL_REQUEST['message'] = serializer.errors

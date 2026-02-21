@@ -5,9 +5,10 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from CaFinTech.errors import UNSUCCESSFUL_REQUEST
-from CaFinTech.utility import generate_error_message
+from CaFinTech.utility import generate_error_message, getDbCursor
 import json
 
+from cafintech_api.serializers.rcm_report_serializer import RcmReportSerializer
 from cafintech_api.serializers.reverse_charges_serializer import ReverseChargesSerializer
 from cafintech_api.views.bill_receipt_view import ConvertToJson
 
@@ -17,11 +18,64 @@ def addReverseCharges(request):
     try:
         serializer = ReverseChargesSerializer(data=request.data, many=True)
         if(serializer.is_valid()):
-            cursor = connections[request.user.cid.cid].cursor()
-            cursor.execute(f"EXEC [fiac].[uspAddReverseCharge] %s",(json.dumps(serializer.data),))
+            cursor = getDbCursor(request.user)
+            cursor.execute(f"EXEC [fiac].[uspAddRcm] ?",(json.dumps(serializer.data),))
             cursor.close()
             return Response(serializer.data)
         UNSUCCESSFUL_REQUEST['message'] = serializer.errors
         return Response(UNSUCCESSFUL_REQUEST, status=400)
     except Exception as e:
         return Response(generate_error_message(e), status=500, exception=e)
+    
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def updateReverseCharges(request):
+    try:
+        serializer = ReverseChargesSerializer(data=request.data)
+        if(serializer.is_valid()):
+            cursor = getDbCursor(request.user)
+            cursor.execute(f"EXEC [fiac].[uspUpdateRcm] ?",(json.dumps(serializer.data),))
+            cursor.close()
+            return Response(serializer.data)
+        UNSUCCESSFUL_REQUEST['message'] = serializer.errors
+        return Response(UNSUCCESSFUL_REQUEST, status=400)
+    except Exception as e:
+        return Response(generate_error_message(e), status=500, exception=e)
+    
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def getReverseChargeRep(request):
+    try:
+        serializer = RcmReportSerializer(data=request.data)
+        if(serializer.is_valid()):
+            cursor = getDbCursor(request.user)
+            cursor.execute(f"EXEC [fiac].[uspGetRcmRep] ?",(json.dumps(serializer.data),))
+            json_data = ConvertToJson(cursor)
+            cursor.close()
+            return JsonResponse(json_data, safe=False)
+        UNSUCCESSFUL_REQUEST['message'] = serializer.errors
+        return Response(UNSUCCESSFUL_REQUEST, status=400)
+    except Exception as e:
+        return Response(generate_error_message(e), status=500, exception=e)
+    
+@api_view(["POST"])
+@permission_classes([IsAuthenticated])
+def deleteRcm(request):
+    try:
+        cursor = getDbCursor(request.user)
+        cursor.execute(f"exec [fiac].[uspDeleteRcm] ?", (json.dumps(request.data), ))
+        cursor.close()
+        return Response(data={"status" : "OK"}, status=204)
+    except Exception as e:
+        return Response(data=generate_error_message(e), status=500, exception=e)
+    
+@api_view(["POST"])
+@permission_classes([IsAuthenticated])
+def getRcm(request):
+    try:
+        cursor = getDbCursor(request.user)
+        cursor.execute(f"exec [fiac].[uspGetRcmById] ?", (json.dumps(request.data), ))
+        json_data = ConvertToJson(cursor)
+        return JsonResponse(json_data, safe=False)
+    except Exception as e:
+        return Response(data=generate_error_message(e), status=500, exception=e)

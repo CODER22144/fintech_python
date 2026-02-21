@@ -1,26 +1,37 @@
 from rest_framework import serializers
 
+from cafintech_api.serializers.inward_details_serializer import InwardVoucherDetailSerializer
+
 class InwardVoucherSerializer(serializers.Serializer):
-    # tDate = serializers.CharField(max_length = 20)
+    transId = serializers.IntegerField(allow_null=True, required=False)
     lcode = serializers.CharField(max_length = 10)
     brId = serializers.IntegerField(allow_null=True, required=False)
     billNo = serializers.CharField(max_length = 30,allow_null=True, required = False)
-    billDate = serializers.CharField(max_length = 20)
-    naration = serializers.CharField(max_length = 100, allow_null=True, required = False)
+    billDate = serializers.CharField(max_length = 20,allow_null=True, required = False)
     dbCode = serializers.CharField(max_length = 10)
-    # hsnCode = serializers.CharField(max_length = 10, allow_null=True, required = False)
-    qty = serializers.DecimalField(max_digits=12, decimal_places=3)
     rc = serializers.CharField(max_length=1)
-    rate = serializers.DecimalField(max_digits=12, decimal_places=3)
-    amount = serializers.DecimalField(max_digits=12, decimal_places=2)
-    discountAmount = serializers.DecimalField(max_digits=12, decimal_places=2)
-    GstRt = serializers.DecimalField(max_digits=5, decimal_places=2, default = 0)
-    GstAmount = serializers.DecimalField(max_digits=12, decimal_places=2, default = 0)
-    tdsAmount = serializers.DecimalField(max_digits=12, decimal_places=3, default = 0)
-    roff = serializers.DecimalField(max_digits=5, decimal_places=2, default = 0)
-    tamount = serializers.DecimalField(max_digits=12, decimal_places=2)
-
+    rtds = serializers.DecimalField(max_digits=5, decimal_places=2, default = 0)
+    tdsCode = serializers.CharField(max_length=10)
     DocProof = serializers.CharField(allow_null=True, required = False)
+    naration = serializers.CharField(max_length=255, allow_null=True, required=False)
+    InwardVoucherDetails = InwardVoucherDetailSerializer(many=True)
 
+class InwardVoucherSingleSerializer(serializers.Serializer):
+    lcode = serializers.CharField(max_length = 10)
+    billNo = serializers.CharField(max_length = 30,allow_null=True, required = False)
+    billDate = serializers.CharField(max_length = 20,allow_null=True, required = False)
+    naration = serializers.CharField(max_length=255, allow_null=True, required=False)
+    dbCode = serializers.CharField(max_length = 10)
+    rc = serializers.CharField(max_length=1)
+    tdsCode = serializers.CharField(max_length=10)
+    rtds = serializers.DecimalField(max_digits=5, decimal_places=2, default = 0)
+    DocProof = serializers.CharField(allow_null=True, required = False)
+    amount = serializers.DecimalField(max_digits=12, decimal_places=3)
+    discountAmount = serializers.DecimalField(max_digits=12, decimal_places=3)
+    GstRt = serializers.DecimalField(max_digits=12, decimal_places=2)
+    GstAmount = serializers.DecimalField(max_digits=12, decimal_places=2)
+    roff = serializers.DecimalField(max_digits=12, decimal_places=3)
+    tamount = serializers.DecimalField(max_digits=12, decimal_places=3)
 
-# Total Amount  = qty * rate
+    # transId = serializers.IntegerField(allow_null=True, required=False)
+    # brId = serializers.IntegerField(allow_null=True, required=False)

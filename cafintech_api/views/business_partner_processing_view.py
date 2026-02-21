@@ -5,7 +5,7 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from CaFinTech.errors import UNSUCCESSFUL_REQUEST
-from CaFinTech.utility import generate_error_message
+from CaFinTech.utility import generate_error_message, getDbCursor
 import json
 
 from cafintech_api.serializers.business_partner_processing import BusinessPartnerProcessingSerializer
@@ -18,8 +18,8 @@ def addBusinessPartnerProcessing(request):
     try:
         serializer = BusinessPartnerProcessingSerializer(data=request.data)     # CAN HAVE IMPORT HERE
         if(serializer.is_valid()):
-            cursor = connections[request.user.cid.cid].cursor()
-            cursor.execute(f"EXEC [cost].[uspAddBusinessPartnerProcessing] %s",(json.dumps(serializer.data),))
+            cursor = getDbCursor(request.user)
+            cursor.execute(f"EXEC [cost].[uspAddBusinessPartnerProcessing] ?",(json.dumps(serializer.data),))
             cursor.close()
             return Response(serializer.data)
         UNSUCCESSFUL_REQUEST['message'] = serializer.errors
@@ -33,8 +33,8 @@ def UpdateBusinessPartnerProcessing(request):
     try:
         serializer = BusinessPartnerProcessingSerializer(data=request.data)
         if(serializer.is_valid()):
-            cursor = connections[request.user.cid.cid].cursor()
-            cursor.execute(f"EXEC [cost].[uspUpdateBusinessPartnerProcessing] %s",(json.dumps(serializer.data),))
+            cursor = getDbCursor(request.user)
+            cursor.execute(f"EXEC [cost].[uspUpdateBusinessPartnerProcessing] ?",(json.dumps(serializer.data),))
             cursor.close()
             return Response(serializer.data)
         UNSUCCESSFUL_REQUEST['message'] = serializer.errors
@@ -46,8 +46,8 @@ def UpdateBusinessPartnerProcessing(request):
 @permission_classes([IsAuthenticated])
 def getBusinessPartnerProcessingById(request):
     try:        
-        cursor = connections[request.user.cid.cid].cursor()
-        cursor.execute(f"EXEC [cost].[uspGetBusinessPartnerProcessingById] %s,%s",(request.data['bpCode'],request.data['pId']))
+        cursor = getDbCursor(request.user)
+        cursor.execute(f"EXEC [cost].[uspGetBusinessPartnerProcessingById] ?,?",(request.data['bpCode'],request.data['pId']))
         json_data = ConvertToJson(cursor)
         cursor.close()
         return JsonResponse(json_data, safe=False)  
@@ -58,8 +58,8 @@ def getBusinessPartnerProcessingById(request):
 @permission_classes([IsAuthenticated])
 def deleteBusinessPartnerProcessing(request):
     try:        
-        cursor = connections[request.user.cid.cid].cursor()
-        cursor.execute(f"EXEC [cost].[uspDeleteBusinessPartnerProcessing] %s,%s",(request.data['bpCode'],request.data['pId']))
+        cursor = getDbCursor(request.user)
+        cursor.execute(f"EXEC [cost].[uspDeleteBusinessPartnerProcessing] ?,?",(request.data['bpCode'],request.data['pId']))
         cursor.close()
         return Response({'message': 'Deleted successfully'})
     except Exception as e:

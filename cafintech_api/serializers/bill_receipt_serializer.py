@@ -2,7 +2,7 @@ from django.forms import ValidationError
 from rest_framework import serializers
 
 class BillReceiptSerializer(serializers.Serializer):
-    brId = serializers.IntegerField(allow_null=True, required=False)
+    brId = serializers.CharField(max_length=50, allow_null=True, required=False)
     bt = serializers.CharField(max_length = 1)
     bpName = serializers.CharField(max_length=200)
     billNo = serializers.CharField(max_length = 16, required=False, allow_null=True)

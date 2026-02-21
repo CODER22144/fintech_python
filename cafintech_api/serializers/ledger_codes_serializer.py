@@ -24,8 +24,8 @@ class LedgerCodesSerializer(serializers.Serializer):
     SupTyp = serializers.CharField(max_length=10, allow_null=True, required=False)
     regId = serializers.CharField(max_length=3, allow_null=True, required=False)
     Gstin = serializers.CharField(max_length=15, allow_null=True, required=False)
-    rc = serializers.CharField(max_length=1, default='N')
-    isEcom = serializers.CharField(max_length=1, default='N')
+    rc = serializers.CharField(max_length=1, default='N', allow_null=True, required=False)
+    isEcom = serializers.CharField(max_length=1, default='N', allow_null=True, required=False)
     tdsCode = serializers.CharField(max_length=10, allow_null=True, required=False)
     igstOnIntra = serializers.CharField(max_length=1, default='N')
 

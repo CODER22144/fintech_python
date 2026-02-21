@@ -5,7 +5,7 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from CaFinTech.errors import UNSUCCESSFUL_REQUEST
-from CaFinTech.utility import generate_error_message
+from CaFinTech.utility import generate_error_message, getDbCursor
 import json
 
 from cafintech_api.serializers.checkInSerializer import CheckInSerializer
@@ -19,8 +19,8 @@ def checkIn(request):
         request.data['userId'] = request.user.userId
         serializer = CheckInSerializer(data=request.data)
         if(serializer.is_valid()):
-            cursor = connections[request.user.cid.cid].cursor()
-            cursor.execute(f"EXEC [docen].[uspAddAttendenceCheckIn] %s",(json.dumps(serializer.data),))
+            cursor = getDbCursor(request.user)
+            cursor.execute(f"EXEC [docen].[uspAddAttendenceCheckIn] ?",(json.dumps(serializer.data),))
             cursor.close()
             return Response(serializer.data)
         UNSUCCESSFUL_REQUEST['message'] = serializer.errors
@@ -35,8 +35,8 @@ def checkOut(request):
         request.data['userId'] = request.user.userId
         serializer = CheckOutSerializer(data=request.data)
         if(serializer.is_valid()):
-            cursor = connections[request.user.cid.cid].cursor()
-            cursor.execute(f"EXEC [docen].[uspAddAttendenceCheckOut] %s",(json.dumps(serializer.data),))
+            cursor = getDbCursor(request.user)
+            cursor.execute(f"EXEC [docen].[uspAddAttendenceCheckOut] ?",(json.dumps(serializer.data),))
             cursor.close()
             return Response(serializer.data)
         UNSUCCESSFUL_REQUEST['message'] = serializer.errors
@@ -49,8 +49,8 @@ def checkOut(request):
 @permission_classes([IsAuthenticated])
 def getLastAttendance(request):
     try:
-        cursor = connections[request.user.cid.cid].cursor()
-        cursor.execute(f"exec [docen].[uspGetLastAttendance] %s",(request.user.userId,))
+        cursor = getDbCursor(request.user)
+        cursor.execute(f"exec [docen].[uspGetLastAttendance] ?",(request.user.userId,))
         json_data = ConvertToJson(cursor)
         return JsonResponse(json_data, safe=False)
     except Exception as e:

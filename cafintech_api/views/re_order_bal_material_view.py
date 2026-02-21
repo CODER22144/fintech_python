@@ -5,7 +5,7 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from CaFinTech.errors import UNSUCCESSFUL_REQUEST
-from CaFinTech.utility import generate_error_message
+from CaFinTech.utility import generate_error_message, getDbCursor
 import json
 
 from cafintech_api.serializers.re_order_balance_material_serializer import ReOrderBalanceMaterialSerializer
@@ -19,8 +19,8 @@ def reportReOrderBalanceMaterial(request):
         request.data['roleid'] = request.user.roles.role_id
         serializer = ReOrderBalanceMaterialSerializer(data=request.data)
         if(serializer.is_valid()):
-            cursor = connections[request.user.cid.cid].cursor()
-            cursor.execute(f"EXEC [sales].[ReOrderBalanceMaterial] %s",(json.dumps(request.data),))
+            cursor = getDbCursor(request.user)
+            cursor.execute(f"EXEC [sales].[ReOrderBalanceMaterial] ?",(json.dumps(request.data),))
             json_data = ConvertToJson(cursor)
             cursor.close()
             return JsonResponse(json_data, safe=False)
@@ -33,8 +33,8 @@ def reportReOrderBalanceMaterial(request):
 @permission_classes([IsAuthenticated])
 def createBalanceOrder(request):
     try:
-        cursor = connections[request.user.cid.cid].cursor()
-        cursor.execute(f"EXEC [sales].[uspCreateBalanceOrder] %s",(request.data['orderId'],))
+        cursor = getDbCursor(request.user)
+        cursor.execute(f"EXEC [sales].[uspCreateBalanceOrder] ?",(request.data['orderId'],))
         cursor.close()
         return Response(data={"status" : "success", "message": "Order Created Successfully"}, status=200)
     except Exception as e:

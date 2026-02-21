@@ -5,7 +5,7 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from CaFinTech.errors import UNSUCCESSFUL_REQUEST
-from CaFinTech.utility import generate_error_message
+from CaFinTech.utility import generate_error_message, getDbCursor
 import json
 
 from cafintech_api.serializers.dl_challan_serializer import DlChallanDetailSerializer, DlChallanSerializer
@@ -16,10 +16,10 @@ from cafintech_api.views.bill_receipt_view import ConvertToJson
 def addDlChallan(request):
     try:
         serializer = DlChallanSerializer(data=request.data)
-        serializerDetails = DlChallanDetailSerializer(data=request.data['DlChallanDetails'], many=True)
+        serializerDetails = DlChallanDetailSerializer(data=request.data['DeliveryChallanItemDetails'], many=True)
         if(serializer.is_valid() and serializerDetails.is_valid()):
-            cursor = connections[request.user.cid.cid].cursor()
-            cursor.execute(f"EXEC [inven].[uspAddDlChallan] %s",(json.dumps(request.data),))
+            cursor = getDbCursor(request.user)
+            cursor.execute(f"EXEC [inven].[uspAddDeliveryChallan] ?",(json.dumps(request.data),))
             cursor.close()
             return Response(serializer.data)
         errors = {}
@@ -37,7 +37,7 @@ def addDlChallan(request):
 @permission_classes([IsAuthenticated])
 def getChallanType(request):
     try:
-        cursor = connections[request.user.cid.cid].cursor()
+        cursor = getDbCursor(request.user)
         cursor.execute(f"exec [inven].[uspGetDlChallanType]")
         json_data = ConvertToJson(cursor)
         return JsonResponse(json_data, safe=False)

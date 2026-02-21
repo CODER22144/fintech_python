@@ -4,7 +4,7 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from CaFinTech.errors import UNSUCCESSFUL_REQUEST
-from CaFinTech.utility import generate_error_message
+from CaFinTech.utility import generate_error_message, getDbCursor
 import json
 from cafintech_api.serializers.warehouse_serializer import WarehouseSerializer
 from cafintech_api.views.bill_receipt_view import ConvertToJson
@@ -15,8 +15,8 @@ def addWarehouse(request):
     try:
         serializer = WarehouseSerializer(data=request.data, many=True)
         if(serializer.is_valid()):
-            cursor = connections[request.user.cid.cid].cursor()
-            cursor.execute(f"EXEC [mastcode].[uspAddWarehouse] %s",(json.dumps(serializer.data),))
+            cursor = getDbCursor(request.user)
+            cursor.execute(f"EXEC [mastcode].[uspAddWarehouse] ?",(json.dumps(serializer.data),))
             cursor.close()
             return Response(serializer.data)
         UNSUCCESSFUL_REQUEST['message'] = serializer.errors
@@ -28,7 +28,7 @@ def addWarehouse(request):
 @permission_classes([IsAuthenticated])
 def getAllWareHouse(request):
     try:
-        cursor = connections[request.user.cid.cid].cursor()
+        cursor = getDbCursor(request.user)
         cursor.execute(f"EXEC [mastcode].[uspGetWareHouse]")
         json_data = ConvertToJson(cursor)
         cursor.close()

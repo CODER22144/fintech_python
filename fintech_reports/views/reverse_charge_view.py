@@ -6,7 +6,7 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from CaFinTech.errors import UNSUCCESSFUL_REQUEST
-from CaFinTech.utility import generate_error_message
+from CaFinTech.utility import generate_error_message, getDbCursor
 import json
 
 from cafintech_api.views.bill_receipt_view import ConvertToJson
@@ -26,7 +26,7 @@ def getReverseCharge(request):
         "tdate": tdate if tdate != 'null' else None
     }
     
-    cursor.execute(f"EXEC [fiac].[ReversechargeReport] %s", (json.dumps(json_input),))
+    cursor.execute(f"EXEC [fiac].[ReversechargeReport] ?", (json.dumps(json_input),))
     json_data = ConvertToJson(cursor)
     json_data = json_data
 

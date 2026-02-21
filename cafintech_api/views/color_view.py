@@ -4,7 +4,7 @@ from rest_framework.permissions import IsAuthenticated
 from django.http import JsonResponse
 from rest_framework.response import Response
 from CaFinTech.errors import UNSUCCESSFUL_REQUEST
-from CaFinTech.utility import generate_error_message
+from CaFinTech.utility import generate_error_message, getDbCursor
 from cafintech_api.serializers.color_serializer import ColorSerializer
 from cafintech_api.views.bill_receipt_view import ConvertToJson
 
@@ -16,8 +16,8 @@ def addColourCode(request):
     try:
         serializer = ColorSerializer(data=request.data, many=True)
         if(serializer.is_valid()):
-            cursor = connections[request.user.cid.cid].cursor()
-            cursor.execute(f"EXEC [mastcode].[uspAddColourCode] %s",(json.dumps(serializer.data),))
+            cursor = getDbCursor(request.user)
+            cursor.execute(f"EXEC [mastcode].[uspAddColourCode] ?",(json.dumps(serializer.data),))
             cursor.close()
             return Response(serializer.data)
         UNSUCCESSFUL_REQUEST['message'] = serializer.errors
@@ -31,8 +31,8 @@ def updateColourCode(request):
     try:
         serializer = ColorSerializer(data=request.data)
         if(serializer.is_valid()):
-            cursor = connections[request.user.cid.cid].cursor()
-            cursor.execute(f"EXEC [mastcode].[uspUpdateColourCode] %s",(json.dumps(serializer.data),))
+            cursor = getDbCursor(request.user)
+            cursor.execute(f"EXEC [mastcode].[uspUpdateColourCode] ?",(json.dumps(serializer.data),))
             cursor.close()
             return Response(serializer.data)
         UNSUCCESSFUL_REQUEST['message'] = serializer.errors
@@ -44,8 +44,8 @@ def updateColourCode(request):
 @permission_classes([IsAuthenticated])
 def deleteColourCode(request):
     try:
-        cursor = connections[request.user.cid.cid].cursor()
-        cursor.execute(f"exec [mastcode].[uspDeleteColourCode] %s", (request.data['colNo'], ))
+        cursor = getDbCursor(request.user)
+        cursor.execute(f"exec [mastcode].[uspDeleteColourCode] ?", (request.data['colNo'], ))
         cursor.close()
         return Response(data={"status" : "OK"}, status=204)
     except Exception as e:
@@ -56,8 +56,8 @@ def deleteColourCode(request):
 @permission_classes([IsAuthenticated])
 def getColourCodeById(request):
     try:
-        cursor = connections[request.user.cid.cid].cursor()
-        cursor.execute(f"exec [mastcode].[uspGetColourCodeById] %s", (request.data['colNo'], ))
+        cursor = getDbCursor(request.user)
+        cursor.execute(f"exec [mastcode].[uspGetColourCodeById] ?", (request.data['colNo'], ))
         json_data = ConvertToJson(cursor)
         return JsonResponse(json_data, safe=False)
     except Exception as e:
@@ -67,7 +67,7 @@ def getColourCodeById(request):
 @permission_classes([IsAuthenticated])
 def getColorReport(request):
     try:
-        cursor = connections[request.user.cid.cid].cursor()
+        cursor = getDbCursor(request.user)
         cursor.execute(f"exec [mastcode].[uspGetColourCode]")
         json_data = ConvertToJson(cursor)
         return JsonResponse(json_data, safe=False)

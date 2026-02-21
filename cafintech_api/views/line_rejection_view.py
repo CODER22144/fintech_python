@@ -5,7 +5,7 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from CaFinTech.errors import UNSUCCESSFUL_REQUEST
-from CaFinTech.utility import generate_error_message
+from CaFinTech.utility import generate_error_message, getDbCursor
 import json
 
 from cafintech_api.serializers.line_rejection_serializer import LineRejectionSerializer
@@ -17,8 +17,8 @@ def addLineRejection(request):
     try:
         serializer = LineRejectionSerializer(data=request.data, many=True)
         if(serializer.is_valid()):
-            cursor = connections[request.user.cid.cid].cursor()
-            cursor.execute(f"EXEC [inven].[uspAddLineRejection] %s",(json.dumps(serializer.data),))
+            cursor = getDbCursor(request.user)
+            cursor.execute(f"EXEC [inven].[uspAddLineRejection] ?",(json.dumps(serializer.data),))
             cursor.close()
             return Response(serializer.data)
         UNSUCCESSFUL_REQUEST['message'] = serializer.errors
@@ -30,8 +30,8 @@ def addLineRejection(request):
 @permission_classes([IsAuthenticated])
 def getLineRejectionPending(request):
     try:
-        cursor = connections[request.user.cid.cid].cursor()
-        cursor.execute(f"EXEC [inven].[uspLineRejectionPending] %s",(request.data['bpCode'],))
+        cursor = getDbCursor(request.user)
+        cursor.execute(f"EXEC [inven].[uspLineRejectionPending] ?",(request.data['bpCode'],))
         json_data = ConvertToJson(cursor)
         cursor.close()
         return JsonResponse(json_data, safe=False)
@@ -42,8 +42,8 @@ def getLineRejectionPending(request):
 @permission_classes([IsAuthenticated])
 def deleteLineRejection(request):
     try:
-        cursor = connections[request.user.cid.cid].cursor()
-        cursor.execute(f"EXEC [inven].[uspDeleteLineRejection] %s",(request.data['id'],))
+        cursor = getDbCursor(request.user)
+        cursor.execute(f"EXEC [inven].[uspDeleteLineRejection] ?",(request.data['id'],))
         cursor.close()
         return Response({"message": "Line rejection deleted successfully."}, status=200)
     except Exception as e:

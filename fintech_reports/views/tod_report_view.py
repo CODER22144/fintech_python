@@ -6,7 +6,7 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from CaFinTech.errors import UNSUCCESSFUL_REQUEST
-from CaFinTech.utility import generate_error_message
+from CaFinTech.utility import generate_error_message, getDbCursor
 import json
 
 
@@ -25,7 +25,7 @@ def getTodReport(request):
         "stateid": stateid if stateid != 'null' else None
     }
     
-    cursor.execute(f"EXEC [sales].[TodReport] %s", (json.dumps(json_input),))
+    cursor.execute(f"EXEC [sales].[TodReport] ?", (json.dumps(json_input),))
     json_data = [data[0] for data in cursor.fetchall()]
     json_data = "".join(json_data)
     json_data = json.loads(json_data if json_data != '' else "[]")
@@ -56,7 +56,7 @@ def getTodReport(request):
 @permission_classes([IsAuthenticated])
 def getPeriod(request):
     try:
-        cursor = connections[request.user.cid.cid].cursor()
+        cursor = getDbCursor(request.user)
         cursor.execute(f"exec [mastcode].[uspGetCalPeriod]")
         json_data = ConvertToJson(cursor)
         return JsonResponse(json_data, safe=False)

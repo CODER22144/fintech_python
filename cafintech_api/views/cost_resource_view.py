@@ -5,7 +5,7 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from CaFinTech.errors import UNSUCCESSFUL_REQUEST
-from CaFinTech.utility import generate_error_message
+from CaFinTech.utility import generate_error_message, getDbCursor
 import json
 
 from cafintech_api.serializers.cost_resource_serializer import CostResourceSerializer
@@ -17,8 +17,8 @@ def addCostResource(request):
     try:
         serializer = CostResourceSerializer(data=request.data)
         if(serializer.is_valid()):
-            cursor = connections[request.user.cid.cid].cursor()
-            cursor.execute(f"EXEC [cost].[uspAddResource] %s",(json.dumps(serializer.data),))
+            cursor = getDbCursor(request.user)
+            cursor.execute(f"EXEC [cost].[uspAddResource] ?",(json.dumps(serializer.data),))
             cursor.close()
             return Response(serializer.data)
         UNSUCCESSFUL_REQUEST['message'] = serializer.errors
@@ -32,8 +32,8 @@ def updateCostResource(request):
     try:
         serializer = CostResourceSerializer(data=request.data)
         if(serializer.is_valid()):
-            cursor = connections[request.user.cid.cid].cursor()
-            cursor.execute(f"EXEC [cost].[uspUpdateResource] %s",(json.dumps(serializer.data),))
+            cursor = getDbCursor(request.user)
+            cursor.execute(f"EXEC [cost].[uspUpdateResource] ?",(json.dumps(serializer.data),))
             cursor.close()
             return Response(serializer.data)
         UNSUCCESSFUL_REQUEST['message'] = serializer.errors
@@ -45,7 +45,7 @@ def updateCostResource(request):
 @permission_classes([IsAuthenticated])
 def getAllResource(request):
     try:
-        cursor = connections[request.user.cid.cid].cursor()
+        cursor = getDbCursor(request.user)
         cursor.execute(f"exec [cost].[uspGetResource]")
         json_data = ConvertToJson(cursor)
         return JsonResponse(json_data, safe=False)
@@ -56,8 +56,8 @@ def getAllResource(request):
 @permission_classes([IsAuthenticated])
 def getByIdResource(request):
     try:
-        cursor = connections[request.user.cid.cid].cursor()
-        cursor.execute(f"exec [cost].[uspGetByIdResource] %s",(request.data['rId'],))
+        cursor = getDbCursor(request.user)
+        cursor.execute(f"exec [cost].[uspGetByIdResource] ?",(request.data['rId'],))
         json_data = ConvertToJson(cursor)
         return JsonResponse(json_data, safe=False)
     except Exception as e:
@@ -67,8 +67,8 @@ def getByIdResource(request):
 @permission_classes([IsAuthenticated])
 def deleteResource(request):
     try:
-        cursor = connections[request.user.cid.cid].cursor()
-        cursor.execute(f"exec [cost].[uspDeleteResource] %s", (request.data['rId'],))
+        cursor = getDbCursor(request.user)
+        cursor.execute(f"exec [cost].[uspDeleteResource] ?", (request.data['rId'],))
         cursor.close()
         return Response(data={"status" : "OK"}, status=204)
     except Exception as e:

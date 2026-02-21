@@ -34,9 +34,9 @@ class User(AbstractBaseUser):
     first_name = models.CharField(max_length=100)
     last_name = models.CharField(max_length=100)
     email = models.EmailField(verbose_name='email', max_length=60)
-    roles = models.ForeignKey('Roles', on_delete=models.CASCADE, verbose_name="roles", default='US')
-    # cid = models.CharField(default=None, null=True, blank=True, max_length=2)
-    cid = models.ForeignKey('Company', on_delete=models.CASCADE, verbose_name="cid", default='OW')
+    roles = models.CharField(max_length=50) # comma separated list of role ids
+    cgId = models.ForeignKey('CompanyGroup', on_delete=models.CASCADE, null=True, blank=True)
+    cid = models.CharField(max_length=5, null=True, blank=True) # Foreign key to Company
     date_joined = models.DateTimeField(verbose_name='date joined', auto_now_add=True)
     last_login = models.DateTimeField(verbose_name='last login', auto_now_add=True)
     is_admin = models.BooleanField(default=False)
@@ -72,31 +72,26 @@ class User(AbstractBaseUser):
             "first_name" : self.first_name,
             "last_name" : self.last_name,
             "email" : self.email,
-            "roles" : self.roles.role_id,
-            "roles_description" : self.roles.role_description,
-            "cid" : self.cid.cid,
-            "company_name" : self.cid.companyName,
-            "company_phone" : self.cid.phoneNumber,
-            "logo" : self.cid.logo,
-            "date_joined" : self.date_joined,
-            "last_login" : self.last_login,
-            "is_admin" : self.is_admin,
-            "is_active" : self.is_active,
-            "is_staff" : self.is_staff,
-            "is_superuser" : self.is_superuser
+            "roles" : self.roles,
+            "cgId" : self.cgId.associated_companies if self.cgId else None,
+            "cid" : self.cid
         }
 
 
 class Company(models.Model):
-    cid = models.CharField(primary_key=True, max_length=2)
-    companyName = models.CharField(max_length=100)
-    phoneNumber = models.CharField(max_length=10, unique=True)
-    logo = models.CharField(max_length=500, default='')
+    cid = models.CharField(primary_key=True, max_length=5)
+    company_name = models.CharField(max_length=100)
+    connection_string = models.JSONField(null=True, blank=True)  # Store connection details as JSON
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+
+class CompanyGroup(models.Model):
+    group_id = models.CharField(primary_key=True, max_length=2)
+    group_description = models.CharField(max_length=30)
+    associated_companies = models.CharField(max_length=250)  # Comma-separated list of company IDs
 
 class Roles(models.Model):
     role_id = models.CharField(primary_key=True, max_length=2)
     role_description = models.CharField(max_length=30)
-
 
 class ErrorLog(models.Model):
     id = models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID', default=None)

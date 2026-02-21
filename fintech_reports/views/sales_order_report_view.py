@@ -7,7 +7,7 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from CaFinTech.errors import UNSUCCESSFUL_REQUEST
-from CaFinTech.utility import generate_error_message
+from CaFinTech.utility import generate_error_message, getDbCursor
 import json
 
 from CaFinTech.settings import File_Path, path_wkhtmltopdf
@@ -15,7 +15,7 @@ import pdfkit
 
 from cafintech_api.views.bill_receipt_view import ConvertToJson
 from fintech_reports.serializers.payment_pending_serializer import PaymentPendingSerializer
-from fintech_reports.serializers.payment_report_serializer import PaymentReportSerializer
+from fintech_reports.serializers.payment_report_serializer import BillPendingSerializer
 from fintech_reports.serializers.sales_order_report_serializer import SalesOrderReportSerializer
 from fintech_reports.serializers.sales_report_serializer import SalesReportSerializer
 
@@ -28,8 +28,8 @@ def getSalesOrderReport(request):
         request.data['roleid'] = request.user.roles.role_id
         serializer = SalesOrderReportSerializer(data=request.data)
         if(serializer.is_valid()):
-            cursor = connections[request.user.cid.cid].cursor()
-            cursor.execute(f"EXEC [sales].[uspGetOrderReport] %s",(json.dumps(serializer.data),))
+            cursor = getDbCursor(request.user)
+            cursor.execute(f"EXEC [sales].[uspGetOrderReport] ?",(json.dumps(serializer.data),))
             json_data = [data[0] for data in cursor.fetchall()]
             json_data = "".join(json_data)
             cursor.close()
@@ -43,7 +43,7 @@ def getSalesOrderReport(request):
 def getSaleOrderByOrderId(request, orderId, cid):
     try:
         cursor = connections[cid].cursor()
-        cursor.execute(f"EXEC [sales].[uspGetOrderByorderId] %s",(orderId,))
+        cursor.execute(f"EXEC [sales].[uspGetOrderByorderId] ?",(orderId,))
         json_data = [data[0] for data in cursor.fetchall()]
         json_data = "".join(json_data)
         json_data = json.loads(json_data)[0]
@@ -74,13 +74,14 @@ def convertSaleOrderToPdf(request, orderId, cid):
 # PART OF SALES ORDER
 def getPaymentPending(request):
     try:
-        serializer = PaymentPendingSerializer(data=request.data)
+        serializer = BillPendingSerializer(data=request.data)
         if(serializer.is_valid()):
-            cursor = connections[request.user.cid.cid].cursor()
-            cursor.execute(f"EXEC [fiac].[uspGetPaymentPending] %s",(json.dumps(serializer.data),))
-            json_data = ConvertToJson(cursor)
+            cursor = getDbCursor(request.user)
+            cursor.execute(f"EXEC [fiac].[uspGetPaymentPending] ?",(json.dumps(serializer.data),))
+            json_data = [data[0] for data in cursor.fetchall()]
+            json_data = "".join(json_data)
             cursor.close()
-            return JsonResponse(json_data, safe=False)
+            return Response(json.loads(json_data))
         UNSUCCESSFUL_REQUEST['message'] = serializer.errors
         return Response(UNSUCCESSFUL_REQUEST, status=400)
     except Exception as e:
@@ -91,17 +92,13 @@ def getPaymentPending(request):
 # SALES REPORT
 def getSalesReport(request):
     try:
-        request.data['userid'] = request.user.userId
-        request.data['roleid'] = request.user.roles.role_id
         serializer = SalesReportSerializer(data=request.data)
         if(serializer.is_valid()):
-            cursor = connections[request.user.cid.cid].cursor()
-            cursor.execute(f"EXEC [sales].[uspGetSaleReport] %s",(json.dumps(serializer.data),))
-            json_data = [data[0] for data in cursor.fetchall()]
-            json_data = "".join(json_data)
+            cursor = getDbCursor(request.user)
+            cursor.execute(f"EXEC [sales].[uspGetSale] ?",(json.dumps(serializer.data),))
+            json_data = ConvertToJson(cursor)
             cursor.close()
-            print(json_data)
-            return Response(json.loads(json_data))
+            return JsonResponse(json_data, safe=False)
         UNSUCCESSFUL_REQUEST['message'] = serializer.errors
         return Response(UNSUCCESSFUL_REQUEST, status=400)
     except Exception as e:
@@ -112,7 +109,7 @@ def getSalesReport(request):
 def getOrderSlip(request, orderId, cid):
     try:
         cursor = connections[cid].cursor()
-        cursor.execute(f"EXEC [sales].[uspGetOrderByorderId] %s",(orderId,))
+        cursor.execute(f"EXEC [sales].[uspGetOrderByorderId] ?",(orderId,))
         json_data = [data[0] for data in cursor.fetchall()]
         json_data = "".join(json_data)
         json_data = json.loads(json_data)[0]
@@ -133,8 +130,8 @@ def getOrderSlip(request, orderId, cid):
 @permission_classes([IsAuthenticated])
 def getOrderStatus(request):
     try:
-        cursor = connections[request.user.cid.cid].cursor()
-        cursor.execute(f"exec [sales].[uspGetOrderProcessed] %s",(request.data['orderId'],))
+        cursor = getDbCursor(request.user)
+        cursor.execute(f"exec [sales].[uspGetOrderProcessed] ?",(request.data['orderId'],))
         json_data = ConvertToJson(cursor)
         cursor.close()
         return JsonResponse(json_data, safe=False)
@@ -145,8 +142,8 @@ def getOrderStatus(request):
 @permission_classes([IsAuthenticated])
 def getOrderClearValue(request):
     try:
-        cursor = connections[request.user.cid.cid].cursor()
-        cursor.execute(f"exec [sales].[GetOrderClearValue] %s",(request.data['orderId'],))
+        cursor = getDbCursor(request.user)
+        cursor.execute(f"exec [sales].[GetOrderClearValue] ?",(request.data['orderId'],))
         json_data = ConvertToJson(cursor)
         cursor.close()
         return JsonResponse(json_data, safe=False)
@@ -157,8 +154,8 @@ def getOrderClearValue(request):
 @permission_classes([IsAuthenticated])
 def getEInvoicePending(request):
     try:
-        cursor = connections[request.user.cid.cid].cursor()
-        cursor.execute(f"exec  [sales].[uspGetEInvoicePending] %s,%s",(request.user.userId,request.user.roles.role_id))
+        cursor = getDbCursor(request.user)
+        cursor.execute(f"exec  [sales].[uspGetEInvoicePending] ?,?",(request.user.userId,request.user.roles.role_id))
         json_data = ConvertToJson(cursor)
         cursor.close()
         return JsonResponse(json_data, safe=False)

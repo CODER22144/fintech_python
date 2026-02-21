@@ -6,7 +6,7 @@ from rest_framework.response import Response
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
 from CaFinTech.errors import UNSUCCESSFUL_REQUEST
-from CaFinTech.utility import generate_error_message
+from CaFinTech.utility import generate_error_message, getDbCursor
 import json
 
 from cafintech_api.views.bill_receipt_view import ConvertToJson
@@ -21,7 +21,7 @@ def getWireSizeReport(request):
         serializer = WireSizeReportSerializer(data={'matno':matno, 'repId':repId, 'soId':soId})    
         if(serializer.is_valid()):
             cursor = connections[request.GET.get("cid")].cursor()
-            cursor.execute(f"EXEC [cost].[WireSizeTl] %s",(json.dumps(serializer.data),))
+            cursor.execute(f"EXEC [cost].[WireSizeTl] ?",(json.dumps(serializer.data),))
             json_data = ConvertToJson(cursor)
             
 
@@ -41,8 +41,8 @@ def getWsReport(request):
     try:
         serializer = WsReportSerializer(data=request.data)
         if(serializer.is_valid()):
-            cursor = connections[request.user.cid.cid].cursor()
-            cursor.execute(f"EXEC [cost].[WireSizeReport] %s",(json.dumps(serializer.data),))
+            cursor = getDbCursor(request.user)
+            cursor.execute(f"EXEC [cost].[WireSizeReport] ?",(json.dumps(serializer.data),))
             json_data = ConvertToJson(cursor)
             cursor.close()
             return JsonResponse(json_data, safe=False)
@@ -58,8 +58,8 @@ def getPbCostingReport(request):
     try:
         serializer = WsReportSerializer(data=request.data)
         if(serializer.is_valid()):
-            cursor = connections[request.user.cid.cid].cursor()
-            cursor.execute(f"EXEC [cost].[ProductBreakupCostReport] %s",(json.dumps(serializer.data),))
+            cursor = getDbCursor(request.user)
+            cursor.execute(f"EXEC [cost].[ProductBreakupCostReport] ?",(json.dumps(serializer.data),))
             json_data = ConvertToJson(cursor)
             cursor.close()
             return JsonResponse(json_data, safe=False)
@@ -74,8 +74,8 @@ def getPartAssemblyCosting(request):
     try:
         serializer = WsReportSerializer(data=request.data)
         if(serializer.is_valid()):
-            cursor = connections[request.user.cid.cid].cursor()
-            cursor.execute(f"EXEC [cost].[PartAssemblyCostReport] %s",(json.dumps(serializer.data),))
+            cursor = getDbCursor(request.user)
+            cursor.execute(f"EXEC [cost].[PartAssemblyCostReport] ?",(json.dumps(serializer.data),))
             json_data = ConvertToJson(cursor)
             cursor.close()
             return JsonResponse(json_data, safe=False)
@@ -90,8 +90,8 @@ def getPartSubAssemblyCosting(request):
     try:
         serializer = WsReportSerializer(data=request.data)
         if(serializer.is_valid()):
-            cursor = connections[request.user.cid.cid].cursor()
-            cursor.execute(f"EXEC [cost].[PartSubAssemblyCostReport] %s",(json.dumps(serializer.data),))
+            cursor = getDbCursor(request.user)
+            cursor.execute(f"EXEC [cost].[PartSubAssemblyCostReport] ?",(json.dumps(serializer.data),))
             json_data = ConvertToJson(cursor)
             cursor.close()
             return JsonResponse(json_data, safe=False)
@@ -106,8 +106,8 @@ def getMaterialAssemblyCosting(request):
     try:
         serializer = WsReportSerializer(data=request.data)
         if(serializer.is_valid()):
-            cursor = connections[request.user.cid.cid].cursor()
-            cursor.execute(f"EXEC [cost].[MaterialAssemblyCostReport] %s",(json.dumps(serializer.data),))
+            cursor = getDbCursor(request.user)
+            cursor.execute(f"EXEC [cost].[MaterialAssemblyCostReport] ?",(json.dumps(serializer.data),))
             json_data = ConvertToJson(cursor)
             cursor.close()
             return JsonResponse(json_data, safe=False)

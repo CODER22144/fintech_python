@@ -5,7 +5,7 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from CaFinTech.errors import UNSUCCESSFUL_REQUEST
-from CaFinTech.utility import generate_error_message
+from CaFinTech.utility import generate_error_message, getDbCursor
 import json
 
 from cafintech_api.serializers.material_tech_details_serializer import MaterialTechDetailsSerializer
@@ -18,8 +18,8 @@ def addMaterialTechDetails(request):
     try:
         serializer = MaterialTechDetailsSerializer(data=request.data, many=True)
         if(serializer.is_valid()):
-            cursor = connections[request.user.cid.cid].cursor()
-            cursor.execute(f"EXEC [purchase].[uspAddMaterialTechDetails] %s",(json.dumps(serializer.data),))
+            cursor = getDbCursor(request.user)
+            cursor.execute(f"EXEC [purchase].[uspAddMaterialTechDetails] ?",(json.dumps(serializer.data),))
             cursor.close()
             return Response(serializer.data)
         UNSUCCESSFUL_REQUEST['message'] = serializer.errors
@@ -33,8 +33,8 @@ def updateMaterialTechDetails(request):
     try:
         serializer = MaterialTechDetailsSerializer(data=request.data)
         if(serializer.is_valid()):
-            cursor = connections[request.user.cid.cid].cursor()
-            cursor.execute(f"EXEC [purchase].[uspUpdateMaterialTechDetails] %s",(json.dumps(serializer.data),))
+            cursor = getDbCursor(request.user)
+            cursor.execute(f"EXEC [purchase].[uspUpdateMaterialTechDetails] ?",(json.dumps(serializer.data),))
             cursor.close()
             return Response(serializer.data)
         UNSUCCESSFUL_REQUEST['message'] = serializer.errors
@@ -46,8 +46,8 @@ def updateMaterialTechDetails(request):
 @permission_classes([IsAuthenticated])
 def deleteMaterialTechDetails(request):
     try:
-        cursor = connections[request.user.cid.cid].cursor()
-        cursor.execute(f"EXEC [purchase].[uspDeleteMaterialTechDetails] %s", (request.data['matno'],))
+        cursor = getDbCursor(request.user)
+        cursor.execute(f"EXEC [purchase].[uspDeleteMaterialTechDetails] ?", (request.data['matno'],))
         cursor.close()
         return Response({"message": "Material Tech Details deleted successfully"}, status=200)
     except Exception as e:
@@ -57,8 +57,8 @@ def deleteMaterialTechDetails(request):
 @permission_classes([IsAuthenticated])
 def getMaterialTechDetails(request):
     try:
-        cursor = connections[request.user.cid.cid].cursor()
-        cursor.execute(f"EXEC [purchase].[uspGetMaterialTechDetailsById] %s", (request.data['matno'],))
+        cursor = getDbCursor(request.user)
+        cursor.execute(f"EXEC [purchase].[uspGetMaterialTechDetailsById] ?", (request.data['matno'],))
         json_data = ConvertToJson(cursor)
         cursor.close()
         return JsonResponse(json_data, safe=False)
@@ -69,8 +69,8 @@ def getMaterialTechDetails(request):
 @permission_classes([IsAuthenticated])
 def getMaterialTechDetailsReport(request):
     try:
-        cursor = connections[request.user.cid.cid].cursor()
-        cursor.execute(f"EXEC [cost].[MaterialTechDetailsReport] %s", (json.dumps(request.data),))
+        cursor = getDbCursor(request.user)
+        cursor.execute(f"EXEC [cost].[MaterialTechDetailsReport] ?", (json.dumps(request.data),))
         json_data = ConvertToJson(cursor)
         cursor.close()
         return JsonResponse(json_data, safe=False)

@@ -10,15 +10,15 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from CaFinTech.errors import UNSUCCESSFUL_REQUEST
-from CaFinTech.utility import generate_error_message
+from CaFinTech.utility import generate_error_message, getDbCursor
 import json
     
 @api_view(["GET"])
 @permission_classes([IsAuthenticated])
 def getBymatnoPartSubAssembly(request, matno):
     try:
-        cursor = connections[request.user.cid.cid].cursor()
-        cursor.execute(f"exec [cost].[uspGetPartSubAssemblyBymatno] %s", (matno,))
+        cursor = getDbCursor(request.user)
+        cursor.execute(f"exec [cost].[uspGetPartSubAssemblyBymatno] ?", (matno,))
         json_data = ConvertToJson(cursor)
         return JsonResponse(json_data, safe=False)
     except Exception as e:
@@ -28,8 +28,8 @@ def getBymatnoPartSubAssembly(request, matno):
 @permission_classes([IsAuthenticated])
 def getBymatnoPartSubAssemblyDetails(request, matno):
     try:
-        cursor = connections[request.user.cid.cid].cursor()
-        cursor.execute(f"exec [cost].[uspGetPartSubAssemblyDetailsBymatno] %s", (matno,))
+        cursor = getDbCursor(request.user)
+        cursor.execute(f"exec [cost].[uspGetPartSubAssemblyDetailsBymatno] ?", (matno,))
         json_data = ConvertToJson(cursor)
         return JsonResponse(json_data, safe=False)
     except Exception as e:
@@ -39,8 +39,8 @@ def getBymatnoPartSubAssemblyDetails(request, matno):
 @permission_classes([IsAuthenticated])
 def getBymatnoPartSubAssemblyProcessing(request, matno):
     try:
-        cursor = connections[request.user.cid.cid].cursor()
-        cursor.execute(f"exec [cost].[uspGetPartSubAssemblyProcessingBymatno] %s", (matno,))
+        cursor = getDbCursor(request.user)
+        cursor.execute(f"exec [cost].[uspGetPartSubAssemblyProcessingBymatno] ?", (matno,))
         json_data = ConvertToJson(cursor)
         return JsonResponse(json_data, safe=False)
     except Exception as e:
@@ -52,8 +52,8 @@ def addPartSubAssembly(request):
     try:
         serializer = PartSubAssemblySerializer(data=request.data)
         if(serializer.is_valid()):
-            cursor = connections[request.user.cid.cid].cursor()
-            cursor.execute(f"EXEC [cost].[uspAddPartSubAssembly] %s",(json.dumps(serializer.data),))
+            cursor = getDbCursor(request.user)
+            cursor.execute(f"EXEC [cost].[uspAddPartSubAssembly] ?",(json.dumps(serializer.data),))
             cursor.close()
             return Response(serializer.data)
         UNSUCCESSFUL_REQUEST['message'] = serializer.errors
@@ -67,8 +67,8 @@ def addPartSubAssemblyDetails(request):
     try:
         serializer = PartSubAssemblyDetailSerializer(data=request.data, many=True)
         if(serializer.is_valid()):
-            cursor = connections[request.user.cid.cid].cursor()
-            cursor.execute(f"EXEC [cost].[uspAddPartSubAssemblyDetails] %s",(json.dumps(serializer.data),))
+            cursor = getDbCursor(request.user)
+            cursor.execute(f"EXEC [cost].[uspAddPartSubAssemblyDetails] ?",(json.dumps(serializer.data),))
             cursor.close()
             return Response(serializer.data)
         UNSUCCESSFUL_REQUEST['message'] = serializer.errors
@@ -82,8 +82,8 @@ def addPartSubAssemblyProcessing(request):
     try:
         serializer = PartSubAssemblyProcessingSerializer(data=request.data, many=True)
         if(serializer.is_valid()):
-            cursor = connections[request.user.cid.cid].cursor()
-            cursor.execute(f"EXEC [cost].[uspAddPartSubAssemblyProcessing] %s",(json.dumps(serializer.data),))
+            cursor = getDbCursor(request.user)
+            cursor.execute(f"EXEC [cost].[uspAddPartSubAssemblyProcessing] ?",(json.dumps(serializer.data),))
             cursor.close()
             return Response(serializer.data)
         UNSUCCESSFUL_REQUEST['message'] = serializer.errors
@@ -95,8 +95,8 @@ def addPartSubAssemblyProcessing(request):
 @permission_classes([IsAuthenticated])
 def deletePartSubAssembly(request, matno):
     try:
-        cursor = connections[request.user.cid.cid].cursor()
-        cursor.execute(f"exec [cost].[uspDeletePartSubAssembly] %s", (matno, ))
+        cursor = getDbCursor(request.user)
+        cursor.execute(f"exec [cost].[uspDeletePartSubAssembly] ?", (matno, ))
         cursor.close()
         return Response(data={"status" : "OK"}, status=204)
     except Exception as e:
@@ -106,8 +106,8 @@ def deletePartSubAssembly(request, matno):
 @permission_classes([IsAuthenticated])
 def deletePartSubAssemblyDetails(request, padId):
     try:
-        cursor = connections[request.user.cid.cid].cursor()
-        cursor.execute(f"exec [cost].[uspDeletePartSubAssemblyDetails] %s", (padId, ))
+        cursor = getDbCursor(request.user)
+        cursor.execute(f"exec [cost].[uspDeletePartSubAssemblyDetails] ?", (padId, ))
         cursor.close()
         return Response(data={"status" : "OK"}, status=204)
     except Exception as e:
@@ -117,8 +117,8 @@ def deletePartSubAssemblyDetails(request, padId):
 @permission_classes([IsAuthenticated])
 def deletePartSubAssemblyProcessing(request, papId):
     try:
-        cursor = connections[request.user.cid.cid].cursor()
-        cursor.execute(f"exec [cost].[uspDeletePartSubAssemblyProcessing] %s", (papId, ))
+        cursor = getDbCursor(request.user)
+        cursor.execute(f"exec [cost].[uspDeletePartSubAssemblyProcessing] ?", (papId, ))
         cursor.close()
         return Response(data={"status" : "OK"}, status=204)
     except Exception as e:
@@ -128,8 +128,8 @@ def deletePartSubAssemblyProcessing(request, papId):
 @permission_classes([IsAuthenticated])
 def getPartSubAssemblyReport(request):
     try:
-        cursor = connections[request.user.cid.cid].cursor()
-        cursor.execute(f"exec [cost].[PartSubAssemblyReport] %s", (request.data['matno'],))
+        cursor = getDbCursor(request.user)
+        cursor.execute(f"exec [cost].[PartSubAssemblyReport] ?", (request.data['matno'],))
         json_data = [data[0] for data in cursor.fetchall()]
         json_data = "".join(json_data)
         cursor.close()
@@ -143,8 +143,8 @@ def updatePartSubAssembly(request):
     try:
         serializer = PartSubAssemblySerializer(data=request.data)
         if(serializer.is_valid()):
-            cursor = connections[request.user.cid.cid].cursor()
-            cursor.execute(f"EXEC [cost].[uspUpdatePartSubAssembly] %s",(json.dumps(serializer.data),))
+            cursor = getDbCursor(request.user)
+            cursor.execute(f"EXEC [cost].[uspUpdatePartSubAssembly] ?",(json.dumps(serializer.data),))
             cursor.close()
             return Response(serializer.data)
         UNSUCCESSFUL_REQUEST['message'] = serializer.errors

@@ -17,7 +17,7 @@ class FileUpload(models.Model):
 
     def __str__(self):
         return f"{self.file}"
-    
+
 
 class BaseFileUpload(models.Model):
     file = models.FileField(upload_to=dynamic_upload_to)
@@ -42,3 +42,10 @@ class BillReceiptUpload(BaseFileUpload):
     def get_file_type(self):
         return 'br'
 
+class JvoucherUpload(BaseFileUpload):
+    def get_file_type(self):
+        return 'jvoucher'
+    
+class CompanyUpload(BaseFileUpload):
+    def get_file_type(self):
+        return 'company'
