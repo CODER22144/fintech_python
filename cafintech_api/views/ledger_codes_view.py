@@ -196,3 +196,15 @@ def importLedgerCodes(request):
         
     except Exception as e:
         return Response(data=generate_error_message(e), status=500, exception=e)
+    
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def getGstnDetails(request):
+    try:
+        cursor = getDbCursor(request.user)
+        cursor.execute(f"select [mastcode].[fnGetGstDetails] (?)",(json.dumps(request.data),))
+        json_data = ConvertToJson(cursor)
+        cursor.close()
+        return Response(json_data)
+    except Exception as e:
+        return Response(generate_error_message(e), status=500, exception=e)

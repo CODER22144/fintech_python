@@ -43,6 +43,7 @@ class User(AbstractBaseUser):
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
     is_superuser = models.BooleanField(default=False)
+    admin = models.ForeignKey('User', on_delete=models.SET_NULL, null=True, blank=True)  # Link to admin user who created this user
 
     USERNAME_FIELD = 'userId'
 
@@ -74,7 +75,8 @@ class User(AbstractBaseUser):
             "email" : self.email,
             "roles" : self.roles,
             "cgId" : self.cgId.associated_companies if self.cgId else None,
-            "cid" : self.cid
+            "cid" : self.cid,
+            "company_name" : Company.objects.filter(cid=self.cid).first().company_name if self.cid else None
         }
 
 
@@ -82,12 +84,13 @@ class Company(models.Model):
     cid = models.CharField(primary_key=True, max_length=5)
     company_name = models.CharField(max_length=100)
     connection_string = models.JSONField(null=True, blank=True)  # Store connection details as JSON
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)  # Link to User who added the company
 
 class CompanyGroup(models.Model):
     group_id = models.CharField(primary_key=True, max_length=2)
     group_description = models.CharField(max_length=30)
     associated_companies = models.CharField(max_length=250)  # Comma-separated list of company IDs
+    associated_user = models.ForeignKey(User, on_delete=models.CASCADE)
 
 class Roles(models.Model):
     role_id = models.CharField(primary_key=True, max_length=2)

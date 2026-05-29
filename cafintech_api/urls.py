@@ -189,6 +189,7 @@ urlpatterns = [
 
     # IMPORT LEDGER CODES
     re_path(r"^import-ledger-codes/$", lc.importLedgerCodes),
+    re_path(r"^get-gstn-details/$", lc.getGstnDetails),
 
 
     # Material

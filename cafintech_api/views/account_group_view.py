@@ -18,7 +18,7 @@ def addAccountGroup(request):
         serializer = AccountGroupSerializer(data=request.data, many=True)
         if(serializer.is_valid()):
             cursor = getDbCursor(request.user)
-            cursor.execute(f"EXEC [mastcode].[uspAddAcGroups] ?",(json.dumps(serializer.data),))
+            cursor.execute("EXEC [mastcode].[uspAddAcGroups] ?",(json.dumps(serializer.data),))
             cursor.close()
             return Response(serializer.data)
         UNSUCCESSFUL_REQUEST['message'] = serializer.errors

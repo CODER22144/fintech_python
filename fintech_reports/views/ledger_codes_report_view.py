@@ -7,7 +7,7 @@ from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from CaFinTech.errors import UNSUCCESSFUL_REQUEST
 from CaFinTech.settings import File_Path, path_wkhtmltopdf
-from CaFinTech.utility import generate_error_message, getDbCursor
+from CaFinTech.utility import generate_error_message, getDbCursor, getDbCursorByCid
 import json
 import pdfkit
 import uuid
@@ -58,7 +58,7 @@ def getLedgerReportPDF(request):
 
         serializer = LedgerReportSerializer(data={'lcode':lcode, 'fromDate':fromDate, 'toDate':toDate})    
         if(serializer.is_valid()):
-            cursor = connections[request.GET.get("cid")].cursor()
+            cursor = getDbCursorByCid(request.GET.get("cid"))
             cursor.execute(f"EXEC [gl].[uspGetLedger] ?",(json.dumps(serializer.data),))
             json_data = [data[0] for data in cursor.fetchall()]
             json_data = "".join(json_data)
@@ -67,7 +67,6 @@ def getLedgerReportPDF(request):
         context = {
             "ledger" : json.loads(json_data),
         }
-        cursor.close()
         return render(request, "ledger_pdf.html", context)
     except Exception as e:
         return Response(generate_error_message(e), status=500, exception=e)

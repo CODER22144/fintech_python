@@ -100,20 +100,20 @@ WSGI_APPLICATION = 'CaFinTech.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'mssql',
-        'NAME': 'centralDB',
-        'HOST': '192.168.231.9',
-        'USER': 'sa',
-        'PASSWORD': 'Tstsql@1234',
+        'NAME': 'masterArchDB',
+        'HOST': '192.168.231.6',
+        'USER': 'erpusr',
+        'PASSWORD': 'CR5svQ33@#yER90N',
         'OPTIONS': {
             'driver': 'ODBC Driver 17 for SQL Server',
        }
     }
     # 'OW': {
     #     'ENGINE': 'mssql',
-    #     'NAME': 'RemoteDb',
-    #     'HOST': '192.168.231.9',
-    #     'USER': 'sa',
-    #     'PASSWORD': 'Tstsql@1234',
+    #     'NAME': 'masterDb',
+    #     'HOST': '192.168.231.6',
+    #     'USER': 'erpusr',
+    #     'PASSWORD': 'CR5svQ33@#yER90N',
     #     'OPTIONS': {
     #         'driver': 'ODBC Driver 17 for SQL Server',
     #    }
